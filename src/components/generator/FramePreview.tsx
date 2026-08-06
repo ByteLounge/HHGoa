@@ -21,7 +21,7 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
       <div className="absolute inset-0 bg-editorial-dots opacity-25 pointer-events-none" />
 
       {/* Circular Photo Container */}
-      <div className="absolute w-[68%] h-[68%] rounded-full overflow-hidden top-[10%] flex items-center justify-center bg-[#0E6B3A] border-4 border-[#0A4C2B] shadow-[4px_4px_0px_#0A4C2B]">
+      <div className="absolute w-[68%] h-[68%] rounded-full overflow-hidden top-[8%] flex items-center justify-center bg-[#0E6B3A] border-4 border-[#0A4C2B] shadow-[4px_4px_0px_#0A4C2B]">
         {userImageUrl ? (
           <img
             src={userImageUrl}
@@ -49,22 +49,22 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
         {/* Outer Circular Ring Ring - Yellow & Pink Geometric Trim */}
         <circle
           cx="200"
-          cy="176"
-          r="138"
+          cy="168"
+          r="134"
           stroke="#FF007A"
           strokeWidth="6"
         />
         <circle
           cx="200"
-          cy="176"
-          r="144"
+          cy="168"
+          r="140"
           stroke="#FFD400"
           strokeWidth="3"
           strokeDasharray="10 6"
         />
 
         {/* Top Floating Stamp Badge */}
-        <g transform="translate(200, 26)">
+        <g transform="translate(200, 22)">
           <rect x="-65" y="-14" width="130" height="28" rx="14" fill="#FFD400" stroke="#0A4C2B" strokeWidth="2" />
           <text
             x="0"
@@ -80,11 +80,11 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
           </text>
         </g>
 
-        {/* Bottom Banner Badge */}
-        <g transform="translate(32, 292)">
+        {/* Bottom Banner Badge with Complete Details */}
+        <g transform="translate(24, 282)">
           <rect
-            width="336"
-            height="86"
+            width="352"
+            height="102"
             rx="16"
             fill="#0E6B3A"
             stroke="#0A4C2B"
@@ -92,21 +92,21 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
           />
 
           {/* Accent dot & Header */}
-          <circle cx="24" cy="24" r="6" fill="#FFD400" />
+          <circle cx="20" cy="20" r="5" fill="#FFD400" />
           <text
-            x="38"
-            y="28"
+            x="32"
+            y="24"
             fontFamily="Cormorant Garamond, serif"
             fontWeight="700"
-            fontSize="18"
+            fontSize="16"
             fill="#FFD400"
             letterSpacing="1"
           >
             HH GOA 2026
           </text>
           <text
-            x="312"
-            y="28"
+            x="332"
+            y="24"
             fontFamily="IBM Plex Mono, monospace"
             fontWeight="700"
             fontSize="10"
@@ -117,12 +117,12 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
           </text>
 
           {/* Divider */}
-          <line x1="24" y1="38" x2="312" y2="38" stroke="#F7F1DF" strokeOpacity="0.3" strokeWidth="1.5" />
+          <line x1="20" y1="32" x2="332" y2="32" stroke="#F7F1DF" strokeOpacity="0.3" strokeWidth="1.5" />
 
-          {/* Name & Title */}
+          {/* Name, Title, Role, Org & Location */}
           <text
-            x="24"
-            y="58"
+            x="20"
+            y="52"
             fontFamily="Cormorant Garamond, serif"
             fontWeight="700"
             fontSize="17"
@@ -131,14 +131,24 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
             {builderInfo.name || 'Alex Rivera'}
           </text>
           <text
-            x="24"
-            y="72"
+            x="20"
+            y="68"
             fontFamily="IBM Plex Mono, monospace"
             fontWeight="700"
             fontSize="10"
             fill="#FFD400"
           >
-            {builderInfo.builderTitle || 'The AI Architect'} • #FrameInGoa
+            {(builderInfo.builderTitle || 'The AI Architect') + ' • ' + (builderInfo.role || 'Full Stack Engineer')}
+          </text>
+          <text
+            x="20"
+            y="84"
+            fontFamily="IBM Plex Mono, monospace"
+            fontWeight="500"
+            fontSize="9"
+            fill="#F7F1DF"
+          >
+            {(builderInfo.company || builderInfo.college || '2:47 PM Studio') + ' • ' + (builderInfo.location || 'Goa, India') + ' (' + (builderInfo.customHashtag || '#FrameInGoa') + ')'}
           </text>
         </g>
       </svg>

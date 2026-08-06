@@ -37,7 +37,7 @@ export async function generateHighResGraphic({
   const dimension = exportOptions.resolution === '2048x2048' ? 2048 : 1080;
   const theme = FRAME_THEMES[exportOptions.themeId] || FRAME_THEMES['hhgoa-editorial'];
 
-  // Process user photo first with rotation, zoom, offset
+  // Process user photo first with rotation, zoom, offset using fresh Sharp clone
   let userSharp = sharp(userImageBuffer);
 
   if (cropConfig.rotation && cropConfig.rotation !== 0) {
@@ -77,7 +77,7 @@ export async function generateHighResGraphic({
 }
 
 /**
- * Helper to apply zoom & pan crop to a photo buffer
+ * Helper to apply zoom & pan crop to a photo buffer using Sharp clone
  */
 async function processPhotoCrop(
   userSharp: Sharp,
@@ -85,7 +85,8 @@ async function processPhotoCrop(
   targetHeight: number,
   cropConfig: ImageCropConfig
 ): Promise<Buffer> {
-  const metadata = await userSharp.metadata();
+  const cloned = userSharp.clone();
+  const metadata = await cloned.metadata();
   const origW = metadata.width || targetWidth;
   const origH = metadata.height || targetHeight;
 
@@ -103,6 +104,7 @@ async function processPhotoCrop(
   const extractTop = Math.max(0, Math.min(origH - cropH, Math.round((origH - cropH) / 2 - shiftY)));
 
   return userSharp
+    .clone()
     .extract({
       left: extractLeft,
       top: extractTop,
@@ -115,7 +117,7 @@ async function processPhotoCrop(
 }
 
 /**
- * Profile Picture Frame Composite Renderer
+ * Profile Picture Frame Composite Renderer (HH Goa Editorial Frame)
  */
 async function generateProfileFrameSharp({
   userSharp,
@@ -158,7 +160,11 @@ async function generateProfileFrameSharp({
     .toBuffer();
 
   const nameText = escapeXml(builderInfo.name || 'Alex Rivera');
+  const roleText = escapeXml(builderInfo.role || 'Full Stack Engineer');
   const titleText = escapeXml(builderInfo.builderTitle || 'The AI Architect');
+  const companyText = escapeXml(builderInfo.company || builderInfo.college || '2:47 PM Studio');
+  const locationText = escapeXml(builderInfo.location || 'Goa, India');
+  const hashtagText = escapeXml(builderInfo.customHashtag || '#FrameInGoa');
 
   const svgOverlay = `
   <svg width="${dimension}" height="${dimension}" viewBox="0 0 ${dimension} ${dimension}" xmlns="http://www.w3.org/2000/svg">
@@ -180,23 +186,26 @@ async function generateProfileFrameSharp({
       <text x="0" y="${dimension * 0.01}" font-family="Impact, sans-serif" font-weight="bold" font-size="${dimension * 0.026}" fill="#0A4C2B" text-anchor="middle" letter-spacing="2">HH GOA 2026</text>
     </g>
 
-    <!-- Bottom Branding Banner Card -->
-    <g transform="translate(${dimension * 0.08}, ${dimension * 0.73})">
-      <rect width="${dimension * 0.84}" height="${dimension * 0.22}" rx="${dimension * 0.04}" fill="#0E6B3A" stroke="#0A4C2B" stroke-width="${dimension * 0.006}"/>
+    <!-- Bottom Branding Banner Card with Complete Details -->
+    <g transform="translate(${dimension * 0.08}, ${dimension * 0.72})">
+      <rect width="${dimension * 0.84}" height="${dimension * 0.24}" rx="${dimension * 0.04}" fill="#0E6B3A" stroke="#0A4C2B" stroke-width="${dimension * 0.006}"/>
       
-      <!-- Accent Dot -->
-      <circle cx="${dimension * 0.06}" cy="${dimension * 0.06}" r="${dimension * 0.015}" fill="#FFD400"/>
-      
-      <!-- Event Header -->
-      <text x="${dimension * 0.09}" y="${dimension * 0.07}" font-family="Georgia, serif" font-weight="bold" font-size="${dimension * 0.04}" fill="#FFD400" letter-spacing="1">HH GOA 2026</text>
-      <text x="${dimension * 0.78}" y="${dimension * 0.07}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.024}" fill="#FF007A" text-anchor="end">28-31 OCT</text>
+      <!-- Accent Dot & Header -->
+      <circle cx="${dimension * 0.05}" cy="${dimension * 0.05}" r="${dimension * 0.012}" fill="#FFD400"/>
+      <text x="${dimension * 0.08}" y="${dimension * 0.06}" font-family="Georgia, serif" font-weight="bold" font-size="${dimension * 0.034}" fill="#FFD400" letter-spacing="1">HH GOA 2026</text>
+      <text x="${dimension * 0.79}" y="${dimension * 0.06}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.022}" fill="#FF007A" text-anchor="end">28-31 OCT</text>
 
       <!-- Divider line -->
-      <line x1="${dimension * 0.06}" y1="${dimension * 0.095}" x2="${dimension * 0.78}" y2="${dimension * 0.095}" stroke="#F7F1DF" stroke-opacity="0.3" stroke-width="2"/>
+      <line x1="${dimension * 0.05}" y1="${dimension * 0.085}" x2="${dimension * 0.79}" y2="${dimension * 0.085}" stroke="#F7F1DF" stroke-opacity="0.3" stroke-width="2"/>
 
-      <!-- User Name & Title -->
-      <text x="${dimension * 0.06}" y="${dimension * 0.145}" font-family="Georgia, serif" font-weight="bold" font-size="${dimension * 0.038}" fill="#F7F1DF">${nameText}</text>
-      <text x="${dimension * 0.06}" y="${dimension * 0.185}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.024}" fill="#FFD400">${titleText} • #FrameInGoa</text>
+      <!-- User Full Name -->
+      <text x="${dimension * 0.05}" y="${dimension * 0.13}" font-family="Georgia, serif" font-weight="bold" font-size="${dimension * 0.036}" fill="#F7F1DF">${nameText}</text>
+      
+      <!-- Title & Role -->
+      <text x="${dimension * 0.05}" y="${dimension * 0.165}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.022}" fill="#FFD400">${titleText} • ${roleText}</text>
+      
+      <!-- Organization, Location & Hashtag -->
+      <text x="${dimension * 0.05}" y="${dimension * 0.20}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.018}" fill="#F7F1DF">${companyText} • ${locationText} (${hashtagText})</text>
     </g>
   </svg>
   `;
@@ -343,7 +352,7 @@ async function generateBuilderCardSharp({
         <text x="0" y="${cardHeight * 0.225}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.021}" fill="${subtextColor}">${companyText}</text>
 
         <!-- Location -->
-        <text x="0" y="${cardHeight * 0.27}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.018}" fill="${subtextColor}">Goa, India</text>
+        <text x="0" y="${cardHeight * 0.27}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.018}" fill="${subtextColor}">${locationText}</text>
       </g>
 
       <!-- Dashed Divider -->
