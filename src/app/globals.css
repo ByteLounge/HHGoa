@@ -3,33 +3,41 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #090d16;
-  --card: #f8fafc;
-  --card-border: #e2e8f0;
+  --background: #0E6B3A;
+  --foreground: #F7F1DF;
+  --card: #F7F1DF;
+  --card-border: #1E5A3B;
+  --color-green: #0E6B3A;
+  --color-cream: #F7F1DF;
+  --color-yellow: #FFD400;
+  --color-pink: #FF007A;
+  --color-dark-text: #0A4C2B;
+  --color-border: #1E5A3B;
 }
 
 .dark {
-  --background: #030406;
-  --foreground: #ffffff;
-  --card: #0a0d14;
-  --card-border: rgba(0, 255, 102, 0.15);
+  --background: #0E6B3A;
+  --foreground: #F7F1DF;
+  --card: #F7F1DF;
+  --card-border: #1E5A3B;
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --color-hh-dark: #030406;
-  --color-hh-card: #0a0d14;
-  --color-hh-green: #00FF66;
-  --color-hh-yellow: #FFE600;
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-mono: var(--font-ibm-mono), Menlo, Courier New, monospace;
+  --font-display: var(--font-oswald), Impact, sans-serif;
+  --color-hh-green: #0E6B3A;
+  --color-hh-cream: #F7F1DF;
+  --color-hh-yellow: #FFD400;
   --color-hh-pink: #FF007A;
-  --color-hh-orange: #FF5500;
+  --color-hh-dark: #0A4C2B;
+  --color-hh-border: #1E5A3B;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   overflow-x: hidden;
   letter-spacing: -0.01em;
 }
@@ -39,69 +47,114 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Gradient text utilities for Green, Yellow, Pink */
-.text-gradient-hhgoa {
-  background: linear-gradient(135deg, #00FF66 0%, #FFE600 50%, #FF007A 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Editorial Serif & Mono Font Helper Classes */
+.font-editorial-serif {
+  font-family: var(--font-cormorant), Georgia, serif;
 }
 
-.text-gradient-green-yellow {
-  background: linear-gradient(135deg, #00FF66 0%, #FFE600 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.font-editorial-mono {
+  font-family: var(--font-ibm-mono), monospace;
 }
 
-.text-gradient-pink-yellow {
-  background: linear-gradient(135deg, #FF007A 0%, #FFE600 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.font-editorial-display {
+  font-family: var(--font-oswald), sans-serif;
 }
 
-/* Neon buttons */
-.btn-neon-green {
-  background: linear-gradient(135deg, #00FF66 0%, #10B981 100%);
-  color: #000000;
-  font-weight: 900;
-  box-shadow: 0 0 20px rgba(0, 255, 102, 0.35);
+/* Editorial Cards & Panel Styling */
+.editorial-card {
+  background-color: #F7F1DF;
+  color: #0A4C2B;
+  border: 2px solid #1E5A3B;
+  border-radius: 1.5rem;
+  box-shadow: 6px 6px 0px #0A4C2B;
 }
 
-.btn-neon-pink {
-  background: linear-gradient(135deg, #FF007A 0%, #EC4899 100%);
-  color: #ffffff;
-  font-weight: 900;
-  box-shadow: 0 0 20px rgba(255, 0, 122, 0.35);
+.editorial-card-dark {
+  background-color: #0A4C2B;
+  color: #F7F1DF;
+  border: 2px solid #FFD400;
+  border-radius: 1.5rem;
+  box-shadow: 6px 6px 0px #FFD400;
 }
 
-.btn-neon-tri {
-  background: linear-gradient(135deg, #00FF66 0%, #FFE600 50%, #FF007A 100%);
-  color: #000000;
-  font-weight: 900;
-  box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
+/* Editorial Buttons */
+.btn-editorial-pink {
+  background-color: #FF007A;
+  color: #FFFFFF;
+  font-family: var(--font-oswald), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid #0A4C2B;
+  box-shadow: 4px 4px 0px #0A4C2B;
+  transition: all 0.15s ease-in-out;
 }
 
-/* Subtle dot background utility */
-.bg-dot-pattern {
-  background-image: radial-gradient(rgba(0, 255, 102, 0.15) 1px, transparent 1px);
+.btn-editorial-pink:hover {
+  background-color: #E0006C;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #0A4C2B;
+}
+
+.btn-editorial-pink:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #0A4C2B;
+}
+
+.btn-editorial-cream {
+  background-color: #F7F1DF;
+  color: #0A4C2B;
+  font-family: var(--font-oswald), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid #FF007A;
+  box-shadow: 4px 4px 0px #0A4C2B;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-editorial-cream:hover {
+  background-color: #FFFFFF;
+  color: #FF007A;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #0A4C2B;
+}
+
+.btn-editorial-yellow {
+  background-color: #FFD400;
+  color: #0A4C2B;
+  font-family: var(--font-oswald), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid #0A4C2B;
+  box-shadow: 4px 4px 0px #0A4C2B;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-editorial-yellow:hover {
+  background-color: #FFF000;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #0A4C2B;
+}
+
+/* Subtle dot background pattern */
+.bg-editorial-dots {
+  background-image: radial-gradient(rgba(255, 212, 0, 0.2) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
-}
-
-.bg-dot-pattern-light {
-  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
-  background-size: 20px 20px;
 }
 
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0E6B3A;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 102, 0.3);
+  background: #FFD400;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 0, 122, 0.6);
+  background: #FF007A;
 }

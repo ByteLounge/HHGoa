@@ -13,21 +13,15 @@ interface FramePreviewProps {
 }
 
 export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }: FramePreviewProps) {
-  const theme = FRAME_THEMES[themeId] || FRAME_THEMES['goa-sunset'];
+  const theme = FRAME_THEMES[themeId] || FRAME_THEMES['hhgoa-editorial'];
 
   return (
-    <div className="w-full max-w-sm sm:max-w-md aspect-square mx-auto rounded-3xl overflow-hidden shadow-2xl relative bg-[#06080d] border border-white/10 flex items-center justify-center select-none group">
-      {/* Background Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293d_1px,transparent_1px),linear-gradient(to_bottom,#1f293d_1px,transparent_1px)] bg-[size:24px_24px] opacity-30" />
+    <div className="w-full max-w-sm sm:max-w-md aspect-square mx-auto rounded-3xl p-4 sm:p-6 select-none bg-[#F7F1DF] text-[#0A4C2B] border-2 border-[#1E5A3B] shadow-[8px_8px_0px_#0A4C2B] relative flex flex-col items-center justify-center overflow-hidden">
+      {/* Background Dots */}
+      <div className="absolute inset-0 bg-editorial-dots opacity-25 pointer-events-none" />
 
-      {/* Ambient Ring Glow */}
-      <div
-        className="absolute w-[70%] h-[70%] rounded-full blur-2xl opacity-25 pointer-events-none"
-        style={{ background: theme.primaryColor }}
-      />
-
-      {/* User Photo Container inside central circle */}
-      <div className="absolute w-[68%] h-[68%] rounded-full overflow-hidden top-[12%] flex items-center justify-center bg-slate-950 shadow-inner">
+      {/* Circular Photo Container */}
+      <div className="absolute w-[68%] h-[68%] rounded-full overflow-hidden top-[10%] flex items-center justify-center bg-[#0E6B3A] border-4 border-[#0A4C2B] shadow-[4px_4px_0px_#0A4C2B]">
         {userImageUrl ? (
           <img
             src={userImageUrl}
@@ -38,87 +32,74 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
             }}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center p-4 text-center text-slate-500">
-            <span className="text-2xl font-black text-slate-600">PHOTO</span>
-            <span className="text-xs text-slate-500 mt-1">Upload image above</span>
+          <div className="flex flex-col items-center justify-center p-4 text-center text-[#F7F1DF]">
+            <span className="font-editorial-mono text-xl font-bold">PHOTO</span>
+            <span className="text-xs text-[#FFD400] mt-1">Upload Above</span>
           </div>
         )}
       </div>
 
-      {/* SVG Overlay Frame Graphics */}
+      {/* SVG Geometric Frame Decorative Overlay */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
         viewBox="0 0 400 400"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <defs>
-          <linearGradient id="primaryGradPreview" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={theme.primaryColor} />
-            <stop offset="100%" stopColor={theme.accentColor} />
-          </linearGradient>
-          <linearGradient id="darkBannerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#0E131F" stopOpacity="0.96" />
-            <stop offset="100%" stopColor="#06080D" stopOpacity="0.98" />
-          </linearGradient>
-        </defs>
-
-        {/* Circular Ring Glow around photo */}
+        {/* Outer Circular Ring Ring - Yellow & Pink Geometric Trim */}
         <circle
           cx="200"
-          cy="184"
+          cy="176"
           r="138"
-          stroke="url(#primaryGradPreview)"
-          strokeWidth="5"
-          className="drop-shadow-[0_0_12px_rgba(255,85,0,0.5)]"
+          stroke="#FF007A"
+          strokeWidth="6"
         />
         <circle
           cx="200"
-          cy="184"
+          cy="176"
           r="144"
-          stroke={theme.primaryColor}
-          strokeOpacity="0.35"
-          strokeWidth="1.5"
-          strokeDasharray="8 4"
+          stroke="#FFD400"
+          strokeWidth="3"
+          strokeDasharray="10 6"
         />
 
-        {/* Top Floating Badge */}
-        <g transform="translate(200, 30)">
-          <rect x="-65" y="-14" width="130" height="28" rx="14" fill="url(#primaryGradPreview)" />
+        {/* Top Floating Stamp Badge */}
+        <g transform="translate(200, 26)">
+          <rect x="-65" y="-14" width="130" height="28" rx="14" fill="#FFD400" stroke="#0A4C2B" strokeWidth="2" />
           <text
             x="0"
             y="4"
-            fontFamily="Inter, sans-serif"
-            fontWeight="900"
-            fontSize="10"
-            fill="#FFFFFF"
+            fontFamily="Oswald, sans-serif"
+            fontWeight="700"
+            fontSize="11"
+            fill="#0A4C2B"
             textAnchor="middle"
-            letterSpacing="1.5"
+            letterSpacing="2"
           >
             HH GOA 2026
           </text>
         </g>
 
         {/* Bottom Banner Badge */}
-        <g transform="translate(32, 296)">
+        <g transform="translate(32, 292)">
           <rect
             width="336"
-            height="84"
+            height="86"
             rx="16"
-            fill="url(#darkBannerGrad)"
-            stroke="url(#primaryGradPreview)"
-            strokeWidth="1.5"
+            fill="#0E6B3A"
+            stroke="#0A4C2B"
+            strokeWidth="3"
           />
 
           {/* Accent dot & Header */}
-          <circle cx="24" cy="24" r="5" fill={theme.primaryColor} />
+          <circle cx="24" cy="24" r="6" fill="#FFD400" />
           <text
-            x="36"
+            x="38"
             y="28"
-            fontFamily="Inter, sans-serif"
-            fontWeight="900"
-            fontSize="14"
-            fill="#FFFFFF"
+            fontFamily="Cormorant Garamond, serif"
+            fontWeight="700"
+            fontSize="18"
+            fill="#FFD400"
             letterSpacing="1"
           >
             HH GOA 2026
@@ -126,36 +107,36 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
           <text
             x="312"
             y="28"
-            fontFamily="Inter, sans-serif"
+            fontFamily="IBM Plex Mono, monospace"
             fontWeight="700"
-            fontSize="9"
-            fill={theme.accentColor}
+            fontSize="10"
+            fill="#FF007A"
             textAnchor="end"
           >
             28-31 OCT
           </text>
 
           {/* Divider */}
-          <line x1="24" y1="38" x2="312" y2="38" stroke="#ffffff" strokeOpacity="0.1" strokeWidth="1" />
+          <line x1="24" y1="38" x2="312" y2="38" stroke="#F7F1DF" strokeOpacity="0.3" strokeWidth="1.5" />
 
           {/* Name & Title */}
           <text
             x="24"
-            y="56"
-            fontFamily="Inter, sans-serif"
-            fontWeight="900"
-            fontSize="13"
-            fill="#FFFFFF"
+            y="58"
+            fontFamily="Cormorant Garamond, serif"
+            fontWeight="700"
+            fontSize="17"
+            fill="#F7F1DF"
           >
             {builderInfo.name || 'Alex Rivera'}
           </text>
           <text
             x="24"
-            y="70"
-            fontFamily="Inter, sans-serif"
+            y="72"
+            fontFamily="IBM Plex Mono, monospace"
             fontWeight="700"
             fontSize="10"
-            fill={theme.accentColor}
+            fill="#FFD400"
           >
             {builderInfo.builderTitle || 'The AI Architect'} • #FrameInGoa
           </text>

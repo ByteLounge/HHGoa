@@ -6,13 +6,13 @@ import { Cpu, Image, Sparkles, Share2, Smartphone, ShieldCheck } from 'lucide-re
 const FEATURES = [
   {
     icon: Image,
-    title: 'Dual Identity Formats',
-    description: 'Switch seamlessly between official circular avatar overlays and Apple Pass style attendee passes.',
+    title: 'Dual Graphic Formats',
+    description: 'Switch seamlessly between circular avatar overlays and Apple Pass style printed event credentials.',
   },
   {
     icon: Cpu,
-    title: 'Sharp 4K Server Rendering',
-    description: 'Zero blurry client export. High-res 1080p or 2048p PNG compositing powered by server-side Sharp.',
+    title: 'Sharp 4K Server Compositing',
+    description: 'Zero blurry client export. High-res 1080p or 2048p PNG rendering powered by server-side Sharp.',
   },
   {
     icon: Sparkles,
@@ -38,16 +38,16 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section id="features" className="py-20 sm:py-28 bg-slate-50/50 dark:bg-[#090c15] border-b border-slate-200/80 dark:border-white/10 relative">
+    <section id="features" className="py-20 sm:py-28 bg-[#0E6B3A] border-b-2 border-[#1E5A3B] relative font-editorial-mono">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20">
-            ENGINEERED FOR BUILDERS
+          <span className="text-xs font-bold text-[#FFD400] uppercase tracking-widest px-3 py-1 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 shadow-[2px_2px_0px_#0A4C2B]">
+            DESIGNED FOR BUILDERS
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight mt-3">
-            Built for Elite Speed &amp; Quality
+          <h2 className="font-editorial-serif font-bold text-4xl sm:text-6xl text-[#F7F1DF] tracking-tight mt-4 uppercase">
+            Built for Speed &amp; Precision
           </h2>
-          <p className="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">
+          <p className="mt-4 text-[#F7F1DF]/90 text-base sm:text-lg font-normal">
             Everything required to generate, preview, export, and showcase your official HH Goa 2026 conference identity.
           </p>
         </div>
@@ -58,15 +58,15 @@ export function Features() {
             return (
               <div
                 key={idx}
-                className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0e131f] border border-slate-200 dark:border-white/10 shadow-sm hover:border-orange-500/50 dark:hover:border-orange-500/50 transition-all duration-200 hover:-translate-y-1 group"
+                className="editorial-card p-6 sm:p-8 hover:-translate-y-1 transition-all duration-200 group"
               >
-                <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-500 border border-orange-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Icon className="w-6 h-6" />
+                <div className="w-14 h-14 rounded-2xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center mb-6 shadow-[3px_3px_0px_#0A4C2B] group-hover:scale-105 transition-transform">
+                  <Icon className="w-7 h-7 text-[#FF007A]" />
                 </div>
-                <h3 className="text-lg font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+                <h3 className="font-editorial-serif font-bold text-2xl text-[#0A4C2B] mb-2 uppercase leading-tight">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+                <p className="text-sm text-[#0E6B3A] leading-relaxed font-normal">
                   {feature.description}
                 </p>
               </div>

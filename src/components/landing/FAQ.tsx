@@ -30,13 +30,13 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-20 sm:py-28 bg-slate-50/50 dark:bg-[#090c15]">
+    <section id="faq" className="py-20 sm:py-28 bg-[#0E6B3A] font-editorial-mono">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20">
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold text-[#FFD400] uppercase tracking-widest px-3 py-1 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 shadow-[2px_2px_0px_#0A4C2B]">
             FREQUENTLY ASKED QUESTIONS
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight mt-3">
+          <h2 className="font-editorial-serif font-bold text-4xl sm:text-6xl text-[#F7F1DF] tracking-tight mt-4 uppercase">
             Got Questions?
           </h2>
         </div>
@@ -47,24 +47,24 @@ export function FAQ() {
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-white dark:bg-[#0e131f] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm transition-all"
+                className="editorial-card overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-5 sm:p-6 text-left font-black text-slate-900 dark:text-white flex items-center justify-between gap-4 text-base sm:text-lg cursor-pointer"
+                  className="w-full p-5 sm:p-6 text-left font-bold text-[#0A4C2B] flex items-center justify-between gap-4 text-base sm:text-lg cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
-                    <HelpCircle className="w-5 h-5 text-orange-500 shrink-0" />
+                    <HelpCircle className="w-5 h-5 text-[#FF007A] shrink-0" />
                     {faq.q}
                   </span>
                   <ChevronDown
-                    className={`w-5 h-5 text-orange-500 shrink-0 transition-transform duration-200 ${
+                    className={`w-5 h-5 text-[#FF007A] shrink-0 transition-transform duration-200 ${
                       isOpen ? 'rotate-180' : ''
                     }`}
                   />
                 </button>
                 {isOpen && (
-                  <div className="px-6 pb-6 text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-white/5 pt-4">
+                  <div className="px-6 pb-6 text-sm sm:text-base text-[#0E6B3A] leading-relaxed border-t-2 border-[#1E5A3B] pt-4 font-normal">
                     {faq.a}
                   </div>
                 )}

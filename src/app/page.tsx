@@ -34,7 +34,7 @@ export default function HomePage() {
   const [userFile, setUserFile] = useState<File | null>(null);
   const [builderInfo, setBuilderInfo] = useState<BuilderInfo>(DEFAULT_BUILDER_INFO);
   const [graphicType, setGraphicType] = useState<GraphicType>('card');
-  const [themeId, setThemeId] = useState<ThemeId>('hhgoa-vibrant');
+  const [themeId, setThemeId] = useState<ThemeId>('hhgoa-editorial');
   const [cropConfig, setCropConfig] = useState<ImageCropConfig>({
     zoom: 1,
     offsetX: 0,
@@ -44,7 +44,7 @@ export default function HomePage() {
   const [exportOptions, setExportOptions] = useState<ExportOptions>({
     resolution: '1080x1080',
     transparentBg: false,
-    themeId: 'hhgoa-vibrant',
+    themeId: 'hhgoa-editorial',
     graphicType: 'card',
   });
 
@@ -80,7 +80,6 @@ export default function HomePage() {
   const handleGenerateAndDownload = async () => {
     setIsGenerating(true);
     try {
-      // If user hasn't uploaded a file, create a canvas placeholder buffer
       let fileToUpload = userFile;
       if (!fileToUpload && userImageUrl) {
         const res = await fetch(userImageUrl);
@@ -89,15 +88,14 @@ export default function HomePage() {
       }
 
       if (!fileToUpload) {
-        // Create 400x400 blank placeholder file if none provided
         const canvas = document.createElement('canvas');
         canvas.width = 400;
         canvas.height = 400;
         const ctx = canvas.getContext('2d');
         if (ctx) {
-          ctx.fillStyle = '#06080D';
+          ctx.fillStyle = '#0E6B3A';
           ctx.fillRect(0, 0, 400, 400);
-          ctx.fillStyle = '#FF5500';
+          ctx.fillStyle = '#FFD400';
           ctx.font = 'bold 36px sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('HH GOA', 200, 200);
@@ -127,7 +125,6 @@ export default function HomePage() {
       if (data.success && data.imageDataUrl) {
         setGeneratedShareUrl(data.shareUrl);
 
-        // Download trigger
         const link = document.createElement('a');
         link.href = data.imageDataUrl;
         link.download = `HHGoa2026_${graphicType}_${data.id.slice(0, 8)}.png`;
@@ -135,7 +132,6 @@ export default function HomePage() {
         link.click();
         document.body.removeChild(link);
 
-        // Save to Recent Cards in localStorage
         try {
           const newRecord: GeneratedGraphicRecord = {
             id: data.id,
@@ -167,80 +163,80 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#06080d] text-slate-900 dark:text-slate-100 flex flex-col font-sans antialiased transition-colors">
+    <div className="min-h-screen bg-[#0E6B3A] text-[#F7F1DF] flex flex-col font-editorial-mono antialiased">
       <Header />
 
       {/* Hero Section */}
       <Hero />
 
       {/* Main Generator Studio Section */}
-      <section id="generator" className="py-12 sm:py-24 relative z-10">
+      <section id="generator" className="py-16 sm:py-28 relative z-10 bg-[#0E6B3A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold text-[#FFD400] uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 shadow-[2px_2px_0px_#0A4C2B]">
               ● LIVE GENERATOR STUDIO
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight mt-3 text-slate-900 dark:text-white">
-              Create Your HH Goa Identity
+            <h2 className="font-editorial-serif font-bold text-4xl sm:text-6xl tracking-tight mt-4 text-[#F7F1DF] uppercase">
+              Build Your Credentials
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2">
-              Select pass format, upload photo, customize builder stats, and download 4K PNG.
+            <p className="text-base sm:text-lg text-[#F7F1DF]/90 mt-2 font-normal">
+              Select pass format, upload photo, fill in details, and export 4K PNG.
             </p>
           </div>
 
-          {/* Format Tabs Switcher (Profile Frame vs Builder Pass) */}
-          <div className="flex justify-center mb-10">
-            <div className="p-1.5 rounded-2xl bg-slate-100 dark:bg-[#0e131f] border border-slate-200 dark:border-white/10 flex gap-2 max-w-md w-full shadow-inner">
+          {/* Format Tabs Switcher */}
+          <div className="flex justify-center mb-12">
+            <div className="p-2 rounded-full bg-[#F7F1DF] border-2 border-[#0A4C2B] flex gap-2 max-w-md w-full shadow-[4px_4px_0px_#0A4C2B]">
               <button
                 onClick={() => handleGraphicTypeChange('card')}
-                className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all min-h-[44px] cursor-pointer ${
+                className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-full font-editorial-display font-bold text-sm transition-all min-h-[44px] cursor-pointer ${
                   graphicType === 'card'
-                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 border border-orange-400/20'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-[#FF007A] text-white shadow-[2px_2px_0px_#0A4C2B] border-2 border-[#0A4C2B]'
+                    : 'text-[#0A4C2B] hover:text-[#FF007A]'
                 }`}
               >
-                <CreditCard className="w-4 h-4" /> Builder Pass Card
+                <CreditCard className="w-4 h-4" /> Builder Pass
               </button>
 
               <button
                 onClick={() => handleGraphicTypeChange('frame')}
-                className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all min-h-[44px] cursor-pointer ${
+                className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-full font-editorial-display font-bold text-sm transition-all min-h-[44px] cursor-pointer ${
                   graphicType === 'frame'
-                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 border border-orange-400/20'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-[#FF007A] text-white shadow-[2px_2px_0px_#0A4C2B] border-2 border-[#0A4C2B]'
+                    : 'text-[#0A4C2B] hover:text-[#FF007A]'
                 }`}
               >
-                <ImageIcon className="w-4 h-4" /> Profile Picture Frame
+                <ImageIcon className="w-4 h-4" /> Profile Frame
               </button>
             </div>
           </div>
 
-          {/* Responsive Two-Column Studio Layout */}
+          {/* Responsive Two-Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left Column: Controls & Input Forms */}
-            <div className="lg:col-span-6 space-y-6 bg-white dark:bg-[#0e131f] p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 shadow-xl">
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-4">
-                <h3 className="font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-orange-500" /> 1. Photo &amp; Customization
+            {/* Left Column: Upload & Form Controls */}
+            <div className="lg:col-span-6 space-y-6 bg-[#0E6B3A] p-6 sm:p-8 rounded-3xl border-2 border-[#1E5A3B] shadow-xl">
+              <div className="flex items-center justify-between border-b-2 border-[#1E5A3B] pb-4">
+                <h3 className="font-editorial-serif font-bold text-2xl text-[#F7F1DF] flex items-center gap-2 uppercase">
+                  <Sparkles className="w-5 h-5 text-[#FFD400]" /> 1. Upload &amp; Customize
                 </h3>
                 {userImageUrl && (
                   <button
                     onClick={() => setIsPhotoModalOpen(true)}
-                    className="flex items-center gap-1.5 text-xs font-black text-orange-500 hover:text-orange-400 bg-orange-500/10 px-3 py-1.5 rounded-xl border border-orange-500/20 transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-bold text-[#0A4C2B] bg-[#FFD400] px-3 py-1.5 rounded-full border-2 border-[#0A4C2B] shadow-[2px_2px_0px_#0A4C2B] hover:translate-x-0.5 transition-all cursor-pointer font-editorial-display uppercase"
                   >
                     <SlidersHorizontal className="w-3.5 h-3.5" /> Adjust Crop
                   </button>
                 )}
               </div>
 
-              {/* Primary Drag & Drop Upload Zone */}
+              {/* Upload Zone */}
               <ImageUploader
                 onImageSelected={handleImageSelected}
                 currentImageName={userFile?.name}
               />
 
-              {/* Theme Color Selector */}
+              {/* Theme Selector */}
               <ThemeSelector selectedThemeId={themeId} onThemeSelect={handleThemeChange} />
 
               {/* Form Input Fields */}
@@ -251,15 +247,15 @@ export default function HomePage() {
               />
             </div>
 
-            {/* Right Column: Live Real-Time Card/Frame Preview & Export */}
+            {/* Right Column: Live Interactive Preview & Export Controls */}
             <div className="lg:col-span-6 space-y-6 sticky top-24">
-              <div className="bg-white dark:bg-[#0e131f] p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 shadow-xl space-y-6">
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-4">
-                  <h3 className="font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <div className="bg-[#0E6B3A] p-6 sm:p-8 rounded-3xl border-2 border-[#1E5A3B] shadow-xl space-y-6">
+                <div className="flex items-center justify-between border-b-2 border-[#1E5A3B] pb-4">
+                  <h3 className="font-editorial-serif font-bold text-2xl text-[#F7F1DF] uppercase">
                     2. Instant Live Preview
                   </h3>
-                  <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">
-                    ● Real-Time Render
+                  <span className="text-xs font-bold text-[#0A4C2B] bg-[#FFD400] px-3 py-1 rounded-full border-2 border-[#0A4C2B] uppercase tracking-wider font-editorial-mono shadow-[2px_2px_0px_#0A4C2B]">
+                    ● Real-Time
                   </span>
                 </div>
 
@@ -280,7 +276,7 @@ export default function HomePage() {
                   />
                 )}
 
-                {/* Export Options & Download Button */}
+                {/* Export Options & Download */}
                 <ExportControls
                   exportOptions={exportOptions}
                   onChangeOptions={setExportOptions}
@@ -298,7 +294,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features & Gallery & FAQ Sections */}
+      {/* Features & Gallery & FAQ */}
       <Features />
       <Gallery />
       <FAQ />
@@ -316,31 +312,31 @@ export default function HomePage() {
 
       {/* QR Code Modal Popup */}
       {isQrModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
-          <div className="bg-white dark:bg-[#0e131f] border border-slate-200 dark:border-white/10 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
-                <QrCode className="w-5 h-5 text-orange-500" /> Shareable Pass QR
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A4C2B]/85 backdrop-blur-md animate-in fade-in font-editorial-mono">
+          <div className="bg-[#F7F1DF] text-[#0A4C2B] border-3 border-[#0A4C2B] rounded-3xl p-6 max-w-sm w-full shadow-[8px_8px_0px_#0A4C2B] text-center space-y-4">
+            <div className="flex items-center justify-between border-b-2 border-[#0A4C2B] pb-3">
+              <h3 className="font-editorial-serif font-bold text-xl text-[#0A4C2B] flex items-center gap-2 uppercase">
+                <QrCode className="w-5 h-5 text-[#FF007A]" /> Pass QR Code
               </h3>
               <button
                 onClick={() => setIsQrModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white cursor-pointer"
+                className="p-1 text-[#0A4C2B] hover:text-[#FF007A] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-inner flex items-center justify-center">
-              <QrCode className="w-48 h-48 text-slate-900" />
+            <div className="p-4 bg-white rounded-2xl border-2 border-[#0A4C2B] shadow-inner flex items-center justify-center">
+              <QrCode className="w-48 h-48 text-[#0A4C2B]" />
             </div>
 
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Scan QR code with mobile camera to open official builder pass link directly on your phone.
+            <p className="text-xs text-[#0E6B3A] font-bold">
+              Scan QR code with mobile camera to open official builder pass link on your phone.
             </p>
 
             <button
               onClick={() => setIsQrModalOpen(false)}
-              className="w-full py-3 rounded-xl bg-orange-500 text-white font-black text-xs hover:bg-orange-600 shadow-md min-h-[44px] cursor-pointer"
+              className="w-full py-3 rounded-full btn-editorial-pink text-xs min-h-[44px] cursor-pointer"
             >
               Done
             </button>

@@ -5,64 +5,64 @@ import { QrCode } from 'lucide-react';
 
 export function Gallery() {
   return (
-    <section id="gallery" className="py-20 sm:py-28 border-b border-slate-200/80 dark:border-white/10 relative">
+    <section id="gallery" className="py-20 sm:py-28 bg-[#0E6B3A] border-b-2 border-[#1E5A3B] relative font-editorial-mono">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20">
-            SAMPLE OUTPUT PREVIEW
+          <span className="text-xs font-bold text-[#FFD400] uppercase tracking-widest px-3 py-1 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 shadow-[2px_2px_0px_#0A4C2B]">
+            SAMPLE GALLERY
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight mt-3">
-            Official Pass &amp; Frame Gallery
+          <h2 className="font-editorial-serif font-bold text-4xl sm:text-6xl text-[#F7F1DF] tracking-tight mt-4 uppercase">
+            Pass &amp; Frame Gallery
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2">
-            See how your identity cards will look on social media and conference check-in.
+          <p className="text-sm sm:text-base text-[#F7F1DF]/90 mt-2 font-normal">
+            See how your identity credentials will look printed and on social media.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Card Example */}
-          <div className="rounded-3xl bg-[#0e131f] border border-white/10 p-6 sm:p-8 shadow-2xl relative overflow-hidden text-left space-y-4">
-            <div className="flex items-center justify-between text-xs font-black">
-              <span className="text-white tracking-wide">HH GOA 2026</span>
-              <span className="px-3 py-1 rounded-full bg-orange-500 text-white text-[10px] uppercase tracking-widest font-black shadow-sm">
+          <div className="editorial-card p-6 sm:p-8 relative overflow-hidden text-left space-y-4">
+            <div className="flex items-center justify-between text-xs font-bold border-b-2 border-[#0A4C2B] pb-3">
+              <span className="font-editorial-serif text-xl text-[#0A4C2B]">HH GOA 2026</span>
+              <span className="px-3 py-1 rounded-full bg-[#FF007A] text-white text-[10px] uppercase font-display tracking-widest shadow-[2px_2px_0px_#0A4C2B]">
                 BUILDER PASS
               </span>
             </div>
 
             <div className="flex items-center gap-4 py-2">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center font-black text-2xl text-white shadow-xl">
+              <div className="w-20 h-20 rounded-2xl bg-[#0E6B3A] border-2 border-[#0A4C2B] flex items-center justify-center font-editorial-serif font-bold text-2xl text-[#FFD400] shadow-[3px_3px_0px_#0A4C2B]">
                 AR
               </div>
               <div>
-                <span className="px-2.5 py-0.5 rounded text-[10px] font-black bg-orange-500/20 text-orange-400 border border-orange-500/30 uppercase tracking-wider">
+                <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#FFD400] text-[#0A4C2B] border border-[#0A4C2B] uppercase">
                   The AI Architect
                 </span>
-                <h3 className="text-xl font-black text-white mt-1">Alex Rivera</h3>
-                <p className="text-xs font-bold text-orange-400">Full Stack Engineer</p>
-                <p className="text-xs text-slate-400">2:47 PM Studio • Goa, India</p>
+                <h3 className="font-editorial-serif font-bold text-2xl text-[#0A4C2B] mt-1 uppercase">Alex Rivera</h3>
+                <p className="text-xs font-bold text-[#FF007A]">Full Stack Engineer</p>
+                <p className="text-xs text-[#0E6B3A]">2:47 PM Studio • Goa, India</p>
               </div>
             </div>
 
-            <div className="border-t border-dashed border-slate-800 pt-4 flex items-center justify-between text-xs text-slate-400 font-bold">
+            <div className="border-t-2 border-dashed border-[#0A4C2B] pt-4 flex items-center justify-between text-xs text-[#0A4C2B] font-bold">
               <span>28 – 31 OCT 2026 • #FrameInGoa</span>
-              <QrCode className="w-6 h-6 text-slate-300" />
+              <QrCode className="w-6 h-6 text-[#0A4C2B]" />
             </div>
           </div>
 
           {/* Frame Example */}
-          <div className="rounded-3xl bg-[#090c15] border border-white/10 p-6 sm:p-8 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center text-center space-y-5">
-            <div className="w-40 h-40 rounded-full border-4 border-orange-500 p-1 relative flex items-center justify-center bg-slate-950 shadow-[0_0_25px_rgba(255,85,0,0.35)]">
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 flex items-center justify-center text-white font-black text-3xl">
+          <div className="editorial-card p-6 sm:p-8 relative overflow-hidden flex flex-col items-center justify-center text-center space-y-5">
+            <div className="w-40 h-40 rounded-full border-4 border-[#0A4C2B] p-1 relative flex items-center justify-center bg-[#0E6B3A] shadow-[4px_4px_0px_#0A4C2B]">
+              <div className="w-full h-full rounded-full bg-[#FFD400] text-[#0A4C2B] flex items-center justify-center font-editorial-serif font-bold text-3xl">
                 SK
               </div>
-              <div className="absolute -top-3 px-3.5 py-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-[10px] tracking-widest shadow-md">
+              <div className="absolute -top-3 px-3.5 py-1 rounded-full bg-[#FF007A] text-white font-display font-bold text-xs tracking-widest shadow-[2px_2px_0px_#0A4C2B]">
                 HH GOA 2026
               </div>
             </div>
 
-            <div className="w-full bg-[#0e131f] border border-orange-500/30 rounded-2xl p-4">
-              <p className="font-black text-base text-white">Siddharth K.</p>
-              <p className="text-xs font-bold text-orange-400 mt-0.5">Prompt Engineer • #FrameInGoa</p>
+            <div className="w-full bg-[#F7F1DF] border-2 border-[#0A4C2B] rounded-2xl p-4 shadow-[3px_3px_0px_#0A4C2B]">
+              <p className="font-editorial-serif font-bold text-xl text-[#0A4C2B] uppercase">Siddharth K.</p>
+              <p className="text-xs font-bold text-[#FF007A] mt-0.5">Prompt Engineer • #FrameInGoa</p>
             </div>
           </div>
         </div>

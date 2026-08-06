@@ -13,10 +13,10 @@ export interface BuilderInfo {
 }
 
 export type ThemeId =
-  | 'hhgoa-vibrant'
-  | 'neon-green'
+  | 'hhgoa-editorial'
+  | 'goa-festival'
+  | 'palm-green'
   | 'cyber-pink'
-  | 'electric-yellow'
   | 'goa-sunset'
   | 'deep-navy'
   | 'cyber-neon'

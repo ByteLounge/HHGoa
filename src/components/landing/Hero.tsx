@@ -5,59 +5,56 @@ import { Sparkles, ArrowDown, Zap, Award, Terminal } from 'lucide-react';
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden pt-10 pb-16 sm:pt-16 sm:pb-24 border-b border-slate-200/80 dark:border-white/10">
-      {/* Ambient Lighting Gradients (HH Goa Neon Lights: Green, Yellow, Pink) */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[350px] bg-[#00FF66]/15 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-10 right-1/4 w-[450px] h-[350px] bg-[#FF007A]/15 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-[#FFE600]/10 rounded-full blur-[120px] pointer-events-none" />
+    <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-32 border-b-2 border-[#1E5A3B] bg-[#0E6B3A]">
+      {/* Decorative Dots Backdrop */}
+      <div className="absolute inset-0 bg-editorial-dots opacity-40 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        {/* Top Announcement Pill Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00FF66]/10 dark:bg-[#00FF66]/15 border border-[#00FF66]/30 text-[#00FF66] text-[11px] sm:text-xs font-black uppercase tracking-widest mb-8 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-pulse" />
+        {/* Top Announcement Pill */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFD400]/20 border-2 border-[#FFD400] text-[#FFD400] text-xs font-editorial-mono font-bold uppercase tracking-widest mb-10 shadow-[3px_3px_0px_#0A4C2B]">
+          <span className="w-2 h-2 rounded-full bg-[#FFD400] animate-ping" />
           GOA, INDIA &nbsp;·&nbsp; 28 – 31 OCT 2026 &nbsp;·&nbsp; 2:47 PM STUDIO
         </div>
 
-        {/* Main Hero Headline with Green, Yellow, Pink Neon Gradient */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white max-w-5xl mx-auto leading-[1.08]">
-          Less Noise. More Signal.{' '}
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#00FF66] via-[#FFE600] to-[#FF007A] mt-2">
-            Frame Your Identity for HH Goa.
-          </span>
+        {/* Oversized Editorial Serif Heading */}
+        <h1 className="font-editorial-serif font-bold tracking-tight text-[#F7F1DF] text-6xl sm:text-8xl lg:text-9xl uppercase leading-[0.9] max-w-5xl mx-auto text-center">
+          <span className="block text-[#FFD400]">FRAME</span>
+          <span className="block text-[#F7F1DF]">YOUR</span>
+          <span className="block text-[#FF007A]">IDENTITY</span>
         </h1>
 
         {/* Hero Subtitle */}
-        <p className="mt-6 text-base sm:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
-          The official identity studio for India&apos;s premier builder residency. Generate crisp, server-rendered profile frames and attendee passes in seconds.
+        <p className="mt-8 text-lg sm:text-2xl text-[#F7F1DF]/90 max-w-3xl mx-auto font-editorial-mono font-normal leading-relaxed">
+          Official Builder Pass &amp; Profile Overlay Studio for HH Goa 2026. Editorial print typography, server-composited 4K PNG downloads.
         </p>
 
-        {/* Hero Quick Stats / Badges with Neon Colors */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-bold">
-          <div className="flex items-center gap-2 bg-slate-100 dark:bg-white/5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#00FF66]/30 backdrop-blur-md shadow-sm">
-            <Zap className="w-4 h-4 text-[#00FF66]" /> Instant Sharp 4K Render
+        {/* Hero Quick Specs */}
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[#0A4C2B] font-editorial-mono text-xs sm:text-sm font-bold">
+          <div className="flex items-center gap-2 bg-[#F7F1DF] px-4 py-2.5 rounded-full border-2 border-[#0A4C2B] shadow-[3px_3px_0px_#0A4C2B]">
+            <Zap className="w-4 h-4 text-[#FF007A]" /> 4K Sharp Server PNG
           </div>
-          <div className="flex items-center gap-2 bg-slate-100 dark:bg-white/5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#FFE600]/30 backdrop-blur-md shadow-sm">
-            <Award className="w-4 h-4 text-[#FFE600]" /> AI Title Engine
+          <div className="flex items-center gap-2 bg-[#F7F1DF] px-4 py-2.5 rounded-full border-2 border-[#0A4C2B] shadow-[3px_3px_0px_#0A4C2B]">
+            <Award className="w-4 h-4 text-[#0E6B3A]" /> AI Title Shuffler
           </div>
-          <div className="flex items-center gap-2 bg-slate-100 dark:bg-white/5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#FF007A]/30 backdrop-blur-md shadow-sm">
-            <Terminal className="w-4 h-4 text-[#FF007A]" /> #FrameInGoa Ready
+          <div className="flex items-center gap-2 bg-[#F7F1DF] px-4 py-2.5 rounded-full border-2 border-[#0A4C2B] shadow-[3px_3px_0px_#0A4C2B]">
+            <Terminal className="w-4 h-4 text-[#FF007A]" /> #FrameInGoa Badge
           </div>
         </div>
 
         {/* CTA Buttons */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
             href="#generator"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#00FF66] via-[#FFE600] to-[#FF007A] hover:opacity-95 text-black font-black px-8 py-4 text-base rounded-2xl shadow-xl shadow-[#00FF66]/20 transition-all hover:scale-[1.03] active:scale-95 border border-[#00FF66]/30 min-h-[52px]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 btn-editorial-pink px-9 py-4 text-base sm:text-lg rounded-full min-h-[54px] cursor-pointer"
           >
-            <Sparkles className="w-5 h-5 text-black" /> Launch Generator Studio <ArrowDown className="w-4 h-4 animate-bounce text-black" />
+            <Sparkles className="w-5 h-5 text-white" /> Launch Generator Studio <ArrowDown className="w-4 h-4 animate-bounce text-white" />
           </a>
 
           <a
             href="#features"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 font-extrabold px-6 py-4 text-base rounded-2xl border border-slate-200 dark:border-white/10 transition-all min-h-[52px]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 btn-editorial-cream px-8 py-4 text-base sm:text-lg rounded-full min-h-[54px] cursor-pointer"
           >
-            Explore Specs
+            Read Specifications
           </a>
         </div>
       </div>

@@ -109,16 +109,17 @@ export function ImageUploader({ onImageSelected, currentImageName }: ImageUpload
   }, [processFile]);
 
   return (
-    <div className="w-full space-y-3">
+    <div className="w-full space-y-3 font-editorial-mono">
+      {/* Large Cream Upload Panel */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`relative cursor-pointer border-2 border-dashed rounded-3xl p-6 sm:p-8 text-center transition-all duration-200 ${
+        className={`relative cursor-pointer border-3 border-dashed rounded-3xl p-6 sm:p-10 text-center transition-all duration-200 bg-[#F7F1DF] text-[#0A4C2B] shadow-[6px_6px_0px_#0A4C2B] ${
           isDragging
-            ? 'border-orange-500 bg-orange-500/10 scale-[1.01] shadow-xl shadow-orange-500/10'
-            : 'border-slate-300 dark:border-white/15 bg-slate-50/50 dark:bg-white/[0.02] hover:border-orange-500/60 dark:hover:border-orange-500/60 hover:bg-orange-500/[0.02]'
+            ? 'border-[#FF007A] bg-[#FFFBEB] scale-[1.01] shadow-[8px_8px_0px_#0A4C2B]'
+            : 'border-[#FF007A] hover:border-[#0E6B3A] hover:bg-[#FFFDF5]'
         }`}
       >
         <input
@@ -131,54 +132,56 @@ export function ImageUploader({ onImageSelected, currentImageName }: ImageUpload
 
         {isConvertingHeic ? (
           <div className="flex flex-col items-center justify-center py-6 space-y-3">
-            <RefreshCw className="w-10 h-10 text-orange-500 animate-spin" />
-            <p className="font-extrabold text-slate-900 dark:text-white text-sm">
-              Converting iPhone HEIC to high-res PNG...
+            <RefreshCw className="w-10 h-10 text-[#FF007A] animate-spin" />
+            <p className="font-bold text-[#0A4C2B] text-sm">
+              Converting iPhone HEIC photo...
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Preserving original photo clarity automatically</p>
+            <p className="text-xs text-[#0E6B3A]">Optimizing image clarity automatically</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500/15 to-amber-500/15 dark:from-orange-500/25 dark:to-amber-500/25 text-orange-500 flex items-center justify-center shadow-inner border border-orange-500/20">
-              <Upload className="w-7 h-7" />
+          <div className="flex flex-col items-center justify-center space-y-4">
+            {/* Yellow Upload Icon */}
+            <div className="w-16 h-16 rounded-2xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center shadow-[3px_3px_0px_#0A4C2B]">
+              <Upload className="w-8 h-8 text-[#0A4C2B]" />
             </div>
+
             <div>
-              <p className="font-black text-slate-900 dark:text-white text-base sm:text-lg">
-                {currentImageName ? 'Choose Different Photo' : 'Upload Your Builder Photo'}
+              <p className="font-editorial-serif font-bold text-2xl text-[#0A4C2B]">
+                {currentImageName ? 'REPLACE BUILDER PHOTO' : 'UPLOAD YOUR PHOTO'}
               </p>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-                Drag &amp; drop, paste from clipboard, or browse gallery
+              <p className="text-xs sm:text-sm text-[#0E6B3A] mt-1 font-medium">
+                Drag &amp; drop, paste from clipboard, or tap to choose photo
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              <span className="px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-white/10 text-slate-700 dark:text-slate-300">
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-[11px] font-bold text-[#0A4C2B] uppercase tracking-wider">
+              <span className="px-2.5 py-1 rounded-md bg-[#FFD400] border border-[#0A4C2B]">
                 JPG
               </span>
-              <span className="px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-white/10 text-slate-700 dark:text-slate-300">
+              <span className="px-2.5 py-1 rounded-md bg-[#FFD400] border border-[#0A4C2B]">
                 PNG
               </span>
-              <span className="px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-white/10 text-slate-700 dark:text-slate-300">
+              <span className="px-2.5 py-1 rounded-md bg-[#FFD400] border border-[#0A4C2B]">
                 WEBP
               </span>
-              <span className="px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-white/10 text-slate-700 dark:text-slate-300">
+              <span className="px-2.5 py-1 rounded-md bg-[#FFD400] border border-[#0A4C2B]">
                 HEIC
               </span>
-              <span className="ml-1 text-slate-400">• Up to 15MB</span>
+              <span className="text-[#0E6B3A]">• Max 15MB</span>
             </div>
           </div>
         )}
       </div>
 
       {currentImageName && !error && !isConvertingHeic && (
-        <div className="flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2.5 rounded-2xl">
-          <div className="flex items-center gap-2 truncate">
-            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
-            <span className="truncate font-bold">Photo Loaded: {currentImageName}</span>
+        <div className="flex items-center justify-between text-xs text-[#0A4C2B] bg-[#FFD400] border-2 border-[#0A4C2B] px-4 py-3 rounded-2xl shadow-[3px_3px_0px_#0A4C2B]">
+          <div className="flex items-center gap-2 truncate font-bold">
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-[#FF007A]" />
+            <span className="truncate">Loaded: {currentImageName}</span>
           </div>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="text-xs font-black underline hover:text-emerald-500 shrink-0 ml-2 cursor-pointer"
+            className="text-xs font-black underline hover:text-[#FF007A] shrink-0 ml-2 cursor-pointer uppercase tracking-wider"
           >
             Change
           </button>
@@ -186,9 +189,9 @@ export function ImageUploader({ onImageSelected, currentImageName }: ImageUpload
       )}
 
       {error && (
-        <div className="flex items-center gap-2 text-xs text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/20 p-3.5 rounded-2xl">
-          <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
-          <span className="font-semibold">{error}</span>
+        <div className="flex items-center gap-2 text-xs text-white bg-[#FF007A] border-2 border-[#0A4C2B] p-3.5 rounded-2xl shadow-[3px_3px_0px_#0A4C2B]">
+          <AlertCircle className="w-4 h-4 shrink-0 text-white" />
+          <span className="font-bold">{error}</span>
         </div>
       )}
     </div>

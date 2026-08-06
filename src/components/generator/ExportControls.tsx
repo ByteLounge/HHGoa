@@ -26,12 +26,12 @@ export function ExportControls({
 
   const handleDownload = async () => {
     await onGenerateAndDownload();
-    // Fire celebratory confetti with neon green, yellow, pink colors!
+    // Fire celebratory confetti with HH Goa green, yellow, pink colors!
     confetti({
       particleCount: 90,
       spread: 80,
       origin: { y: 0.6 },
-      colors: ['#00FF66', '#FFE600', '#FF007A', '#FFFFFF'],
+      colors: ['#0E6B3A', '#FFD400', '#FF007A', '#F7F1DF'],
     });
   };
 
@@ -57,24 +57,24 @@ export function ExportControls({
   };
 
   return (
-    <div className="space-y-4 bg-slate-50/80 dark:bg-white/[0.02] p-5 rounded-2xl border border-slate-200 dark:border-white/10">
+    <div className="space-y-4 bg-[#F7F1DF] text-[#0A4C2B] p-6 rounded-3xl border-2 border-[#1E5A3B] shadow-[6px_6px_0px_#0A4C2B] font-editorial-mono">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-          <Layers className="w-4 h-4 text-[#00FF66]" /> Export &amp; Resolution Settings
+        <h4 className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-[#0A4C2B]">
+          <Layers className="w-4 h-4 text-[#FF007A]" /> Output &amp; Export Resolution
         </h4>
       </div>
 
-      {/* Resolution Selector */}
+      {/* Resolution Selector Buttons */}
       <div className="grid grid-cols-2 gap-2 text-xs font-bold">
         {(['1080x1080', '2048x2048'] as ExportResolution[]).map((res) => (
           <button
             key={res}
             type="button"
             onClick={() => onChangeOptions({ ...exportOptions, resolution: res })}
-            className={`py-2.5 px-3 rounded-xl border transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
+            className={`py-2.5 px-3 rounded-xl border-2 transition-all cursor-pointer min-h-[44px] flex items-center justify-center font-editorial-display uppercase tracking-wider ${
               exportOptions.resolution === res
-                ? 'bg-[#00FF66] text-black border-[#00FF66] font-black shadow-md shadow-[#00FF66]/20'
-                : 'bg-white dark:bg-[#030406] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-[#00FF66]/40'
+                ? 'bg-[#FFD400] text-[#0A4C2B] border-[#0A4C2B] shadow-[3px_3px_0px_#0A4C2B]'
+                : 'bg-[#F7F1DF] text-[#0A4C2B] border-[#1E5A3B] hover:border-[#FF007A]'
             }`}
           >
             {res === '1080x1080' ? '1080p Standard' : '2048p Ultra HD (4K)'}
@@ -82,62 +82,62 @@ export function ExportControls({
         ))}
       </div>
 
-      {/* Transparent BG option for Frame format */}
+      {/* Transparent BG Option for Frame */}
       {exportOptions.graphicType === 'frame' && (
-        <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 dark:text-slate-300 pt-1">
+        <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#0A4C2B] pt-1">
           <input
             type="checkbox"
             checked={exportOptions.transparentBg}
             onChange={(e) =>
               onChangeOptions({ ...exportOptions, transparentBg: e.target.checked })
             }
-            className="rounded text-[#00FF66] focus:ring-[#00FF66] accent-[#00FF66] w-4 h-4 cursor-pointer"
+            className="rounded text-[#FF007A] focus:ring-[#FF007A] accent-[#FF007A] w-4 h-4 cursor-pointer"
           />
           Transparent background overlay (PNG)
         </label>
       )}
 
-      {/* Download Action Button with Green, Yellow, Pink Gradient */}
+      {/* Primary Hot Pink Download Button */}
       <button
         type="button"
         disabled={isGenerating}
         onClick={handleDownload}
-        className="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-xl font-black text-sm text-black bg-gradient-to-r from-[#00FF66] via-[#FFE600] to-[#FF007A] hover:opacity-95 shadow-xl shadow-[#00FF66]/20 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed border border-[#00FF66]/30 min-h-[48px] cursor-pointer"
+        className="w-full flex items-center justify-center gap-2.5 py-4 px-6 btn-editorial-pink rounded-full text-base min-h-[50px] cursor-pointer"
       >
         {isGenerating ? (
           <>
-            <RefreshCw className="w-5 h-5 animate-spin text-black" /> Rendering Sharp 4K PNG...
+            <RefreshCw className="w-5 h-5 animate-spin text-white" /> Rendering Sharp 4K PNG...
           </>
         ) : (
           <>
-            <Download className="w-5 h-5 text-black" /> Download Official PNG Graphics
+            <Download className="w-5 h-5 text-white" /> Download Official Graphic PNG
           </>
         )}
       </button>
 
-      {/* Sharing & QR Options */}
+      {/* Secondary CTAs */}
       <div className="flex flex-wrap items-center gap-2 pt-1">
         <button
           type="button"
           onClick={handleShareToX}
-          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-black bg-slate-900 dark:bg-white/10 hover:bg-slate-800 dark:hover:bg-white/15 text-white border border-slate-800 dark:border-white/10 transition-all min-h-[44px] cursor-pointer"
+          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 btn-editorial-cream rounded-full text-xs min-h-[44px] cursor-pointer"
         >
-          <Share2 className="w-4 h-4 text-[#FFE600]" /> Share to X
+          <Share2 className="w-4 h-4 text-[#FF007A]" /> Share to X
         </button>
 
         {generatedShareUrl && (
           <button
             type="button"
             onClick={handleCopyLink}
-            className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl text-xs font-extrabold bg-slate-200 dark:bg-white/10 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-white/15 transition-all min-h-[44px] cursor-pointer"
+            className="flex items-center justify-center gap-1.5 py-3 px-4 btn-editorial-cream rounded-full text-xs min-h-[44px] cursor-pointer"
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4 text-[#00FF66]" /> Copied Link!
+                <Check className="w-4 h-4 text-[#0E6B3A]" /> Copied Link!
               </>
             ) : (
               <>
-                <Copy className="w-4 h-4" /> Copy Link
+                <Copy className="w-4 h-4 text-[#0A4C2B]" /> Copy Link
               </>
             )}
           </button>
@@ -146,10 +146,10 @@ export function ExportControls({
         <button
           type="button"
           onClick={onShowQrModal}
-          className="p-3 rounded-xl bg-slate-200 dark:bg-white/10 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-white/15 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer"
+          className="p-3 rounded-full bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] shadow-[2px_2px_0px_#0A4C2B] hover:translate-x-0.5 hover:translate-y-0.5 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer"
           title="Show Shareable QR Code"
         >
-          <QrCode className="w-4 h-4" />
+          <QrCode className="w-4 h-4 text-[#0A4C2B]" />
         </button>
       </div>
     </div>
