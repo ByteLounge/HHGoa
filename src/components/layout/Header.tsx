@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Sparkles, ShieldCheck, Menu, X, ArrowRight } from 'lucide-react';
+import { Sparkles, ShieldCheck, Menu, X, ArrowRight, ExternalLink } from 'lucide-react';
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -67,6 +67,14 @@ export function Header() {
 
         {/* Right Desktop Action Controls */}
         <div className="hidden sm:flex items-center gap-3">
+          <a
+            href="https://hhgoa.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-editorial-cream px-4 py-2.5 text-xs sm:text-sm rounded-full flex items-center gap-1.5 cursor-pointer font-bold shadow-[2px_2px_0px_#0A4C2B] hover:translate-x-0.5 transition-all"
+          >
+            Official Site <ExternalLink className="w-3.5 h-3.5 text-[#FF007A]" />
+          </a>
           <a
             href="#generator"
             className="btn-editorial-yellow px-5 py-2.5 text-xs sm:text-sm rounded-full flex items-center gap-2 cursor-pointer"

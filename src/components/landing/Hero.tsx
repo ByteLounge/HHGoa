@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, ArrowDown, Zap, Award, Terminal } from 'lucide-react';
+import { Sparkles, ArrowDown, Zap, Award, Terminal, ExternalLink } from 'lucide-react';
 
 export function Hero() {
   return (
@@ -51,10 +51,12 @@ export function Hero() {
           </a>
 
           <a
-            href="#features"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 btn-editorial-cream px-8 py-4 text-base sm:text-lg rounded-full min-h-[54px] cursor-pointer"
+            href="https://hhgoa.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 btn-editorial-yellow px-8 py-4 text-base sm:text-lg rounded-full min-h-[54px] cursor-pointer font-bold text-[#0A4C2B]"
           >
-            Read Specifications
+            Visit Official Website <ExternalLink className="w-5 h-5 text-[#0A4C2B]" />
           </a>
         </div>
       </div>
