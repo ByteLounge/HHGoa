@@ -34,7 +34,7 @@ export default function HomePage() {
   const [userFile, setUserFile] = useState<File | null>(null);
   const [builderInfo, setBuilderInfo] = useState<BuilderInfo>(DEFAULT_BUILDER_INFO);
   const [graphicType, setGraphicType] = useState<GraphicType>('card');
-  const [themeId, setThemeId] = useState<ThemeId>('goa-sunset');
+  const [themeId, setThemeId] = useState<ThemeId>('hhgoa-vibrant');
   const [cropConfig, setCropConfig] = useState<ImageCropConfig>({
     zoom: 1,
     offsetX: 0,
@@ -44,7 +44,7 @@ export default function HomePage() {
   const [exportOptions, setExportOptions] = useState<ExportOptions>({
     resolution: '1080x1080',
     transparentBg: false,
-    themeId: 'goa-sunset',
+    themeId: 'hhgoa-vibrant',
     graphicType: 'card',
   });
 

@@ -26,12 +26,12 @@ export function ExportControls({
 
   const handleDownload = async () => {
     await onGenerateAndDownload();
-    // Fire celebratory confetti on download!
+    // Fire celebratory confetti with neon green, yellow, pink colors!
     confetti({
-      particleCount: 85,
-      spread: 75,
+      particleCount: 90,
+      spread: 80,
       origin: { y: 0.6 },
-      colors: ['#FF5500', '#FFB800', '#06B6D4', '#FFFFFF'],
+      colors: ['#00FF66', '#FFE600', '#FF007A', '#FFFFFF'],
     });
   };
 
@@ -60,7 +60,7 @@ export function ExportControls({
     <div className="space-y-4 bg-slate-50/80 dark:bg-white/[0.02] p-5 rounded-2xl border border-slate-200 dark:border-white/10">
       <div className="flex items-center justify-between">
         <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-          <Layers className="w-4 h-4 text-orange-500" /> Export &amp; Resolution Settings
+          <Layers className="w-4 h-4 text-[#00FF66]" /> Export &amp; Resolution Settings
         </h4>
       </div>
 
@@ -73,8 +73,8 @@ export function ExportControls({
             onClick={() => onChangeOptions({ ...exportOptions, resolution: res })}
             className={`py-2.5 px-3 rounded-xl border transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
               exportOptions.resolution === res
-                ? 'bg-orange-500 text-white border-orange-500 shadow-md shadow-orange-500/20'
-                : 'bg-white dark:bg-[#06080d] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-orange-500/40'
+                ? 'bg-[#00FF66] text-black border-[#00FF66] font-black shadow-md shadow-[#00FF66]/20'
+                : 'bg-white dark:bg-[#030406] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-[#00FF66]/40'
             }`}
           >
             {res === '1080x1080' ? '1080p Standard' : '2048p Ultra HD (4K)'}
@@ -91,26 +91,26 @@ export function ExportControls({
             onChange={(e) =>
               onChangeOptions({ ...exportOptions, transparentBg: e.target.checked })
             }
-            className="rounded text-orange-500 focus:ring-orange-500 accent-orange-500 w-4 h-4 cursor-pointer"
+            className="rounded text-[#00FF66] focus:ring-[#00FF66] accent-[#00FF66] w-4 h-4 cursor-pointer"
           />
           Transparent background overlay (PNG)
         </label>
       )}
 
-      {/* Download Action Button */}
+      {/* Download Action Button with Green, Yellow, Pink Gradient */}
       <button
         type="button"
         disabled={isGenerating}
         onClick={handleDownload}
-        className="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-xl font-black text-sm text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-xl shadow-orange-500/25 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed border border-orange-400/20 min-h-[48px] cursor-pointer"
+        className="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-xl font-black text-sm text-black bg-gradient-to-r from-[#00FF66] via-[#FFE600] to-[#FF007A] hover:opacity-95 shadow-xl shadow-[#00FF66]/20 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed border border-[#00FF66]/30 min-h-[48px] cursor-pointer"
       >
         {isGenerating ? (
           <>
-            <RefreshCw className="w-5 h-5 animate-spin text-white" /> Rendering Sharp 4K PNG...
+            <RefreshCw className="w-5 h-5 animate-spin text-black" /> Rendering Sharp 4K PNG...
           </>
         ) : (
           <>
-            <Download className="w-5 h-5" /> Download Official PNG Graphics
+            <Download className="w-5 h-5 text-black" /> Download Official PNG Graphics
           </>
         )}
       </button>
@@ -122,7 +122,7 @@ export function ExportControls({
           onClick={handleShareToX}
           className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-black bg-slate-900 dark:bg-white/10 hover:bg-slate-800 dark:hover:bg-white/15 text-white border border-slate-800 dark:border-white/10 transition-all min-h-[44px] cursor-pointer"
         >
-          <Share2 className="w-4 h-4 text-orange-400" /> Share to X
+          <Share2 className="w-4 h-4 text-[#FFE600]" /> Share to X
         </button>
 
         {generatedShareUrl && (
@@ -133,7 +133,7 @@ export function ExportControls({
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4 text-emerald-500" /> Copied Link!
+                <Check className="w-4 h-4 text-[#00FF66]" /> Copied Link!
               </>
             ) : (
               <>

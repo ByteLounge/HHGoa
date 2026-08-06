@@ -10,19 +10,20 @@
 }
 
 .dark {
-  --background: #06080d;
-  --foreground: #f8fafc;
-  --card: #0e131f;
-  --card-border: rgba(255, 255, 255, 0.08);
+  --background: #030406;
+  --foreground: #ffffff;
+  --card: #0a0d14;
+  --card-border: rgba(0, 255, 102, 0.15);
 }
 
 @theme inline {
   --font-sans: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --color-hh-dark: #06080d;
-  --color-hh-card: #0e131f;
+  --color-hh-dark: #030406;
+  --color-hh-card: #0a0d14;
+  --color-hh-green: #00FF66;
+  --color-hh-yellow: #FFE600;
+  --color-hh-pink: #FF007A;
   --color-hh-orange: #FF5500;
-  --color-hh-amber: #FFB800;
-  --color-hh-cyan: #06B6D4;
 }
 
 body {
@@ -38,28 +39,56 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Gradient text utilities for Green, Yellow, Pink */
+.text-gradient-hhgoa {
+  background: linear-gradient(135deg, #00FF66 0%, #FFE600 50%, #FF007A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-green-yellow {
+  background: linear-gradient(135deg, #00FF66 0%, #FFE600 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-pink-yellow {
+  background: linear-gradient(135deg, #FF007A 0%, #FFE600 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Neon buttons */
+.btn-neon-green {
+  background: linear-gradient(135deg, #00FF66 0%, #10B981 100%);
+  color: #000000;
+  font-weight: 900;
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.35);
+}
+
+.btn-neon-pink {
+  background: linear-gradient(135deg, #FF007A 0%, #EC4899 100%);
+  color: #ffffff;
+  font-weight: 900;
+  box-shadow: 0 0 20px rgba(255, 0, 122, 0.35);
+}
+
+.btn-neon-tri {
+  background: linear-gradient(135deg, #00FF66 0%, #FFE600 50%, #FF007A 100%);
+  color: #000000;
+  font-weight: 900;
+  box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
+}
+
 /* Subtle dot background utility */
 .bg-dot-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-image: radial-gradient(rgba(0, 255, 102, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 .bg-dot-pattern-light {
   background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
   background-size: 20px 20px;
-}
-
-/* Glassmorphism helpers */
-.glass-panel {
-  background: rgba(14, 19, 31, 0.75);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-panel-light {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 /* Custom scrollbar styling */
@@ -70,10 +99,9 @@ html {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
+  background: rgba(0, 255, 102, 0.3);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 85, 0, 0.6);
+  background: rgba(255, 0, 122, 0.6);
 }
-

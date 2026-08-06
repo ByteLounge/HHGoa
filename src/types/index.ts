@@ -12,7 +12,15 @@ export interface BuilderInfo {
   customHashtag?: string;
 }
 
-export type ThemeId = 'goa-sunset' | 'deep-navy' | 'cyber-neon' | 'vip-gold';
+export type ThemeId =
+  | 'hhgoa-vibrant'
+  | 'neon-green'
+  | 'cyber-pink'
+  | 'electric-yellow'
+  | 'goa-sunset'
+  | 'deep-navy'
+  | 'cyber-neon'
+  | 'vip-gold';
 
 export interface FrameTheme {
   id: ThemeId;
