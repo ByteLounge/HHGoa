@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['sharp', 'heic-convert'],
+  serverExternalPackages: ['sharp', 'heic-convert', '@resvg/resvg-js'],
   images: {
     remotePatterns: [
       {

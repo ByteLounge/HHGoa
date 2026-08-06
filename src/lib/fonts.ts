@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { Resvg } from '@resvg/resvg-js';
 
 let cachedEmbeddedFontCss: string | null = null;
 
@@ -50,4 +51,51 @@ export function getEmbeddedFontCss(): string {
 
   cachedEmbeddedFontCss = cssRules.join('\n');
   return cachedEmbeddedFontCss;
+}
+
+let cachedFontBuffers: Buffer[] | null = null;
+
+export function getFontBuffers(): Buffer[] {
+  if (cachedFontBuffers) return cachedFontBuffers;
+
+  const fontsDir = path.join(process.cwd(), 'public', 'fonts');
+  const files = [
+    'cormorant-garamond-400.ttf',
+    'cormorant-garamond-600.ttf',
+    'cormorant-garamond-700.ttf',
+    'ibm-plex-mono-400.ttf',
+    'ibm-plex-mono-500.ttf',
+    'ibm-plex-mono-600.ttf',
+    'ibm-plex-mono-700.ttf',
+    'oswald-500.ttf',
+    'oswald-600.ttf',
+    'oswald-700.ttf',
+  ];
+
+  const buffers: Buffer[] = [];
+  for (const file of files) {
+    const filePath = path.join(fontsDir, file);
+    if (fs.existsSync(filePath)) {
+      buffers.push(fs.readFileSync(filePath));
+    }
+  }
+
+  cachedFontBuffers = buffers;
+  return cachedFontBuffers;
+}
+
+export function renderSvgWithResvg(svgString: string, width: number): Buffer {
+  const fontsDir = path.join(process.cwd(), 'public', 'fonts');
+  const resvg = new Resvg(svgString, {
+    font: {
+      fontDirs: [fontsDir],
+      defaultFontFamily: 'IBM Plex Mono',
+    },
+    fitTo: {
+      mode: 'width',
+      value: width,
+    },
+  });
+  const pngData = resvg.render();
+  return Buffer.from(pngData.asPng());
 }

@@ -2,7 +2,7 @@ import sharp, { Sharp } from 'sharp';
 import QRCode from 'qrcode';
 import { BuilderInfo, ExportOptions, ImageCropConfig } from '@/types';
 import { FRAME_THEMES } from './constants';
-import { getEmbeddedFontCss } from './fonts';
+import { getEmbeddedFontCss, renderSvgWithResvg } from './fonts';
 
 export interface ImageProcessingInput {
   userImageBuffer: Buffer;
@@ -224,6 +224,8 @@ async function generateProfileFrameSharp({
     },
   });
 
+  const svgOverlayBuffer = renderSvgWithResvg(svgOverlay, dimension);
+
   return canvas
     .composite([
       {
@@ -232,7 +234,7 @@ async function generateProfileFrameSharp({
         left: Math.round(photoCenterX - photoRadius),
       },
       {
-        input: Buffer.from(svgOverlay),
+        input: svgOverlayBuffer,
         top: 0,
         left: 0,
       },
@@ -400,20 +402,23 @@ async function generateBuilderCardSharp({
     .resize(qrSize, qrSize)
     .toBuffer();
 
+  const cardSvgOverlayBuffer = renderSvgWithResvg(cardSvgOverlay, dimension);
+  const photoBorderFrameBuffer = renderSvgWithResvg(photoBorderFrameSvg, dimension);
+
   return canvas
     .composite([
       {
-        input: Buffer.from(cardSvgOverlay),
+        input: cardSvgOverlayBuffer,
         top: 0,
         left: 0,
       },
       {
         input: roundedPhoto,
-        top: photoLeft ? photoTop : photoTop,
+        top: photoTop,
         left: photoLeft,
       },
       {
-        input: Buffer.from(photoBorderFrameSvg),
+        input: photoBorderFrameBuffer,
         top: 0,
         left: 0,
       },
