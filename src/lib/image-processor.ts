@@ -60,7 +60,6 @@ export async function generateHighResGraphic({
       userSharp,
       cropConfig,
       builderInfo,
-      theme,
       dimension,
       transparentBg: exportOptions.transparentBg,
     });
@@ -123,14 +122,12 @@ async function generateProfileFrameSharp({
   userSharp,
   cropConfig,
   builderInfo,
-  theme,
   dimension,
   transparentBg,
 }: {
   userSharp: Sharp;
   cropConfig: ImageCropConfig;
   builderInfo: BuilderInfo;
-  theme: typeof FRAME_THEMES['hhgoa-editorial'];
   dimension: number;
   transparentBg: boolean;
 }): Promise<Buffer> {

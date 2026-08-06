@@ -3,19 +3,16 @@
 
 import React from 'react';
 import { BuilderInfo, ImageCropConfig, ThemeId } from '@/types';
-import { FRAME_THEMES } from '@/lib/constants';
 import { QrCode, MapPin, Building, Sparkles } from 'lucide-react';
 
 interface CardPreviewProps {
   userImageUrl: string | null;
   builderInfo: BuilderInfo;
-  themeId: ThemeId;
+  themeId?: ThemeId;
   cropConfig: ImageCropConfig;
 }
 
-export function CardPreview({ userImageUrl, builderInfo, themeId, cropConfig }: CardPreviewProps) {
-  const theme = FRAME_THEMES[themeId] || FRAME_THEMES['hhgoa-editorial'];
-
+export function CardPreview({ userImageUrl, builderInfo, cropConfig }: CardPreviewProps) {
   return (
     <div className="w-full max-w-sm sm:max-w-md aspect-square mx-auto rounded-3xl p-4 sm:p-6 select-none bg-[#F7F1DF] text-[#0A4C2B] border-2 border-[#1E5A3B] shadow-[8px_8px_0px_#0A4C2B] relative flex flex-col justify-between overflow-hidden">
       {/* Editorial Decorative Stamp Header */}
