@@ -8,7 +8,7 @@ import { Download, Share2, Copy, Check, QrCode, RefreshCw, Layers } from 'lucide
 interface ExportControlsProps {
   exportOptions: ExportOptions;
   onChangeOptions: (options: ExportOptions) => void;
-  onGenerateAndDownload: () => Promise<void>;
+  onGenerateAndDownload: () => Promise<string | null>;
   isGenerating: boolean;
   generatedShareUrl?: string | null;
   onShowQrModal: () => void;
@@ -35,23 +35,33 @@ export function ExportControls({
     });
   };
 
-  const handleCopyLink = () => {
-    if (generatedShareUrl) {
-      navigator.clipboard.writeText(generatedShareUrl);
+  const handleCopyLink = async () => {
+    let url = generatedShareUrl;
+    if (!url) {
+      url = await onGenerateAndDownload();
+    }
+    if (url) {
+      navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     }
   };
 
-  const handleShareToX = () => {
+  const handleShareToX = async () => {
+    let url = generatedShareUrl;
+    // If share URL doesn't match current graphicType, generate a fresh unique record
+    if (!url || !url.includes(`/${exportOptions.graphicType}/`)) {
+      url = await onGenerateAndDownload();
+    }
+
+    const targetUrl = url || 'https://hhgoa2026.vercel.app';
     const text = `Ready for HH Goa 2026 🚀\n\nJust created my official ${
       exportOptions.graphicType === 'card' ? 'Builder Pass' : 'Profile Frame'
-    }.\n\n#FrameInGoa`;
+    }.\n\nCheck out my credential:`;
 
-    const url = generatedShareUrl || 'https://hhgoa2026.vercel.app';
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       text
-    )}&url=${encodeURIComponent(url)}`;
+    )}&url=${encodeURIComponent(targetUrl)}`;
 
     window.open(twitterUrl, '_blank', 'noopener,noreferrer');
   };
@@ -120,28 +130,28 @@ export function ExportControls({
         <button
           type="button"
           onClick={handleShareToX}
+          disabled={isGenerating}
           className="flex-1 flex items-center justify-center gap-2 py-3 px-4 btn-editorial-cream rounded-full text-xs min-h-[44px] cursor-pointer"
         >
           <Share2 className="w-4 h-4 text-[#FF007A]" /> Share to X
         </button>
 
-        {generatedShareUrl && (
-          <button
-            type="button"
-            onClick={handleCopyLink}
-            className="flex items-center justify-center gap-1.5 py-3 px-4 btn-editorial-cream rounded-full text-xs min-h-[44px] cursor-pointer"
-          >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4 text-[#0E6B3A]" /> Copied Link!
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4 text-[#0A4C2B]" /> Copy Link
-              </>
-            )}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleCopyLink}
+          disabled={isGenerating}
+          className="flex items-center justify-center gap-1.5 py-3 px-4 btn-editorial-cream rounded-full text-xs min-h-[44px] cursor-pointer"
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4 text-[#0E6B3A]" /> Copied Link!
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4 text-[#0A4C2B]" /> Copy Link
+            </>
+          )}
+        </button>
 
         <button
           type="button"

@@ -53,31 +53,35 @@ export default function HomePage() {
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
-  // Sync graphic type & themeId to exportOptions
+  // Sync graphic type & themeId to exportOptions and reset share URL on tab switch
   const handleGraphicTypeChange = (type: GraphicType) => {
     setGraphicType(type);
     setExportOptions((prev) => ({ ...prev, graphicType: type }));
+    setGeneratedShareUrl(null); // Clear share URL on tab switch so Card and Frame get unique entity URLs
   };
 
   const handleThemeChange = (tid: ThemeId) => {
     setThemeId(tid);
     setExportOptions((prev) => ({ ...prev, themeId: tid }));
+    setGeneratedShareUrl(null);
   };
 
   // Image Upload handler
   const handleImageSelected = (dataUrl: string, file: File) => {
     setUserImageUrl(dataUrl);
     setUserFile(file);
+    setGeneratedShareUrl(null);
   };
 
   // AI Title Shuffle
   const handleShuffleTitle = () => {
     const newTitle = generateBuilderTitle(builderInfo.role);
     setBuilderInfo((prev) => ({ ...prev, builderTitle: newTitle }));
+    setGeneratedShareUrl(null);
   };
 
   // Generate & Download Handler via Sharp backend endpoint
-  const handleGenerateAndDownload = async () => {
+  const handleGenerateAndDownload = async (): Promise<string | null> => {
     setIsGenerating(true);
     try {
       let fileToUpload = userFile;
@@ -153,10 +157,14 @@ export default function HomePage() {
         } catch (err: unknown) {
           console.warn('Could not save to localStorage:', err);
         }
+
+        return data.shareUrl;
       }
+      return null;
     } catch (err: unknown) {
       console.error('Error generating asset:', err);
       alert('Error generating pass. Please try again.');
+      return null;
     } finally {
       setIsGenerating(false);
     }
@@ -242,7 +250,10 @@ export default function HomePage() {
               {/* Form Input Fields */}
               <FormControls
                 builderInfo={builderInfo}
-                onChange={setBuilderInfo}
+                onChange={(info) => {
+                  setBuilderInfo(info);
+                  setGeneratedShareUrl(null);
+                }}
                 onGenerateAiTitle={handleShuffleTitle}
               />
             </div>
@@ -305,7 +316,10 @@ export default function HomePage() {
           isOpen={isPhotoModalOpen}
           onClose={() => setIsPhotoModalOpen(false)}
           cropConfig={cropConfig}
-          onChange={setCropConfig}
+          onChange={(cfg) => {
+            setCropConfig(cfg);
+            setGeneratedShareUrl(null);
+          }}
           imageUrl={userImageUrl}
         />
       )}
