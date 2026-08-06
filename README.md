@@ -1,121 +1,106 @@
-# HH Goa 2026 — Official Frame & Builder Pass Generator
+# Hacker House Goa 2026 — Profile Frame & Builder Pass Studio 🚀
 
-A **production-ready**, **pixel-perfect**, **mobile-first** web application built for the **HH Goa 2026 Conference & Hackathon**. 
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Storage-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![Vitest](https://img.shields.io/badge/Tested_with-Vitest-6E9F18?style=flat-square&logo=vitest)](https://vitest.dev/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-Attendees and builders can upload their photo, customize their conference details, and generate high-resolution branded **Profile Picture Overlays** and **Builder Passes** in seconds.
-
----
-
-## 🌟 Key Features
-
-- **Dual Graphic Formats**:
-  - **Profile Picture Frame**: Circular photo crop wrapped in official event branding and customizable themes.
-  - **Builder Pass**: Apple Event & Google I/O inspired attendee badge featuring custom QR verification code, company/college details, and custom event hashtags.
-- **Sharp Server Rendering**:
-  - High-performance server-side image processing using **Sharp**.
-  - Output options in **1080p Standard** and **2048p (4K Ultra HD)** lossless PNG.
-  - Transparent background overlay toggle for profile picture frames.
-- **HEIC & HEIF Automatic Conversion**:
-  - Direct client/server support for iPhone HEIC photos using Sharp and `heic-convert` fallback.
-- **AI Builder Title Generator**:
-  - Witty, role-matched builder titles like *"The AI Architect"*, *"Frontend Wizard"*, *"Cloud Explorer"*, *"Shipping Machine"*, and *"Bug Hunter"*.
-  - Interactive "Shuffle AI Title" button and quick suggestion pills.
-- **Fine-Tuning Photo Framing**:
-  - Interactive modal with zoom slider, 90° rotation, and horizontal/vertical pan controls for off-center selfies.
-- **Dynamic Open Graph & Social Sharing**:
-  - Dynamic shareable URLs (`/card/[id]` and `/frame/[id]`).
-  - Next.js dynamic OpenGraph image API (`/api/og`) rendering live social media card previews when shared on X/Twitter, LinkedIn, or Slack.
-- **Mobile-First & Accessible**:
-  - Responsive design tested from 320px mobile screens up to 4K displays.
-  - Dark Mode and Light Mode with system preference detection and persistence (`next-themes`).
-- **Client-Side History & QR Code**:
-  - Recent creations saved locally in `localStorage` for easy re-downloading.
-  - Scan-to-verify QR code modal for mobile pass verification.
+An official identity credential generator studio for **Hacker House Goa 2026** (28 – 31 Oct 2026, Goa, India). Built with Next.js 15 App Router, Sharp, `@resvg/resvg-js` vector SVG compositing, and Supabase Storage.
 
 ---
 
-## 🛠 Tech Stack
+## ✨ Features
 
-- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/) & [React 19](https://react.dev/)
-- **Language**: TypeScript
-- **Styling**: [TailwindCSS v4](https://tailwindcss.com/)
-- **Image Processing Engine**: [Sharp](https://sharp.pixelplumbing.com/) & `heic-convert`
-- **Animation & Confetti**: [Framer Motion](https://www.framer.com/motion/) & `canvas-confetti`
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Validation**: [Zod](https://zod.dev/)
-- **QR Code**: `qrcode`
-- **Testing**: [Vitest](https://vitest.dev/)
+- **🎨 Dual Graphic Formats**:
+  - **Profile Frame**: Circular avatar overlay with festival branding, custom title badge, hashtag, and location details.
+  - **Builder Pass**: Printed conference pass credential with QR code, organization, role, and custom title stamp.
 
----
+- **🔤 Pixel-Perfect Vector Text Rendering**:
+  - Server-side text rendering powered by `@resvg/resvg-js` (Rust SVG engine) and self-hosted fonts (`Cormorant Garamond`, `IBM Plex Mono`, and `Oswald`).
+  - Eliminates missing font glyphs / square blocks (`□`) across all exported PNG images.
 
-## 📁 Folder Structure
+- **📱 iPhone HEIC Photo Support**:
+  - On-the-fly client/server conversion for native Apple `.heic` and `.heif` camera photos.
 
-```
-src/
-├── app/
-│   ├── api/
-│   │   ├── generate/route.ts   # Sharp server-side image composite generator
-│   │   ├── heic/route.ts       # Server-side HEIC/HEIF photo converter
-│   │   ├── title/route.ts      # AI Builder Title generation endpoint
-│   │   └── og/route.ts         # Dynamic Open Graph image provider
-│   ├── card/[id]/page.tsx      # Dedicated shareable Builder Pass page
-│   ├── frame/[id]/page.tsx     # Dedicated shareable Profile Frame page
-│   ├── layout.tsx              # Root layout with Inter font & ThemeProvider
-│   ├── globals.css             # TailwindCSS v4 design tokens
-│   └── page.tsx                # Interactive Studio & Landing Page
-├── components/
-│   ├── generator/              # Studio inputs, preview canvases, uploaders & modals
-│   ├── landing/                # Hero, Features, Output Gallery, FAQ accordion
-│   └── layout/                 # Sticky Header & Footer
-├── lib/
-│   ├── image-processor.ts      # Sharp composite & SVG overlay rendering logic
-│   ├── title-generator.ts      # AI title lookup and suggestion engine
-│   ├── storage.ts              # In-memory & Vercel Blob storage manager
-│   ├── constants.ts            # Themes, default values, max size limits
-│   └── validation.ts           # Zod validation schemas
-├── types/                      # TypeScript definitions
-└── __tests__/                  # Vitest unit test suite
-```
+- **🤖 AI Builder Title Shuffler**:
+  - Deterministic title generator giving builders fun, tailored titles like *"The AI Architect"*, *"Shipping Machine"*, *"Prompt Wizard"*, and *"Full-Stack Alchemist"*.
+
+- **☁️ Supabase Cloud Storage**:
+  - Uploads generated high-res PNG credentials directly to Supabase Storage (`hhgoa-graphics` bucket) for cloud link sharing.
+
+- **🖼️ Dynamic Social Card Previews (X / Twitter)**:
+  - Custom `/api/og` route serving dynamic OpenGraph image previews so tweets display the exact custom credential when shared on X/Twitter.
+
+- **🛡️ Stateless URL Parameter Fallback**:
+  - Encodes builder information directly in share URLs so graphics render seamlessly across any serverless lambdas or edge functions.
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Technology Stack
 
-### 1. Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **npm**: v9.0.0 or higher
+| Category | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 15 (App Router), React 19, TypeScript |
+| **Styling** | Tailwind CSS v4, Vanilla CSS Design System |
+| **Image Processing** | Sharp, `@resvg/resvg-js`, `heic-convert`, `html-to-image` |
+| **Cloud Storage** | Supabase Storage (`@supabase/supabase-js`) |
+| **Testing** | Vitest |
+| **Icons & UI** | Lucide React, Canvas Confetti |
 
-### 2. Installation
+---
 
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 20+ installed
+- npm / yarn / pnpm
+
+### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/hh-goa-2026.git
-cd hh-goa-2026
+git clone https://github.com/your-org/hhgoa.git
+cd hhgoa
+```
+
+### 2. Install dependencies
+```bash
 npm install
 ```
 
-### 3. Running Development Server
+### 3. Configure Environment Variables
+Create a `.env.local` file in the root directory:
 
+```env
+# Application Production URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Supabase Credentials (Storage Bucket: hhgoa-graphics)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+```
+
+### 4. Run Development Server
 ```bash
 npm run dev
 ```
-
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
 ## 🧪 Running Tests
 
-Run unit tests via Vitest:
+Execute the automated test suite powered by Vitest:
 
 ```bash
-npm test
+npm run test
 ```
 
 ---
 
-## 📦 Production Build
-
-To test the production build locally:
+## 📦 Building for Production
 
 ```bash
 npm run build
@@ -124,18 +109,50 @@ npm run start
 
 ---
 
-## ☁️ Deployment to Vercel
+## ☁️ Deployment Guides
 
-This application is ready for 1-click deployment on [Vercel](https://vercel.com).
+### Deploying to Netlify
+1. Connect your GitHub repository to Netlify.
+2. In **Site Settings → Environment Variables**, add:
+   - `NEXT_PUBLIC_APP_URL` (e.g. `https://your-site.netlify.app`)
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. Trigger a deployment. Netlify will use `@netlify/plugin-nextjs` and `netlify.toml` automatically.
 
-### Optional Environment Variables:
-If you wish to persist generated passes to Vercel Blob storage long-term:
-- `BLOB_READ_WRITE_TOKEN`: Token obtained from your Vercel Blob Store.
+### Deploying to Vercel
+1. Import your repository into Vercel.
+2. Set Environment Variables in **Project Settings → Environment Variables**.
+3. Deploy!
 
-*(Note: If no Vercel Blob token is supplied, generated passes remain instantly downloadable and cached in-memory).*
+---
+
+## 📂 Project Structure
+
+```text
+├── public/
+│   ├── fonts/           # Self-hosted TTF font files (Cormorant, IBM Plex Mono, Oswald)
+│   └── favicon.webp     # Official application favicon
+├── src/
+│   ├── app/
+│   │   ├── api/         # API routes (/api/generate, /api/og, /api/heic, /api/title)
+│   │   ├── card/[id]/   # Builder Pass share page
+│   │   ├── frame/[id]/  # Profile Frame share page
+│   │   ├── layout.tsx   # Root layout & OpenGraph metadata
+│   │   └── page.tsx     # Main Studio Page
+│   ├── components/      # UI components (Generator, Landing, Layout, Share)
+│   ├── lib/             # Core engines (image-processor, fonts, storage, supabase)
+│   └── __tests__/       # Vitest test suites
+├── netlify.toml         # Netlify deployment configuration
+├── next.config.ts       # Next.js configuration
+└── package.json
+```
 
 ---
 
 ## 📄 License
 
-MIT © 2026 HH Goa Conference Engineering Team.
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+Organized with ❤️ for **Hacker House Goa 2026**.
