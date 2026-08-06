@@ -165,9 +165,9 @@ async function generateProfileFrameSharp({
     </defs>
 
     <!-- Outer Decorative Ring Ring - Yellow & Pink Trim -->
-    <circle cx="${photoCenterX}" cy="${photoCenterY}" r="${photoRadius + dimension * 0.015}" 
-      fill="none" stroke="#FF007A" stroke-width="${dimension * 0.015}"/>
-    <circle cx="${photoCenterX}" cy="${photoCenterY}" r="${photoRadius + dimension * 0.035}" 
+    <circle cx="${photoCenterX}" cy="${photoCenterY}" r="${photoRadius}" 
+      fill="none" stroke="#FF007A" stroke-width="${dimension * 0.018}"/>
+    <circle cx="${photoCenterX}" cy="${photoCenterY}" r="${photoRadius + dimension * 0.02}" 
       fill="none" stroke="#FFD400" stroke-width="${dimension * 0.008}" stroke-dasharray="${dimension * 0.02} ${dimension * 0.01}"/>
 
     <!-- Top Badge Header -->
@@ -251,6 +251,7 @@ async function generateBuilderCardSharp({
   const photoSize = Math.round(cardWidth * 0.42);
   const photoLeft = Math.round(cardLeft + cardWidth * 0.07);
   const photoTop = Math.round(cardTop + cardHeight * 0.22);
+  const photoCornerRadius = Math.round(photoSize * 0.12);
 
   const photoCroppedBuffer = await processPhotoCrop(
     userSharp,
@@ -259,7 +260,6 @@ async function generateBuilderCardSharp({
     cropConfig
   );
 
-  const photoCornerRadius = Math.round(photoSize * 0.12);
   const photoMaskSvg = Buffer.from(`
     <svg width="${photoSize}" height="${photoSize}">
       <rect x="0" y="0" width="${photoSize}" height="${photoSize}" rx="${photoCornerRadius}" ry="${photoCornerRadius}" fill="#fff"/>
@@ -284,6 +284,7 @@ async function generateBuilderCardSharp({
   const primaryColor = theme.primaryColor || '#FFD400';
   const accentColor = theme.accentColor || '#FF007A';
 
+  // Base card surface & details SVG
   const cardSvgOverlay = `
   <svg width="${dimension}" height="${dimension}" viewBox="0 0 ${dimension} ${dimension}" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -316,8 +317,8 @@ async function generateBuilderCardSharp({
       <!-- Top Divider -->
       <line x1="${cardWidth * 0.07}" y1="${cardHeight * 0.13}" x2="${cardWidth * 0.93}" y2="${cardHeight * 0.13}" stroke="#0A4C2B" stroke-width="2.5" />
 
-      <!-- Photo Frame Background Box -->
-      <rect x="${cardWidth * 0.07 - dimension * 0.004}" y="${cardHeight * 0.22 - dimension * 0.004}" width="${photoSize + dimension * 0.008}" height="${photoSize + dimension * 0.008}" rx="${photoCornerRadius + dimension * 0.004}" fill="#0E6B3A" stroke="#0A4C2B" stroke-width="${dimension * 0.004}" />
+      <!-- Photo Slot Background Fill -->
+      <rect x="${cardWidth * 0.07}" y="${cardHeight * 0.22}" width="${photoSize}" height="${photoSize}" rx="${photoCornerRadius}" ry="${photoCornerRadius}" fill="#0E6B3A" />
 
       <!-- Right Column Info (Title Badge, Name, Stack, Org, Location) -->
       <g transform="translate(${cardWidth * 0.53}, ${cardHeight * 0.22})">
@@ -351,6 +352,13 @@ async function generateBuilderCardSharp({
   </svg>
   `;
 
+  // Photo border frame drawn ON TOP of the photo to seal edges cleanly
+  const photoBorderFrameSvg = `
+  <svg width="${dimension}" height="${dimension}" viewBox="0 0 ${dimension} ${dimension}" xmlns="http://www.w3.org/2000/svg">
+    <rect x="${photoLeft}" y="${photoTop}" width="${photoSize}" height="${photoSize}" rx="${photoCornerRadius}" ry="${photoCornerRadius}" fill="none" stroke="#0A4C2B" stroke-width="${Math.round(dimension * 0.007)}" />
+  </svg>
+  `;
+
   const canvas = sharp({
     create: {
       width: dimension,
@@ -368,7 +376,6 @@ async function generateBuilderCardSharp({
     .resize(qrSize, qrSize)
     .toBuffer();
 
-  // CRITICAL: Composite cardSvgOverlay FIRST, THEN roundedPhoto ON TOP, THEN qrResized ON TOP!
   return canvas
     .composite([
       {
@@ -380,6 +387,11 @@ async function generateBuilderCardSharp({
         input: roundedPhoto,
         top: photoTop,
         left: photoLeft,
+      },
+      {
+        input: Buffer.from(photoBorderFrameSvg),
+        top: 0,
+        left: 0,
       },
       {
         input: qrResized,
