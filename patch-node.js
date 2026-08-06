@@ -43,6 +43,25 @@ function patchFs(fsModule) {
       }
     };
   }
+
+  if (fsModule.promises && fsModule.promises.readlink) {
+    const origPromisesReadlink = fsModule.promises.readlink;
+    fsModule.promises.readlink = async function (path, options) {
+      try {
+        return await origPromisesReadlink.call(fsModule.promises, path, options);
+      } catch (err) {
+        if (err && (err.code === 'EISDIR' || err.code === 'UNKNOWN')) {
+          try {
+            const lstat = fsModule.lstatSync(path);
+            if (!lstat.isSymbolicLink()) {
+              err.code = 'EINVAL';
+            }
+          } catch (_) {}
+        }
+        throw err;
+      }
+    };
+  }
 }
 
 patchFs(fs);
@@ -52,4 +71,4 @@ try {
   patchFs(gfs);
 } catch (_) {}
 
-console.log('[Node-Patch] Applied fs.readlink EISDIR -> EINVAL patch for Node 24 Windows.');
+console.log('[Node-Patch] Applied fs & fs.promises readlink EISDIR -> EINVAL patch for Node 24 Windows.');
