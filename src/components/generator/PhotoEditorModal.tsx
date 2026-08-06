@@ -44,22 +44,22 @@ export function PhotoEditorModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
-          <h3 className="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
-            <Move className="w-5 h-5 text-orange-500" /> Fine-Tune Photo Framing
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="bg-white dark:bg-[#0e131f] border border-slate-200 dark:border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-6">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
+          <h3 className="font-black text-lg text-slate-900 dark:text-white flex items-center gap-2">
+            <Move className="w-5 h-5 text-orange-500" /> Adjust Photo Framing
           </h3>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Visual Crop Box Preview */}
-        <div className="w-full aspect-square rounded-2xl bg-slate-950 overflow-hidden relative flex items-center justify-center border border-slate-800">
+        <div className="w-full aspect-square rounded-2xl bg-slate-950 overflow-hidden relative flex items-center justify-center border border-white/10">
           <div className="w-full h-full overflow-hidden flex items-center justify-center">
             <img
               src={imageUrl}
@@ -73,17 +73,17 @@ export function PhotoEditorModal({
             />
           </div>
           {/* Circular Frame Overlay Marker */}
-          <div className="absolute inset-0 border-2 border-orange-500/50 rounded-full pointer-events-none" />
+          <div className="absolute inset-0 border-2 border-orange-500/60 rounded-full pointer-events-none shadow-[0_0_15px_rgba(255,85,0,0.3)]" />
         </div>
 
         {/* Sliders */}
-        <div className="space-y-4 text-xs font-semibold text-slate-700 dark:text-slate-300">
+        <div className="space-y-4 text-xs font-bold text-slate-700 dark:text-slate-300">
           <div>
-            <div className="flex justify-between mb-1">
-              <span className="flex items-center gap-1">
+            <div className="flex justify-between mb-1.5">
+              <span className="flex items-center gap-1.5">
                 <ZoomIn className="w-3.5 h-3.5 text-orange-500" /> Zoom Level
               </span>
-              <span>{cropConfig.zoom.toFixed(1)}x</span>
+              <span className="text-orange-500 font-extrabold">{cropConfig.zoom.toFixed(1)}x</span>
             </div>
             <input
               type="range"
@@ -92,13 +92,13 @@ export function PhotoEditorModal({
               step="0.1"
               value={cropConfig.zoom}
               onChange={handleZoomChange}
-              className="w-full accent-orange-500"
+              className="w-full accent-orange-500 cursor-pointer h-2 bg-slate-200 dark:bg-white/10 rounded-lg"
             />
           </div>
 
           <div>
-            <div className="flex justify-between mb-1">
-              <span>Horizontal Pan (X)</span>
+            <div className="flex justify-between mb-1.5">
+              <span>Horizontal Offset (X)</span>
               <span>{cropConfig.offsetX}px</span>
             </div>
             <input
@@ -107,13 +107,13 @@ export function PhotoEditorModal({
               max="100"
               value={cropConfig.offsetX}
               onChange={handleOffsetXChange}
-              className="w-full accent-orange-500"
+              className="w-full accent-orange-500 cursor-pointer h-2 bg-slate-200 dark:bg-white/10 rounded-lg"
             />
           </div>
 
           <div>
-            <div className="flex justify-between mb-1">
-              <span>Vertical Pan (Y)</span>
+            <div className="flex justify-between mb-1.5">
+              <span>Vertical Offset (Y)</span>
               <span>{cropConfig.offsetY}px</span>
             </div>
             <input
@@ -122,7 +122,7 @@ export function PhotoEditorModal({
               max="100"
               value={cropConfig.offsetY}
               onChange={handleOffsetYChange}
-              className="w-full accent-orange-500"
+              className="w-full accent-orange-500 cursor-pointer h-2 bg-slate-200 dark:bg-white/10 rounded-lg"
             />
           </div>
         </div>
@@ -132,13 +132,13 @@ export function PhotoEditorModal({
           <div className="flex gap-2">
             <button
               onClick={handleRotate}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+              className="flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-bold rounded-xl bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/15 cursor-pointer min-h-[44px]"
             >
               <RotateCw className="w-3.5 h-3.5" /> Rotate 90°
             </button>
             <button
               onClick={handleReset}
-              className="px-3 py-2 text-xs font-semibold rounded-xl text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              className="px-3.5 py-2.5 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 cursor-pointer min-h-[44px]"
             >
               Reset
             </button>
@@ -146,9 +146,9 @@ export function PhotoEditorModal({
 
           <button
             onClick={onClose}
-            className="flex items-center gap-1.5 px-5 py-2 text-xs font-bold rounded-xl bg-orange-500 text-white hover:bg-orange-600 shadow-md shadow-orange-500/20"
+            className="flex items-center gap-1.5 px-5 py-2.5 text-xs font-black rounded-xl bg-orange-500 text-white hover:bg-orange-600 shadow-md shadow-orange-500/20 cursor-pointer min-h-[44px]"
           >
-            <Check className="w-4 h-4" /> Apply Framing
+            <Check className="w-4 h-4" /> Apply
           </button>
         </div>
       </div>

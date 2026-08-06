@@ -5,18 +5,24 @@
 :root {
   --background: #ffffff;
   --foreground: #090d16;
+  --card: #f8fafc;
+  --card-border: #e2e8f0;
 }
 
 .dark {
-  --background: #050811;
+  --background: #06080d;
   --foreground: #f8fafc;
+  --card: #0e131f;
+  --card-border: rgba(255, 255, 255, 0.08);
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --color-hh-dark: #06080d;
+  --color-hh-card: #0e131f;
   --color-hh-orange: #FF5500;
   --color-hh-amber: #FFB800;
-  --color-hh-navy: #0A0F1D;
+  --color-hh-cyan: #06B6D4;
 }
 
 body {
@@ -24,6 +30,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  letter-spacing: -0.01em;
 }
 
 /* Smooth scrolling */
@@ -31,17 +38,42 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Subtle dot background utility */
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-dot-pattern-light {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(14, 19, 31, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
-  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 85, 0, 0.5);
+  background: rgba(255, 85, 0, 0.6);
 }
+

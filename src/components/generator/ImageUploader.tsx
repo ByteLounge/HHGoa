@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
-import { Upload, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Upload, AlertCircle, RefreshCw, CheckCircle2, Image as ImageIcon } from 'lucide-react';
 import { validateImageFile } from '@/lib/validation';
 
 interface ImageUploaderProps {
@@ -115,10 +115,10 @@ export function ImageUploader({ onImageSelected, currentImageName }: ImageUpload
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`relative cursor-pointer border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all ${
+        className={`relative cursor-pointer border-2 border-dashed rounded-3xl p-6 sm:p-8 text-center transition-all duration-200 ${
           isDragging
-            ? 'border-orange-500 bg-orange-500/10 scale-[1.01]'
-            : 'border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 hover:border-orange-500/50 dark:hover:border-orange-500/50'
+            ? 'border-orange-500 bg-orange-500/10 scale-[1.01] shadow-xl shadow-orange-500/10'
+            : 'border-slate-300 dark:border-white/15 bg-slate-50/50 dark:bg-white/[0.02] hover:border-orange-500/60 dark:hover:border-orange-500/60 hover:bg-orange-500/[0.02]'
         }`}
       >
         <input
@@ -130,64 +130,65 @@ export function ImageUploader({ onImageSelected, currentImageName }: ImageUpload
         />
 
         {isConvertingHeic ? (
-          <div className="flex flex-col items-center justify-center py-4 space-y-3">
+          <div className="flex flex-col items-center justify-center py-6 space-y-3">
             <RefreshCw className="w-10 h-10 text-orange-500 animate-spin" />
-            <p className="font-bold text-slate-900 dark:text-white text-sm">
-              Converting HEIC to high-res PNG...
+            <p className="font-extrabold text-slate-900 dark:text-white text-sm">
+              Converting iPhone HEIC to high-res PNG...
             </p>
-            <p className="text-xs text-slate-500">Optimizing photo quality automatically</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Preserving original photo clarity automatically</p>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-orange-500/10 dark:bg-orange-500/20 text-orange-500 flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500/15 to-amber-500/15 dark:from-orange-500/25 dark:to-amber-500/25 text-orange-500 flex items-center justify-center shadow-inner border border-orange-500/20">
               <Upload className="w-7 h-7" />
             </div>
             <div>
-              <p className="font-bold text-slate-900 dark:text-white text-base">
-                {currentImageName ? 'Change Photo' : 'Upload Your Photo'}
+              <p className="font-black text-slate-900 dark:text-white text-base sm:text-lg">
+                {currentImageName ? 'Choose Different Photo' : 'Upload Your Builder Photo'}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Drag &amp; drop, paste, or click to choose from camera / gallery
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+                Drag &amp; drop, paste from clipboard, or browse gallery
               </p>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-[11px] font-semibold text-slate-400">
-              <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+
+            <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <span className="px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-white/10 text-slate-700 dark:text-slate-300">
                 JPG
               </span>
-              <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+              <span className="px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-white/10 text-slate-700 dark:text-slate-300">
                 PNG
               </span>
-              <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+              <span className="px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-white/10 text-slate-700 dark:text-slate-300">
                 WEBP
               </span>
-              <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+              <span className="px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-white/10 text-slate-700 dark:text-slate-300">
                 HEIC
               </span>
-              <span>• Max 15MB</span>
+              <span className="ml-1 text-slate-400">• Up to 15MB</span>
             </div>
           </div>
         )}
       </div>
 
       {currentImageName && !error && !isConvertingHeic && (
-        <div className="flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 rounded-xl">
+        <div className="flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2.5 rounded-2xl">
           <div className="flex items-center gap-2 truncate">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span className="truncate font-medium">Selected: {currentImageName}</span>
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
+            <span className="truncate font-bold">Photo Loaded: {currentImageName}</span>
           </div>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="text-xs font-bold underline hover:text-emerald-500"
+            className="text-xs font-black underline hover:text-emerald-500 shrink-0 ml-2 cursor-pointer"
           >
-            Replace
+            Change
           </button>
         </div>
       )}
 
       {error && (
-        <div className="flex items-center gap-2 text-xs text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+        <div className="flex items-center gap-2 text-xs text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/20 p-3.5 rounded-2xl">
+          <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+          <span className="font-semibold">{error}</span>
         </div>
       )}
     </div>

@@ -1,53 +1,62 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, ShieldCheck, ArrowDown, Award, Zap, Users } from 'lucide-react';
+import { Sparkles, ShieldCheck, ArrowDown, Zap, Award, Users, Terminal } from 'lucide-react';
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-slate-200/80 dark:border-slate-800/80">
-      {/* Background Lighting Gradients */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-500/10 rounded-full blur-[140px] pointer-events-none" />
+    <section className="relative overflow-hidden pt-10 pb-16 sm:pt-16 sm:pb-24 border-b border-slate-200/80 dark:border-white/10">
+      {/* Ambient Lighting Gradients (HH Goa Sunset Glow) */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-orange-500/20 via-amber-500/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-0 right-10 w-[350px] h-[350px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         {/* Top Announcement Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 dark:bg-orange-500/20 border border-orange-500/30 text-orange-600 dark:text-orange-400 text-xs font-bold uppercase tracking-widest mb-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <ShieldCheck className="w-4 h-4" /> OFFICIAL EVENT STUDIO • FEBRUARY 2026 • GOA, INDIA
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 dark:bg-orange-500/20 border border-orange-500/30 text-orange-600 dark:text-orange-400 text-[11px] sm:text-xs font-black uppercase tracking-widest mb-8 shadow-sm">
+          <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+          GOA, INDIA &nbsp;·&nbsp; 28 – 31 OCT 2026 &nbsp;·&nbsp; 2:47 PM STUDIO
         </div>
 
-        {/* Main Title */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white max-w-4xl mx-auto leading-[1.1]">
-          Frame Your Photo &amp; Generate Your{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600">
-            Official HH Goa Pass
+        {/* Main Hero Headline */}
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white max-w-5xl mx-auto leading-[1.08]">
+          Less Noise. More Signal.{' '}
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 mt-2">
+            Frame Your HH Goa Pass.
           </span>
         </h1>
 
-        {/* Subtitle */}
-        <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
-          Create high-resolution branded profile picture overlays and conference builder passes in seconds. Server-rendered, pixel-perfect PNG downloads.
+        {/* Hero Subtitle */}
+        <p className="mt-6 text-base sm:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
+          The official identity studio for India&apos;s premier builder residency. Generate crisp, server-rendered profile frames and attendee passes in seconds.
         </p>
 
-        {/* Hero Quick Stats */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-semibold">
-          <div className="flex items-center gap-2 bg-white/60 dark:bg-slate-900/60 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800">
+        {/* Hero Quick Stats / Badges */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-bold">
+          <div className="flex items-center gap-2 bg-slate-100 dark:bg-white/5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm">
             <Zap className="w-4 h-4 text-orange-500" /> Instant Sharp 4K Render
           </div>
-          <div className="flex items-center gap-2 bg-white/60 dark:bg-slate-900/60 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800">
-            <Award className="w-4 h-4 text-amber-500" /> AI Builder Title Engine
+          <div className="flex items-center gap-2 bg-slate-100 dark:bg-white/5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm">
+            <Award className="w-4 h-4 text-amber-500" /> AI Title Shuffler
           </div>
-          <div className="flex items-center gap-2 bg-white/60 dark:bg-slate-900/60 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800">
-            <Users className="w-4 h-4 text-emerald-500" /> Dynamic Open Graph Sharing
+          <div className="flex items-center gap-2 bg-slate-100 dark:bg-white/5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm">
+            <Terminal className="w-4 h-4 text-cyan-400" /> #FrameInGoa Ready
           </div>
         </div>
 
-        {/* CTA Arrow Button */}
-        <div className="mt-10">
+        {/* CTA Buttons */}
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
             href="#generator"
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold px-8 py-4 text-base rounded-2xl shadow-xl shadow-orange-500/25 transition-all hover:scale-105 active:scale-95"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold px-8 py-4 text-base rounded-2xl shadow-xl shadow-orange-500/25 transition-all hover:scale-[1.03] active:scale-95 border border-orange-400/20 min-h-[52px]"
           >
-            <Sparkles className="w-5 h-5" /> Launch Generator Studio <ArrowDown className="w-5 h-5 animate-bounce" />
+            <Sparkles className="w-5 h-5" /> Launch Generator Studio <ArrowDown className="w-4 h-4 animate-bounce" />
+          </a>
+
+          <a
+            href="#features"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 font-bold px-6 py-4 text-base rounded-2xl border border-slate-200 dark:border-white/10 transition-all min-h-[52px]"
+          >
+            Explore Specs
           </a>
         </div>
       </div>

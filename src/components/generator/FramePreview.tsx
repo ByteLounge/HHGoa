@@ -16,12 +16,18 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
   const theme = FRAME_THEMES[themeId] || FRAME_THEMES['goa-sunset'];
 
   return (
-    <div className="w-full max-w-sm sm:max-w-md aspect-square mx-auto rounded-3xl overflow-hidden shadow-2xl relative bg-[#0A0F1D] border border-slate-800 flex items-center justify-center select-none group">
+    <div className="w-full max-w-sm sm:max-w-md aspect-square mx-auto rounded-3xl overflow-hidden shadow-2xl relative bg-[#06080d] border border-white/10 flex items-center justify-center select-none group">
       {/* Background Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293d_1px,transparent_1px),linear-gradient(to_bottom,#1f293d_1px,transparent_1px)] bg-[size:24px_24px] opacity-40" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293d_1px,transparent_1px),linear-gradient(to_bottom,#1f293d_1px,transparent_1px)] bg-[size:24px_24px] opacity-30" />
+
+      {/* Ambient Ring Glow */}
+      <div
+        className="absolute w-[70%] h-[70%] rounded-full blur-2xl opacity-25 pointer-events-none"
+        style={{ background: theme.primaryColor }}
+      />
 
       {/* User Photo Container inside central circle */}
-      <div className="absolute w-[68%] h-[68%] rounded-full overflow-hidden top-[12%] flex items-center justify-center bg-slate-900 shadow-inner">
+      <div className="absolute w-[68%] h-[68%] rounded-full overflow-hidden top-[12%] flex items-center justify-center bg-slate-950 shadow-inner">
         {userImageUrl ? (
           <img
             src={userImageUrl}
@@ -33,8 +39,8 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
           />
         ) : (
           <div className="flex flex-col items-center justify-center p-4 text-center text-slate-500">
-            <span className="text-3xl font-bold text-slate-700">PHOTO</span>
-            <span className="text-xs">Upload your photo to view frame</span>
+            <span className="text-2xl font-black text-slate-600">PHOTO</span>
+            <span className="text-xs text-slate-500 mt-1">Upload image above</span>
           </div>
         )}
       </div>
@@ -52,8 +58,8 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
             <stop offset="100%" stopColor={theme.accentColor} />
           </linearGradient>
           <linearGradient id="darkBannerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#0A0F1D" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#050811" stopOpacity="0.98" />
+            <stop offset="0%" stopColor="#0E131F" stopOpacity="0.96" />
+            <stop offset="100%" stopColor="#06080D" stopOpacity="0.98" />
           </linearGradient>
         </defs>
 
@@ -71,7 +77,7 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
           cy="184"
           r="144"
           stroke={theme.primaryColor}
-          strokeOpacity="0.3"
+          strokeOpacity="0.35"
           strokeWidth="1.5"
           strokeDasharray="8 4"
         />
@@ -83,7 +89,7 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
             x="0"
             y="4"
             fontFamily="Inter, sans-serif"
-            fontWeight="800"
+            fontWeight="900"
             fontSize="10"
             fill="#FFFFFF"
             textAnchor="middle"
@@ -126,7 +132,7 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
             fill={theme.accentColor}
             textAnchor="end"
           >
-            FEB 2026
+            28-31 OCT
           </text>
 
           {/* Divider */}
@@ -137,7 +143,7 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
             x="24"
             y="56"
             fontFamily="Inter, sans-serif"
-            fontWeight="800"
+            fontWeight="900"
             fontSize="13"
             fill="#FFFFFF"
           >
@@ -147,7 +153,7 @@ export function FramePreview({ userImageUrl, builderInfo, themeId, cropConfig }:
             x="24"
             y="70"
             fontFamily="Inter, sans-serif"
-            fontWeight="600"
+            fontWeight="700"
             fontSize="10"
             fill={theme.accentColor}
           >

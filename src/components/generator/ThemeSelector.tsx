@@ -3,7 +3,7 @@
 import React from 'react';
 import { ThemeId } from '@/types';
 import { FRAME_THEMES } from '@/lib/constants';
-import { Check } from 'lucide-react';
+import { Check, Palette } from 'lucide-react';
 
 interface ThemeSelectorProps {
   selectedThemeId: ThemeId;
@@ -15,8 +15,8 @@ export function ThemeSelector({ selectedThemeId, onThemeSelect }: ThemeSelectorP
 
   return (
     <div className="space-y-2">
-      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-        Official Pass Style &amp; Theme
+      <label className="block text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+        <Palette className="w-3.5 h-3.5 text-orange-500" /> Pass Theme &amp; Color Accent
       </label>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -27,10 +27,10 @@ export function ThemeSelector({ selectedThemeId, onThemeSelect }: ThemeSelectorP
               key={theme.id}
               type="button"
               onClick={() => onThemeSelect(theme.id)}
-              className={`flex flex-col items-center justify-between p-3 rounded-2xl border text-left transition-all relative overflow-hidden ${
+              className={`flex flex-col items-center justify-between p-3 rounded-2xl border text-left transition-all relative overflow-hidden cursor-pointer ${
                 isSelected
                   ? 'border-orange-500 bg-orange-500/10 dark:bg-orange-500/20 shadow-md shadow-orange-500/10 scale-[1.02]'
-                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-orange-500/40'
+                  : 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.02] hover:border-orange-500/40 hover:bg-orange-500/[0.02]'
               }`}
             >
               <div className="flex items-center justify-between w-full mb-2">
@@ -46,7 +46,7 @@ export function ThemeSelector({ selectedThemeId, onThemeSelect }: ThemeSelectorP
               </div>
 
               <div className="w-full">
-                <p className="font-bold text-xs text-slate-900 dark:text-white leading-tight">
+                <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-tight">
                   {theme.name}
                 </p>
               </div>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
 import { ExportOptions, ExportResolution } from '@/types';
-import { Download, Share2, Copy, Check, QrCode, RefreshCw, Layers } from 'lucide-react';
+import { Download, Share2, Copy, Check, QrCode, RefreshCw, Layers, Sparkles } from 'lucide-react';
 
 interface ExportControlsProps {
   exportOptions: ExportOptions;
@@ -26,12 +26,12 @@ export function ExportControls({
 
   const handleDownload = async () => {
     await onGenerateAndDownload();
-    // Fire confetti on successful generation!
+    // Fire celebratory confetti on download!
     confetti({
-      particleCount: 80,
-      spread: 70,
+      particleCount: 85,
+      spread: 75,
       origin: { y: 0.6 },
-      colors: ['#FF5500', '#FFB800', '#38BDF8', '#8B5CF6'],
+      colors: ['#FF5500', '#FFB800', '#06B6D4', '#FFFFFF'],
     });
   };
 
@@ -57,24 +57,24 @@ export function ExportControls({
   };
 
   return (
-    <div className="space-y-4 bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+    <div className="space-y-4 bg-slate-50/80 dark:bg-white/[0.02] p-5 rounded-2xl border border-slate-200 dark:border-white/10">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-          <Layers className="w-4 h-4 text-orange-500" /> Output &amp; Download Settings
+        <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+          <Layers className="w-4 h-4 text-orange-500" /> Export &amp; Resolution Settings
         </h4>
       </div>
 
       {/* Resolution Selector */}
-      <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+      <div className="grid grid-cols-2 gap-2 text-xs font-bold">
         {(['1080x1080', '2048x2048'] as ExportResolution[]).map((res) => (
           <button
             key={res}
             type="button"
             onClick={() => onChangeOptions({ ...exportOptions, resolution: res })}
-            className={`py-2 rounded-xl border transition-all ${
+            className={`py-2.5 px-3 rounded-xl border transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
               exportOptions.resolution === res
-                ? 'bg-orange-500 text-white border-orange-500 shadow-sm'
-                : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-orange-500/40'
+                ? 'bg-orange-500 text-white border-orange-500 shadow-md shadow-orange-500/20'
+                : 'bg-white dark:bg-[#06080d] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-orange-500/40'
             }`}
           >
             {res === '1080x1080' ? '1080p Standard' : '2048p Ultra HD (4K)'}
@@ -84,16 +84,16 @@ export function ExportControls({
 
       {/* Transparent BG option for Frame format */}
       {exportOptions.graphicType === 'frame' && (
-        <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
+        <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 dark:text-slate-300 pt-1">
           <input
             type="checkbox"
             checked={exportOptions.transparentBg}
             onChange={(e) =>
               onChangeOptions({ ...exportOptions, transparentBg: e.target.checked })
             }
-            className="rounded text-orange-500 focus:ring-orange-500 accent-orange-500 w-4 h-4"
+            className="rounded text-orange-500 focus:ring-orange-500 accent-orange-500 w-4 h-4 cursor-pointer"
           />
-          Transparent background overlay
+          Transparent background overlay (PNG)
         </label>
       )}
 
@@ -102,15 +102,15 @@ export function ExportControls({
         type="button"
         disabled={isGenerating}
         onClick={handleDownload}
-        className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-extrabold text-sm text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/25 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-xl font-black text-sm text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-xl shadow-orange-500/25 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed border border-orange-400/20 min-h-[48px] cursor-pointer"
       >
         {isGenerating ? (
           <>
-            <RefreshCw className="w-5 h-5 animate-spin" /> Rendering High-Res PNG...
+            <RefreshCw className="w-5 h-5 animate-spin text-white" /> Rendering Sharp 4K PNG...
           </>
         ) : (
           <>
-            <Download className="w-5 h-5" /> Download High-Res PNG
+            <Download className="w-5 h-5" /> Download Official PNG Graphics
           </>
         )}
       </button>
@@ -120,7 +120,7 @@ export function ExportControls({
         <button
           type="button"
           onClick={handleShareToX}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white border border-slate-800 dark:border-slate-700 transition-all"
+          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-black bg-slate-900 dark:bg-white/10 hover:bg-slate-800 dark:hover:bg-white/15 text-white border border-slate-800 dark:border-white/10 transition-all min-h-[44px] cursor-pointer"
         >
           <Share2 className="w-4 h-4 text-orange-400" /> Share to X
         </button>
@@ -129,11 +129,11 @@ export function ExportControls({
           <button
             type="button"
             onClick={handleCopyLink}
-            className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all"
+            className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl text-xs font-extrabold bg-slate-200 dark:bg-white/10 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-white/15 transition-all min-h-[44px] cursor-pointer"
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4 text-emerald-500" /> Copied!
+                <Check className="w-4 h-4 text-emerald-500" /> Copied Link!
               </>
             ) : (
               <>
@@ -146,8 +146,8 @@ export function ExportControls({
         <button
           type="button"
           onClick={onShowQrModal}
-          className="p-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all"
-          title="Show QR Code"
+          className="p-3 rounded-xl bg-slate-200 dark:bg-white/10 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-white/15 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer"
+          title="Show Shareable QR Code"
         >
           <QrCode className="w-4 h-4" />
         </button>
