@@ -33,6 +33,7 @@ export function getEmbeddedFontCss(): string {
   for (const font of fontFiles) {
     const filePath = path.join(fontsDir, font.file);
     if (fs.existsSync(filePath)) {
+      const normalizedPath = filePath.replace(/\\/g, '/');
       const buffer = fs.readFileSync(filePath);
       const base64 = buffer.toString('base64');
       cssRules.push(`
@@ -40,7 +41,8 @@ export function getEmbeddedFontCss(): string {
           font-family: '${font.name}';
           font-style: ${font.style};
           font-weight: ${font.weight};
-          src: url('data:font/ttf;charset=utf-8;base64,${base64}') format('truetype');
+          src: url('file:///${normalizedPath}') format('truetype'),
+               url('data:font/ttf;charset=utf-8;base64,${base64}') format('truetype');
         }
       `);
     }
