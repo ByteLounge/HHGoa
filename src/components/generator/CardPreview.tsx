@@ -18,8 +18,8 @@ export function CardPreview({ userImageUrl, builderInfo, cropConfig }: CardPrevi
       {/* Editorial Decorative Stamp Header */}
       <div className="flex items-center justify-between border-b-2 border-[#0A4C2B] pb-3 z-10 font-editorial-mono">
         <div>
-          <span className="font-editorial-serif font-bold text-xl tracking-tight text-[#0A4C2B]">
-            HH GOA <span className="text-[#FF007A] font-mono text-sm">2026</span>
+          <span className="font-editorial-serif font-bold text-lg sm:text-xl tracking-tight text-[#0A4C2B]">
+            HACKER HOUSE GOA <span className="text-[#FF007A] font-mono text-xs sm:text-sm">2026</span>
           </span>
           <p className="text-[10px] text-[#0E6B3A] font-bold uppercase tracking-wider">Official Event Credential</p>
         </div>

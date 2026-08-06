@@ -6,7 +6,7 @@ import { ChevronDown, HelpCircle } from 'lucide-react';
 const FAQS = [
   {
     q: 'Do I need an account or sign up to generate my pass?',
-    a: 'No! HH Goa Studio requires zero authentication. Simply upload your photo, customize your details, and download your high-res pass instantly.',
+    a: 'No! Hacker House Goa Studio requires zero authentication. Simply upload your photo, customize your details, and download your high-res pass instantly.',
   },
   {
     q: 'What file formats and image sizes are supported?',
@@ -22,7 +22,7 @@ const FAQS = [
   },
   {
     q: 'What is the hashtag for social media feature?',
-    a: 'Use #FrameInGoa when sharing your card or frame on X to get featured on the HH Goa radar and leaderboard!',
+    a: 'Use #FrameInGoa when sharing your card or frame on X to get featured on the Hacker House Goa radar and leaderboard!',
   },
 ];
 

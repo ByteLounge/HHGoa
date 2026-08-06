@@ -25,7 +25,7 @@ export function Hero() {
 
         {/* Hero Subtitle */}
         <p className="mt-8 text-lg sm:text-2xl text-[#F7F1DF]/90 max-w-3xl mx-auto font-editorial-mono font-normal leading-relaxed">
-          Official Builder Pass &amp; Profile Overlay Studio for HH Goa 2026. Editorial print typography, server-composited 4K PNG downloads.
+          Official Builder Pass &amp; Profile Overlay Studio for Hacker House Goa 2026. Editorial print typography, server-composited 4K PNG downloads.
         </p>
 
         {/* Hero Quick Specs */}

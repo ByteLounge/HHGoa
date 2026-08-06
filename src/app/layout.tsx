@@ -35,10 +35,12 @@ const oswald = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'HH Goa 2026 • Official Editorial Profile Frame & Builder Pass Studio',
+  title: 'Hacker House Goa 2026 • Official Editorial Profile Frame & Builder Pass Studio',
   description:
-    'Generate festival-grade profile picture overlays and official builder credentials for HH Goa 2026. High-res server rendering, zero login required.',
+    'Generate festival-grade profile picture overlays and official builder credentials for Hacker House Goa 2026. High-res server rendering, zero login required.',
   keywords: [
+    'Hacker House Goa 2026',
+    'Hacker House Goa',
     'HH Goa 2026',
     'HH Goa',
     'Builder Pass',
@@ -47,20 +49,20 @@ export const metadata: Metadata = {
     'Goa Hackathon',
     'Developer Pass',
   ],
-  authors: [{ name: 'HH Goa Engineering & Design Team' }],
+  authors: [{ name: 'Hacker House Goa Engineering & Design Team' }],
   openGraph: {
-    title: 'HH Goa 2026 • Official Editorial Profile Frame & Builder Pass Studio',
+    title: 'Hacker House Goa 2026 • Official Editorial Profile Frame & Builder Pass Studio',
     description:
-      'Generate festival-grade profile picture overlays and official builder credentials for HH Goa 2026.',
+      'Generate festival-grade profile picture overlays and official builder credentials for Hacker House Goa 2026.',
     url: 'https://hhgoa2026.vercel.app',
-    siteName: 'HH Goa 2026',
+    siteName: 'Hacker House Goa 2026',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'HH Goa 2026 • Official Editorial Profile Frame & Builder Pass Studio',
-    description: 'Generate festival-grade profile picture overlays and official builder credentials for HH Goa 2026.',
+    title: 'Hacker House Goa 2026 • Official Editorial Profile Frame & Builder Pass Studio',
+    description: 'Generate festival-grade profile picture overlays and official builder credentials for Hacker House Goa 2026.',
   },
 };
 

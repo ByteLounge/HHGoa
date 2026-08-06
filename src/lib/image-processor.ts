@@ -185,8 +185,8 @@ async function generateProfileFrameSharp({
 
     <!-- Top Badge Header -->
     <g transform="translate(${photoCenterX}, ${photoCenterY - photoRadius - dimension * 0.05})">
-      <rect x="-${dimension * 0.18}" y="-${dimension * 0.035}" width="${dimension * 0.36}" height="${dimension * 0.07}" rx="${dimension * 0.035}" fill="#FFD400" stroke="#0A4C2B" stroke-width="${dimension * 0.004}"/>
-      <text x="0" y="${dimension * 0.01}" font-family="'Oswald', sans-serif" font-weight="700" font-size="${dimension * 0.026}" fill="#0A4C2B" text-anchor="middle" letter-spacing="2">HH GOA 2026</text>
+      <rect x="-${dimension * 0.22}" y="-${dimension * 0.035}" width="${dimension * 0.44}" height="${dimension * 0.07}" rx="${dimension * 0.035}" fill="#FFD400" stroke="#0A4C2B" stroke-width="${dimension * 0.004}"/>
+      <text x="0" y="${dimension * 0.01}" font-family="'Oswald', sans-serif" font-weight="700" font-size="${dimension * 0.022}" fill="#0A4C2B" text-anchor="middle" letter-spacing="1">HACKER HOUSE GOA 2026</text>
     </g>
 
     <!-- Bottom Branding Banner Card with Clean ASCII Characters -->
@@ -195,7 +195,7 @@ async function generateProfileFrameSharp({
       
       <!-- Accent Dot & Header -->
       <circle cx="${dimension * 0.05}" cy="${dimension * 0.05}" r="${dimension * 0.012}" fill="#FFD400"/>
-      <text x="${dimension * 0.08}" y="${dimension * 0.06}" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="${dimension * 0.034}" fill="#FFD400" letter-spacing="1">HH GOA 2026</text>
+      <text x="${dimension * 0.08}" y="${dimension * 0.06}" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="${dimension * 0.032}" fill="#FFD400" letter-spacing="1">HACKER HOUSE GOA 2026</text>
       <text x="${dimension * 0.79}" y="${dimension * 0.06}" font-family="'IBM Plex Mono', monospace" font-weight="700" font-size="${dimension * 0.022}" fill="#FF007A" text-anchor="end">28-31 OCT</text>
 
       <!-- Divider line -->
@@ -332,7 +332,7 @@ async function generateBuilderCardSharp({
       <rect width="${cardWidth}" height="${cardHeight}" rx="${dimension * 0.035}" fill="${cardBgColor}" stroke="#1E5A3B" stroke-width="${dimension * 0.005}" />
 
       <!-- Top Header Branding -->
-      <text x="${cardWidth * 0.07}" y="${cardHeight * 0.09}" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="${dimension * 0.04}" fill="${textColor}">HH GOA <tspan fill="${accentColor}" font-family="'IBM Plex Mono', monospace" font-size="${dimension * 0.03}">2026</tspan></text>
+      <text x="${cardWidth * 0.07}" y="${cardHeight * 0.09}" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="${dimension * 0.035}" fill="${textColor}">HACKER HOUSE GOA <tspan fill="${accentColor}" font-family="'IBM Plex Mono', monospace" font-size="${dimension * 0.028}">2026</tspan></text>
       
       <!-- Top Right Badge -->
       <g transform="translate(${cardWidth * 0.65}, ${cardHeight * 0.045})">

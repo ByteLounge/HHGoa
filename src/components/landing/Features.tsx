@@ -48,7 +48,7 @@ export function Features() {
             Built for Speed &amp; Precision
           </h2>
           <p className="mt-4 text-[#F7F1DF]/90 text-base sm:text-lg font-normal">
-            Everything required to generate, preview, export, and showcase your official HH Goa 2026 conference identity.
+            Everything required to generate, preview, export, and showcase your official Hacker House Goa 2026 conference identity.
           </p>
         </div>
 

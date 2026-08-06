@@ -15,7 +15,7 @@ export function Footer() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-editorial-serif font-bold text-xl text-[#FFD400]">HH GOA 2026</span>
+                <span className="font-editorial-serif font-bold text-xl text-[#FFD400]">HACKER HOUSE GOA 2026</span>
                 <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-[#FFD400]/20 text-[#FFD400] border border-[#FFD400]/40">
                   Official
                 </span>
@@ -75,7 +75,7 @@ export function Footer() {
         </div>
 
         <div className="pt-6 border-t border-[#1E5A3B] flex flex-col sm:flex-row items-center justify-between text-xs text-[#F7F1DF]/70 gap-4">
-          <p>© 2026 HH-Goa. All rights reserved. Organized by 2:47PM Studio.</p>
+          <p>© 2026 Hacker House Goa. All rights reserved. Organized by 2:47PM Studio.</p>
           <p className="text-[11px] text-[#FFD400] font-bold">GOA, INDIA &nbsp;·&nbsp; 28 – 31 OCT 2026</p>
         </div>
       </div>

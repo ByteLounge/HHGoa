@@ -40,7 +40,7 @@ export function Header() {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-editorial-serif font-bold text-xl sm:text-2xl tracking-tight text-[#FFD400]">
-                HH GOA <span className="text-[#F7F1DF] font-mono text-base font-normal">2026</span>
+                HACKER HOUSE GOA <span className="text-[#F7F1DF] font-mono text-base font-normal">2026</span>
               </span>
               <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#FFD400]/20 text-[#FFD400] border border-[#FFD400]/40">
                 <ShieldCheck className="w-3 h-3 text-[#FFD400]" /> OFFICIAL

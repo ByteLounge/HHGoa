@@ -62,18 +62,18 @@ export function FramePreview({ userImageUrl, builderInfo, cropConfig }: FramePre
 
         {/* Top Floating Stamp Badge */}
         <g transform="translate(200, 22)">
-          <rect x="-65" y="-14" width="130" height="28" rx="14" fill="#FFD400" stroke="#0A4C2B" strokeWidth="2" />
+          <rect x="-80" y="-14" width="160" height="28" rx="14" fill="#FFD400" stroke="#0A4C2B" strokeWidth="2" />
           <text
             x="0"
             y="4"
             fontFamily="Oswald, sans-serif"
             fontWeight="700"
-            fontSize="11"
+            fontSize="10"
             fill="#0A4C2B"
             textAnchor="middle"
-            letterSpacing="2"
+            letterSpacing="1.5"
           >
-            HH GOA 2026
+            HACKER HOUSE GOA 2026
           </text>
         </g>
 
@@ -95,11 +95,11 @@ export function FramePreview({ userImageUrl, builderInfo, cropConfig }: FramePre
             y="24"
             fontFamily="Cormorant Garamond, serif"
             fontWeight="700"
-            fontSize="16"
+            fontSize="15"
             fill="#FFD400"
             letterSpacing="1"
           >
-            HH GOA 2026
+            HACKER HOUSE GOA 2026
           </text>
           <text
             x="332"

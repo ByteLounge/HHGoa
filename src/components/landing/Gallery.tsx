@@ -23,7 +23,7 @@ export function Gallery() {
           {/* Card Example */}
           <div className="editorial-card p-6 sm:p-8 relative overflow-hidden text-left space-y-4">
             <div className="flex items-center justify-between text-xs font-bold border-b-2 border-[#0A4C2B] pb-3">
-              <span className="font-editorial-serif text-xl text-[#0A4C2B]">HH GOA 2026</span>
+              <span className="font-editorial-serif text-xl text-[#0A4C2B]">HACKER HOUSE GOA 2026</span>
               <span className="px-3 py-1 rounded-full bg-[#FF007A] text-white text-[10px] uppercase font-display tracking-widest shadow-[2px_2px_0px_#0A4C2B]">
                 BUILDER PASS
               </span>
@@ -56,7 +56,7 @@ export function Gallery() {
                 SK
               </div>
               <div className="absolute -top-3 px-3.5 py-1 rounded-full bg-[#FF007A] text-white font-display font-bold text-xs tracking-widest shadow-[2px_2px_0px_#0A4C2B]">
-                HH GOA 2026
+                HACKER HOUSE GOA 2026
               </div>
             </div>
 

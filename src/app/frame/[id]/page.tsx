@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getGraphicRecord } from '@/lib/storage';
@@ -15,12 +14,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const record = await getGraphicRecord(id);
 
   const title = record?.builderInfo?.name
-    ? `${record.builderInfo.name}'s Official HH Goa 2026 Profile Frame`
-    : 'Official HH Goa 2026 Profile Frame';
+    ? `${record.builderInfo.name}'s Official Hacker House Goa 2026 Profile Frame`
+    : 'Official Hacker House Goa 2026 Profile Frame';
 
   const description = record?.builderInfo?.builderTitle
-    ? `${record.builderInfo.name} - ${record.builderInfo.builderTitle} (${record.builderInfo.role}) is attending HH Goa 2026.`
-    : 'Official Profile Frame Credential for HH Goa 2026.';
+    ? `${record.builderInfo.name} - ${record.builderInfo.builderTitle} (${record.builderInfo.role}) is attending Hacker House Goa 2026.`
+    : 'Official Profile Frame Credential for Hacker House Goa 2026.';
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
   const ogImageUrl = `${baseUrl}/api/og?id=${id}&type=frame`;
@@ -33,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url: `${baseUrl}/frame/${id}`,
-      siteName: 'HH Goa 2026 Studio',
+      siteName: 'Hacker House Goa 2026 Studio',
       type: 'website',
       images: [
         {
@@ -57,7 +56,7 @@ export default async function FrameSharePage({ params }: Props) {
   const { id } = await params;
   const record = await getGraphicRecord(id);
 
-  const shareText = `Ready for HH Goa 2026 🚀\n\nJust created my official Profile Frame!\n\nCheck out my graphic:`;
+  const shareText = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official Profile Frame!\n\nCheck out my graphic:`;
   const shareUrl = `https://hhgoa2026.vercel.app/frame/${id}`;
   const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
@@ -68,11 +67,11 @@ export default async function FrameSharePage({ params }: Props) {
       {/* Top Navbar */}
       <header className="max-w-5xl mx-auto w-full flex items-center justify-between py-4 border-b-2 border-[#1E5A3B]">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center font-display font-bold text-lg shadow-[3px_3px_0px_#0A4C2B]">
+          <div className="w-10 h-10 rounded-xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center font-display font-bold text-base shadow-[3px_3px_0px_#0A4C2B]">
             HH
           </div>
           <div>
-            <h1 className="font-editorial-serif font-bold text-2xl leading-none text-[#FFD400]">HH GOA 2026</h1>
+            <h1 className="font-editorial-serif font-bold text-2xl leading-none text-[#FFD400]">HACKER HOUSE GOA 2026</h1>
             <p className="text-xs text-[#F7F1DF]/80 font-bold">Official Profile Frame</p>
           </div>
         </Link>
@@ -88,13 +87,13 @@ export default async function FrameSharePage({ params }: Props) {
       <main className="max-w-4xl mx-auto w-full my-8 flex flex-col md:flex-row items-center gap-8 lg:gap-12">
         {/* Prominent High-Res Profile Frame Graphic (Downloaded PNG) */}
         <div className="w-full max-w-md aspect-square rounded-3xl overflow-hidden bg-[#F7F1DF] border-2 border-[#1E5A3B] shadow-[8px_8px_0px_#0A4C2B] flex items-center justify-center relative group p-2">
-          <ShareGraphicDisplay id={id} initialSrc={imageSrc} altText="Official HH Goa Profile Frame" />
+          <ShareGraphicDisplay id={id} initialSrc={imageSrc} altText="Official Hacker House Goa Profile Frame" />
         </div>
 
         {/* Builder Details & Actions */}
         <div className="flex-1 text-left space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] text-xs font-bold uppercase tracking-wider shadow-[2px_2px_0px_#0A4C2B]">
-            <CheckCircle2 className="w-4 h-4 text-[#FF007A]" /> Verified Official HH Goa Frame
+            <CheckCircle2 className="w-4 h-4 text-[#FF007A]" /> Verified Official Hacker House Goa Frame
           </div>
 
           <div>
@@ -112,7 +111,7 @@ export default async function FrameSharePage({ params }: Props) {
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <a
               href={imageSrc}
-              download={`HHGoa2026_ProfileFrame_${id.slice(0, 8)}.png`}
+              download={`HackerHouseGoa2026_ProfileFrame_${id.slice(0, 8)}.png`}
               className="flex items-center gap-2 btn-editorial-pink px-6 py-3.5 rounded-full text-sm shadow-[4px_4px_0px_#0A4C2B] min-h-[48px]"
             >
               <Download className="w-5 h-5 text-white" /> Download Graphic PNG
@@ -130,7 +129,7 @@ export default async function FrameSharePage({ params }: Props) {
 
           <div className="pt-4 border-t border-[#1E5A3B]">
             <p className="text-xs text-[#F7F1DF]/80">
-              Want your own official HH Goa 2026 Profile Frame or Builder Pass?
+              Want your own official Hacker House Goa 2026 Profile Frame or Builder Pass?
             </p>
             <Link
               href="/"
@@ -144,7 +143,7 @@ export default async function FrameSharePage({ params }: Props) {
 
       {/* Footer */}
       <footer className="max-w-5xl mx-auto w-full text-center py-6 border-t border-[#1E5A3B] text-xs text-[#F7F1DF]/70">
-        © 2026 HH Goa • Hackathon &amp; Builder Studio
+        © 2026 Hacker House Goa • Hackathon &amp; Builder Studio
       </footer>
     </div>
   );
