@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { headers } from 'next/headers';
 import { getGraphicRecord } from '@/lib/storage';
 import { Share2, Download, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
@@ -27,7 +28,10 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     ? `${name || 'Builder'} - ${builderTitle} (${role || 'Engineer'}) is attending Hacker House Goa 2026.`
     : 'Official Builder Pass Credential for Hacker House Goa 2026.';
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
+  const headerList = await headers();
+  const host = headerList.get('host') || 'hhgoa2026.vercel.app';
+  const proto = headerList.get('x-forwarded-proto') || 'https';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
   
   // Construct search string for ogImageUrl
   const ogParams = new URLSearchParams({ id, type: 'card' });

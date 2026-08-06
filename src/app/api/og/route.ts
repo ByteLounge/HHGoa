@@ -30,14 +30,16 @@ export async function GET(req: NextRequest) {
     const customHashtag = searchParams.get('tag') || '#FrameInGoa';
     const themeId = (searchParams.get('theme') as ThemeId) || 'hhgoa-editorial';
 
-    const defaultPhoto = await sharp({
-      create: {
-        width: 400,
-        height: 400,
-        channels: 4,
-        background: { r: 14, g: 107, b: 58, alpha: 1 },
-      },
-    })
+    const initials = name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .substring(0, 2)
+      .toUpperCase() || 'HH';
+
+    const avatarSvg = `<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="400" fill="#0E6B3A"/><circle cx="200" cy="200" r="150" fill="#FFD400" stroke="#0A4C2B" stroke-width="8"/><text x="200" y="240" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="130" fill="#0A4C2B" text-anchor="middle">${initials}</text></svg>`;
+
+    const defaultPhoto = await sharp(Buffer.from(avatarSvg))
       .png()
       .toBuffer();
 
