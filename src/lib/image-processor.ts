@@ -15,6 +15,7 @@ export interface ImageProcessingInput {
  * Escapes text for XML/SVG safety
  */
 function escapeXml(unsafe: string): string {
+  if (!unsafe) return '';
   return unsafe
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -47,10 +48,10 @@ export async function generateHighResGraphic({
   const qrDataUrl = await QRCode.toDataURL(shareUrl, {
     margin: 1,
     color: {
-      dark: theme.textColor === '#FFFFFF' ? '#FFFFFF' : '#0A4C2B',
+      dark: '#0A4C2B',
       light: '#00000000',
     },
-    width: Math.round(dimension * 0.1),
+    width: Math.round(dimension * 0.12),
   });
   const qrBuffer = Buffer.from(qrDataUrl.replace(/^data:image\/\w+;base64,/, ''), 'base64');
 
@@ -92,11 +93,9 @@ async function processPhotoCrop(
   const cropW = Math.round(origW / zoom);
   const cropH = Math.round(origH / zoom);
 
-  // Compute crop region centered with offset
   const maxShiftX = (origW - cropW) / 2;
   const maxShiftY = (origH - cropH) / 2;
 
-  // Offset in pixels mapped from normalized [-100, 100]
   const shiftX = (cropConfig.offsetX / 100) * maxShiftX;
   const shiftY = (cropConfig.offsetY / 100) * maxShiftY;
 
@@ -132,12 +131,11 @@ async function generateProfileFrameSharp({
   dimension: number;
   transparentBg: boolean;
 }): Promise<Buffer> {
-  const innerPhotoSize = Math.round(dimension * 0.68); // Central circle size
+  const innerPhotoSize = Math.round(dimension * 0.68);
   const photoCenterX = Math.round(dimension / 2);
   const photoCenterY = Math.round(dimension * 0.42);
   const photoRadius = Math.round(innerPhotoSize / 2);
 
-  // Crop user photo using processPhotoCrop
   const photoCroppedBuffer = await processPhotoCrop(
     userSharp,
     innerPhotoSize,
@@ -145,7 +143,6 @@ async function generateProfileFrameSharp({
     cropConfig
   );
 
-  // Create circular mask for user photo
   const maskSvg = Buffer.from(`
     <svg width="${innerPhotoSize}" height="${innerPhotoSize}">
       <circle cx="${innerPhotoSize / 2}" cy="${innerPhotoSize / 2}" r="${innerPhotoSize / 2}" fill="#fff"/>
@@ -176,7 +173,7 @@ async function generateProfileFrameSharp({
     <!-- Top Badge Header -->
     <g transform="translate(${photoCenterX}, ${photoCenterY - photoRadius - dimension * 0.05})">
       <rect x="-${dimension * 0.18}" y="-${dimension * 0.035}" width="${dimension * 0.36}" height="${dimension * 0.07}" rx="${dimension * 0.035}" fill="#FFD400" stroke="#0A4C2B" stroke-width="${dimension * 0.004}"/>
-      <text x="0" y="${dimension * 0.01}" font-family="Oswald, sans-serif" font-weight="700" font-size="${dimension * 0.026}" fill="#0A4C2B" text-anchor="middle" letter-spacing="2">HH GOA 2026</text>
+      <text x="0" y="${dimension * 0.01}" font-family="Impact, sans-serif" font-weight="bold" font-size="${dimension * 0.026}" fill="#0A4C2B" text-anchor="middle" letter-spacing="2">HH GOA 2026</text>
     </g>
 
     <!-- Bottom Branding Banner Card -->
@@ -187,20 +184,19 @@ async function generateProfileFrameSharp({
       <circle cx="${dimension * 0.06}" cy="${dimension * 0.06}" r="${dimension * 0.015}" fill="#FFD400"/>
       
       <!-- Event Header -->
-      <text x="${dimension * 0.09}" y="${dimension * 0.07}" font-family="Cormorant Garamond, serif" font-weight="700" font-size="${dimension * 0.04}" fill="#FFD400" letter-spacing="1">HH GOA 2026</text>
-      <text x="${dimension * 0.78}" y="${dimension * 0.07}" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="${dimension * 0.024}" fill="#FF007A" text-anchor="end">28-31 OCT</text>
+      <text x="${dimension * 0.09}" y="${dimension * 0.07}" font-family="Georgia, serif" font-weight="bold" font-size="${dimension * 0.04}" fill="#FFD400" letter-spacing="1">HH GOA 2026</text>
+      <text x="${dimension * 0.78}" y="${dimension * 0.07}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.024}" fill="#FF007A" text-anchor="end">28-31 OCT</text>
 
       <!-- Divider line -->
       <line x1="${dimension * 0.06}" y1="${dimension * 0.095}" x2="${dimension * 0.78}" y2="${dimension * 0.095}" stroke="#F7F1DF" stroke-opacity="0.3" stroke-width="2"/>
 
       <!-- User Name & Title -->
-      <text x="${dimension * 0.06}" y="${dimension * 0.145}" font-family="Cormorant Garamond, serif" font-weight="700" font-size="${dimension * 0.038}" fill="#F7F1DF">${nameText}</text>
-      <text x="${dimension * 0.06}" y="${dimension * 0.185}" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="${dimension * 0.024}" fill="#FFD400">${titleText} • #FrameInGoa</text>
+      <text x="${dimension * 0.06}" y="${dimension * 0.145}" font-family="Georgia, serif" font-weight="bold" font-size="${dimension * 0.038}" fill="#F7F1DF">${nameText}</text>
+      <text x="${dimension * 0.06}" y="${dimension * 0.185}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.024}" fill="#FFD400">${titleText} • #FrameInGoa</text>
     </g>
   </svg>
   `;
 
-  // Base canvas background setup
   const canvas = sharp({
     create: {
       width: dimension,
@@ -252,12 +248,10 @@ async function generateBuilderCardSharp({
   const cardLeft = Math.round((dimension - cardWidth) / 2);
   const cardTop = Math.round((dimension - cardHeight) / 2);
 
-  // Photo inside Card dimensions
   const photoSize = Math.round(cardWidth * 0.42);
   const photoLeft = Math.round(cardLeft + cardWidth * 0.07);
   const photoTop = Math.round(cardTop + cardHeight * 0.22);
 
-  // Crop photo to square with user crop parameters
   const photoCroppedBuffer = await processPhotoCrop(
     userSharp,
     photoSize,
@@ -311,37 +305,37 @@ async function generateBuilderCardSharp({
       <rect width="${cardWidth}" height="${cardHeight}" rx="${dimension * 0.035}" fill="${cardBgColor}" stroke="#1E5A3B" stroke-width="${dimension * 0.005}" />
 
       <!-- Top Header Branding -->
-      <text x="${cardWidth * 0.07}" y="${cardHeight * 0.09}" font-family="Cormorant Garamond, serif" font-weight="700" font-size="${dimension * 0.04}" fill="${textColor}">HH GOA <tspan fill="${accentColor}" font-family="IBM Plex Mono, monospace" font-size="${dimension * 0.03}">2026</tspan></text>
+      <text x="${cardWidth * 0.07}" y="${cardHeight * 0.09}" font-family="Georgia, serif" font-weight="bold" font-size="${dimension * 0.04}" fill="${textColor}">HH GOA <tspan fill="${accentColor}" font-family="monospace, sans-serif" font-size="${dimension * 0.03}">2026</tspan></text>
       
       <!-- Top Right Badge -->
       <g transform="translate(${cardWidth * 0.65}, ${cardHeight * 0.045})">
         <rect width="${cardWidth * 0.28}" height="${cardHeight * 0.05}" rx="${cardHeight * 0.025}" fill="${primaryColor}" stroke="#0A4C2B" stroke-width="2" />
-        <text x="${cardWidth * 0.14}" y="${cardHeight * 0.033}" font-family="Oswald, sans-serif" font-weight="700" font-size="${dimension * 0.017}" fill="#0A4C2B" text-anchor="middle" letter-spacing="2">BUILDER PASS</text>
+        <text x="${cardWidth * 0.14}" y="${cardHeight * 0.033}" font-family="Impact, sans-serif" font-weight="bold" font-size="${dimension * 0.017}" fill="#0A4C2B" text-anchor="middle" letter-spacing="2">BUILDER PASS</text>
       </g>
 
       <!-- Top Divider -->
       <line x1="${cardWidth * 0.07}" y1="${cardHeight * 0.13}" x2="${cardWidth * 0.93}" y2="${cardHeight * 0.13}" stroke="#0A4C2B" stroke-width="2.5" />
 
-      <!-- Photo Border Frame -->
+      <!-- Photo Frame Background Box -->
       <rect x="${cardWidth * 0.07 - dimension * 0.004}" y="${cardHeight * 0.22 - dimension * 0.004}" width="${photoSize + dimension * 0.008}" height="${photoSize + dimension * 0.008}" rx="${photoCornerRadius + dimension * 0.004}" fill="#0E6B3A" stroke="#0A4C2B" stroke-width="${dimension * 0.004}" />
 
       <!-- Right Column Info (Title Badge, Name, Stack, Org, Location) -->
       <g transform="translate(${cardWidth * 0.53}, ${cardHeight * 0.22})">
         <!-- Builder Title Badge -->
         <rect x="0" y="0" width="${cardWidth * 0.4}" height="${cardHeight * 0.045}" rx="${cardHeight * 0.012}" fill="${accentColor}" stroke="#0A4C2B" stroke-width="2" />
-        <text x="${cardWidth * 0.03}" y="${cardHeight * 0.03}" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="${dimension * 0.017}" fill="#FFFFFF">${titleText}</text>
+        <text x="${cardWidth * 0.03}" y="${cardHeight * 0.03}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.017}" fill="#FFFFFF">${titleText}</text>
 
         <!-- Name -->
-        <text x="0" y="${cardHeight * 0.12}" font-family="Cormorant Garamond, serif" font-weight="700" font-size="${dimension * 0.04}" fill="${textColor}">${nameText}</text>
+        <text x="0" y="${cardHeight * 0.12}" font-family="Georgia, serif" font-weight="bold" font-size="${dimension * 0.04}" fill="${textColor}">${nameText}</text>
         
         <!-- Role / Stack -->
-        <text x="0" y="${cardHeight * 0.175}" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="${dimension * 0.024}" fill="${accentColor}">${roleText}</text>
+        <text x="0" y="${cardHeight * 0.175}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.024}" fill="${accentColor}">${roleText}</text>
 
         <!-- Organization -->
-        <text x="0" y="${cardHeight * 0.225}" font-family="IBM Plex Mono, monospace" font-weight="600" font-size="${dimension * 0.021}" fill="${subtextColor}">${companyText}</text>
+        <text x="0" y="${cardHeight * 0.225}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.021}" fill="${subtextColor}">${companyText}</text>
 
         <!-- Location -->
-        <text x="0" y="${cardHeight * 0.27}" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="${dimension * 0.018}" fill="${subtextColor}">📍 ${locationText}</text>
+        <text x="0" y="${cardHeight * 0.27}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.018}" fill="${subtextColor}">Goa, India</text>
       </g>
 
       <!-- Dashed Divider -->
@@ -349,9 +343,9 @@ async function generateBuilderCardSharp({
 
       <!-- Footer Section: Event Info & Hashtag -->
       <g transform="translate(${cardWidth * 0.07}, ${cardHeight * 0.78})">
-        <text x="0" y="0" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="${dimension * 0.024}" fill="${textColor}" letter-spacing="1">28 – 31 OCT 2026 • GOA, INDIA</text>
-        <text x="0" y="${cardHeight * 0.055}" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="${dimension * 0.022}" fill="${accentColor}">${hashtagText}</text>
-        <text x="0" y="${cardHeight * 0.095}" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="${dimension * 0.016}" fill="${subtextColor}">Scan QR to verify official builder pass</text>
+        <text x="0" y="0" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.024}" fill="${textColor}" letter-spacing="1">28 – 31 OCT 2026 • GOA, INDIA</text>
+        <text x="0" y="${cardHeight * 0.055}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.022}" fill="${accentColor}">${hashtagText}</text>
+        <text x="0" y="${cardHeight * 0.095}" font-family="monospace, sans-serif" font-weight="bold" font-size="${dimension * 0.016}" fill="${subtextColor}">Scan QR to verify official builder pass</text>
       </g>
     </g>
   </svg>
@@ -374,17 +368,18 @@ async function generateBuilderCardSharp({
     .resize(qrSize, qrSize)
     .toBuffer();
 
+  // CRITICAL: Composite cardSvgOverlay FIRST, THEN roundedPhoto ON TOP, THEN qrResized ON TOP!
   return canvas
     .composite([
-      {
-        input: roundedPhoto,
-        top: photoTop,
-        left: photoLeft,
-      },
       {
         input: Buffer.from(cardSvgOverlay),
         top: 0,
         left: 0,
+      },
+      {
+        input: roundedPhoto,
+        top: photoTop,
+        left: photoLeft,
       },
       {
         input: qrResized,
