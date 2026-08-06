@@ -12,11 +12,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const record = await getGraphicRecord(id);
 
-  const title = record?.builderInfo.name
+  const title = record?.builderInfo?.name
     ? `${record.builderInfo.name}'s Official HH Goa 2026 Profile Frame`
     : 'Official HH Goa 2026 Profile Frame';
 
-  const description = record?.builderInfo.builderTitle
+  const description = record?.builderInfo?.builderTitle
     ? `${record.builderInfo.name} - ${record.builderInfo.builderTitle} (${record.builderInfo.role}) is attending HH Goa 2026. Get your custom profile frame!`
     : 'Join developers & tech innovators at HH Goa 2026. Create your custom profile frame and builder pass!';
 
@@ -94,7 +94,7 @@ export default async function FrameSharePage({ params }: Props) {
             <div className="text-center p-6 text-[#0A4C2B]">
               <Sparkles className="w-12 h-12 text-[#FF007A] mx-auto mb-3 animate-pulse" />
               <p className="font-editorial-serif font-bold text-2xl text-[#0A4C2B]">HH Goa 2026 Frame</p>
-              <p className="text-xs mt-1 text-[#0E6B3A]">Generate your profile frame to view graphic</p>
+              <p className="text-xs mt-1 text-[#0E6B3A]">Frame graphic loading or generating...</p>
             </div>
           )}
         </div>
@@ -107,20 +107,25 @@ export default async function FrameSharePage({ params }: Props) {
 
           <div>
             <h2 className="text-4xl font-editorial-serif font-bold text-[#F7F1DF] uppercase">
-              {record?.builderInfo.name || 'Alex Rivera'}
+              {record?.builderInfo?.name || 'Alex Rivera'}
             </h2>
             <p className="text-xl text-[#FFD400] font-bold mt-1">
-              {record?.builderInfo.builderTitle || 'The AI Architect'}
+              {record?.builderInfo?.builderTitle || 'The AI Architect'}
             </p>
             <p className="text-[#F7F1DF]/80 text-sm mt-2 font-medium">
-              {record?.builderInfo.role || 'Full Stack Engineer'} • {record?.builderInfo.company || record?.builderInfo.college || 'Goa, India'}
+              {(record?.builderInfo?.role || 'Full Stack Engineer') + ' • ' + (record?.builderInfo?.company || record?.builderInfo?.college || '2:47 PM Studio') + ' • ' + (record?.builderInfo?.location || 'Goa, India')}
             </p>
           </div>
 
           <div className="bg-[#F7F1DF] text-[#0A4C2B] border-2 border-[#0A4C2B] rounded-2xl p-5 text-xs sm:text-sm space-y-2 shadow-[4px_4px_0px_#0A4C2B]">
-            <p className="font-bold uppercase tracking-wider text-[#0A4C2B]">Event Details:</p>
-            <p>📅 28 – 31 October 2026 • Goa, India</p>
-            <p className="text-[#FF007A] font-bold">🚀 Official Tag: #FrameInGoa</p>
+            <p className="font-bold uppercase tracking-wider text-[#0A4C2B]">Frame Details:</p>
+            <p><strong>Name:</strong> {record?.builderInfo?.name || 'Alex Rivera'}</p>
+            <p><strong>Role / Stack:</strong> {record?.builderInfo?.role || 'Full Stack Engineer'}</p>
+            <p><strong>Title:</strong> {record?.builderInfo?.builderTitle || 'The AI Architect'}</p>
+            <p><strong>Studio / Org:</strong> {record?.builderInfo?.company || record?.builderInfo?.college || '2:47 PM Studio'}</p>
+            <p><strong>Location:</strong> {record?.builderInfo?.location || 'Goa, India'}</p>
+            <p>📅 <strong>Dates:</strong> 28 – 31 October 2026 • Goa, India</p>
+            <p className="text-[#FF007A] font-bold">🚀 <strong>Hashtag:</strong> {record?.builderInfo?.customHashtag || '#FrameInGoa'}</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">

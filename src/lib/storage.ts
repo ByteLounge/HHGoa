@@ -2,62 +2,52 @@ import { GeneratedGraphicRecord } from '@/types';
 import fs from 'fs';
 import path from 'path';
 
-// Server-side in-memory cache + persistent disk store
-const graphicStore = new Map<string, GeneratedGraphicRecord>();
+// Memory cache for super-fast lookups
+const graphicMemoryStore = new Map<string, GeneratedGraphicRecord>();
 
-const getStorageFilePath = (): string => {
-  const dataDir = path.join(process.cwd(), 'data');
-  if (!fs.existsSync(dataDir)) {
+const getGraphicsDir = (): string => {
+  const dir = path.join(process.cwd(), 'data', 'graphics');
+  if (!fs.existsSync(dir)) {
     try {
-      fs.mkdirSync(dataDir, { recursive: true });
-    } catch {
-      return path.join(process.cwd(), 'records.json');
+      fs.mkdirSync(dir, { recursive: true });
+    } catch (err) {
+      console.warn('Could not create graphics directory:', err);
     }
   }
-  return path.join(dataDir, 'records.json');
+  return dir;
 };
-
-const loadRecordsFromDisk = (): void => {
-  try {
-    const filePath = getStorageFilePath();
-    if (fs.existsSync(filePath)) {
-      const raw = fs.readFileSync(filePath, 'utf-8');
-      const records: GeneratedGraphicRecord[] = JSON.parse(raw);
-      for (const rec of records) {
-        if (rec && rec.id) {
-          graphicStore.set(rec.id, rec);
-        }
-      }
-    }
-  } catch (err) {
-    console.warn('Could not read records from disk:', err);
-  }
-};
-
-// Load existing records on startup
-loadRecordsFromDisk();
 
 export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise<void> {
-  graphicStore.set(record.id, record);
+  // 1. Cache in memory
+  graphicMemoryStore.set(record.id, record);
 
+  // 2. Persist to disk files (data/graphics/{id}.json and data/graphics/{id}.png)
   try {
-    const filePath = getStorageFilePath();
-    let records: GeneratedGraphicRecord[] = [];
-    if (fs.existsSync(filePath)) {
-      try {
-        records = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-      } catch {
-        records = [];
-      }
-    }
-    // Update or prepend record
-    records = [record, ...records.filter((r) => r.id !== record.id)].slice(0, 200);
-    fs.writeFileSync(filePath, JSON.stringify(records, null, 2), 'utf-8');
+    const dir = getGraphicsDir();
+    const jsonPath = path.join(dir, `${record.id}.json`);
+    const pngPath = path.join(dir, `${record.id}.png`);
+
+    // Separate base64 image data from metadata to keep JSON small
+    const base64Data = record.imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
+    const pngBuffer = Buffer.from(base64Data, 'base64');
+
+    const metadata = {
+      id: record.id,
+      type: record.type,
+      builderInfo: record.builderInfo,
+      themeId: record.themeId,
+      createdAt: record.createdAt,
+      shareUrl: record.shareUrl,
+    };
+
+    // Write PNG and JSON files asynchronously
+    await fs.promises.writeFile(jsonPath, JSON.stringify(metadata, null, 2), 'utf-8');
+    await fs.promises.writeFile(pngPath, pngBuffer);
   } catch (err) {
-    console.warn('Could not save record to disk:', err);
+    console.warn('Failed to save graphic record to disk:', err);
   }
 
-  // If Vercel Blob is configured:
+  // 3. Optional Vercel Blob backup if token exists
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
       const { put } = await import('@vercel/blob');
@@ -68,19 +58,40 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
         contentType: 'image/png',
       });
     } catch (err) {
-      console.warn('Vercel Blob upload skipped or failed:', err);
+      console.warn('Vercel Blob upload skipped:', err);
     }
   }
 }
 
 export async function getGraphicRecord(id: string): Promise<GeneratedGraphicRecord | null> {
-  if (graphicStore.has(id)) {
-    return graphicStore.get(id)!;
+  // Check memory store first
+  if (graphicMemoryStore.has(id)) {
+    return graphicMemoryStore.get(id)!;
   }
-  // Try reloading from disk if not found in memory map
-  loadRecordsFromDisk();
-  if (graphicStore.has(id)) {
-    return graphicStore.get(id)!;
+
+  // Try reading from disk
+  try {
+    const dir = getGraphicsDir();
+    const jsonPath = path.join(dir, `${id}.json`);
+    const pngPath = path.join(dir, `${id}.png`);
+
+    if (fs.existsSync(jsonPath) && fs.existsSync(pngPath)) {
+      const jsonRaw = await fs.promises.readFile(jsonPath, 'utf-8');
+      const metadata = JSON.parse(jsonRaw);
+      const pngBuffer = await fs.promises.readFile(pngPath);
+      const imageDataUrl = `data:image/png;base64,${pngBuffer.toString('base64')}`;
+
+      const record: GeneratedGraphicRecord = {
+        ...metadata,
+        imageDataUrl,
+      };
+
+      graphicMemoryStore.set(id, record);
+      return record;
+    }
+  } catch (err) {
+    console.warn(`Error reading graphic record ${id} from disk:`, err);
   }
+
   return null;
 }
