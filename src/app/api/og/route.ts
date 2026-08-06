@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getGraphicRecord } from '@/lib/storage';
 import { generateHighResGraphic } from '@/lib/image-processor';
 import sharp from 'sharp';
+import { ThemeId } from '@/types';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -24,6 +25,10 @@ export async function GET(req: NextRequest) {
     const name = searchParams.get('name') || 'Official Builder';
     const role = searchParams.get('role') || 'Full Stack Engineer';
     const title = searchParams.get('title') || 'The AI Architect';
+    const company = searchParams.get('company') || '2:47 PM Studio';
+    const location = searchParams.get('location') || 'Goa, India';
+    const customHashtag = searchParams.get('tag') || '#FrameInGoa';
+    const themeId = (searchParams.get('theme') as ThemeId) || 'hhgoa-editorial';
 
     const defaultPhoto = await sharp({
       create: {
@@ -42,16 +47,16 @@ export async function GET(req: NextRequest) {
         name,
         role,
         builderTitle: title,
-        company: '2:47 PM Studio',
-        location: 'Goa, India',
-        customHashtag: '#FrameInGoa',
+        company,
+        location,
+        customHashtag,
       },
       cropConfig: { zoom: 1, offsetX: 0, offsetY: 0, rotation: 0 },
       exportOptions: {
         resolution: '1080x1080',
         transparentBg: false,
-        themeId: 'hhgoa-editorial',
-        graphicType: graphicType,
+        themeId,
+        graphicType,
       },
       shareUrl: `${req.nextUrl.origin}/${graphicType}/${id}`,
     });

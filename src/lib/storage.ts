@@ -1,6 +1,7 @@
 import { GeneratedGraphicRecord } from '@/types';
 import fs from 'fs';
 import path from 'path';
+import { supabase, BUCKET_NAME } from './supabase';
 
 // Memory cache for super-fast lookups
 const graphicMemoryStore = new Map<string, GeneratedGraphicRecord>();
@@ -21,15 +22,14 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
   // 1. Cache in memory
   graphicMemoryStore.set(record.id, record);
 
+  const base64Data = record.imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
+  const pngBuffer = Buffer.from(base64Data, 'base64');
+
   // 2. Persist to disk files (data/graphics/{id}.json and data/graphics/{id}.png)
   try {
     const dir = getGraphicsDir();
     const jsonPath = path.join(dir, `${record.id}.json`);
     const pngPath = path.join(dir, `${record.id}.png`);
-
-    // Separate base64 image data from metadata to keep JSON small
-    const base64Data = record.imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
-    const pngBuffer = Buffer.from(base64Data, 'base64');
 
     const metadata = {
       id: record.id,
@@ -40,25 +40,45 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
       shareUrl: record.shareUrl,
     };
 
-    // Write PNG and JSON files asynchronously
     await fs.promises.writeFile(jsonPath, JSON.stringify(metadata, null, 2), 'utf-8');
     await fs.promises.writeFile(pngPath, pngBuffer);
   } catch (err) {
     console.warn('Failed to save graphic record to disk:', err);
   }
 
-  // 3. Optional Vercel Blob backup if token exists
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  // 3. Upload to Supabase Storage if configured
+  if (supabase) {
     try {
-      const { put } = await import('@vercel/blob');
-      const base64Data = record.imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
-      const buffer = Buffer.from(base64Data, 'base64');
-      await put(`hhgoa-2026/${record.id}.png`, buffer, {
-        access: 'public',
-        contentType: 'image/png',
-      });
+      const filePath = `${record.type}s/${record.id}.png`;
+      const { error: uploadError } = await supabase.storage
+        .from(BUCKET_NAME)
+        .upload(filePath, pngBuffer, {
+          contentType: 'image/png',
+          upsert: true,
+        });
+
+      if (uploadError) {
+        console.warn('Supabase Storage upload message:', uploadError.message);
+      } else {
+        console.log(`Successfully stored graphic ${record.id} in Supabase Storage (${filePath})`);
+      }
+
+      // Optional metadata insertion into Supabase DB table 'graphics'
+      try {
+        await supabase.from('graphics').upsert({
+          id: record.id,
+          type: record.type,
+          builder_info: record.builderInfo,
+          theme_id: record.themeId,
+          created_at: record.createdAt,
+          share_url: record.shareUrl,
+          image_path: filePath,
+        });
+      } catch (err: unknown) {
+        console.warn('Supabase DB table save skipped:', err);
+      }
     } catch (err) {
-      console.warn('Vercel Blob upload skipped:', err);
+      console.warn('Supabase Storage integration skipped:', err);
     }
   }
 }
@@ -91,6 +111,43 @@ export async function getGraphicRecord(id: string): Promise<GeneratedGraphicReco
     }
   } catch (err) {
     console.warn(`Error reading graphic record ${id} from disk:`, err);
+  }
+
+  // Try fetching from Supabase Storage
+  if (supabase) {
+    try {
+      for (const folder of ['cards', 'frames']) {
+        const filePath = `${folder}/${id}.png`;
+        const { data, error } = await supabase.storage.from(BUCKET_NAME).download(filePath);
+        if (data && !error) {
+          const arrayBuffer = await data.arrayBuffer();
+          const pngBuffer = Buffer.from(arrayBuffer);
+          const imageDataUrl = `data:image/png;base64,${pngBuffer.toString('base64')}`;
+
+          const record: GeneratedGraphicRecord = {
+            id,
+            type: folder === 'cards' ? 'card' : 'frame',
+            imageDataUrl,
+            builderInfo: {
+              name: 'Hacker House Builder',
+              role: 'Builder',
+              builderTitle: 'Hacker House Goa',
+              company: 'Hacker House',
+              location: 'Goa, India',
+              customHashtag: '#FrameInGoa',
+            },
+            themeId: 'hhgoa-editorial',
+            createdAt: new Date().toISOString(),
+            shareUrl: `https://hhgoa2026.vercel.app/${folder === 'cards' ? 'card' : 'frame'}/${id}`,
+          };
+
+          graphicMemoryStore.set(id, record);
+          return record;
+        }
+      }
+    } catch (err) {
+      console.warn(`Error downloading graphic ${id} from Supabase:`, err);
+    }
   }
 
   return null;

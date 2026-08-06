@@ -7,22 +7,38 @@ import { ShareGraphicDisplay } from '@/components/share/ShareGraphicDisplay';
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { id } = await params;
+  const sParams = await searchParams;
   const record = await getGraphicRecord(id);
 
-  const title = record?.builderInfo?.name
-    ? `${record.builderInfo.name}'s Official Hacker House Goa 2026 Builder Pass`
+  const name = record?.builderInfo?.name || (typeof sParams.name === 'string' ? sParams.name : null);
+  const role = record?.builderInfo?.role || (typeof sParams.role === 'string' ? sParams.role : null);
+  const builderTitle = record?.builderInfo?.builderTitle || (typeof sParams.title === 'string' ? sParams.title : null);
+
+  const title = name
+    ? `${name}'s Official Hacker House Goa 2026 Builder Pass`
     : 'Official Hacker House Goa 2026 Builder Pass';
 
-  const description = record?.builderInfo?.builderTitle
-    ? `${record.builderInfo.name} - ${record.builderInfo.builderTitle} (${record.builderInfo.role}) is attending Hacker House Goa 2026.`
+  const description = builderTitle
+    ? `${name || 'Builder'} - ${builderTitle} (${role || 'Engineer'}) is attending Hacker House Goa 2026.`
     : 'Official Builder Pass Credential for Hacker House Goa 2026.';
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
-  const ogImageUrl = `${baseUrl}/api/og?id=${id}&type=card`;
+  
+  // Construct search string for ogImageUrl
+  const ogParams = new URLSearchParams({ id, type: 'card' });
+  if (sParams.name) ogParams.set('name', String(sParams.name));
+  if (sParams.role) ogParams.set('role', String(sParams.role));
+  if (sParams.title) ogParams.set('title', String(sParams.title));
+  if (sParams.company) ogParams.set('company', String(sParams.company));
+  if (sParams.location) ogParams.set('location', String(sParams.location));
+  if (sParams.tag) ogParams.set('tag', String(sParams.tag));
+
+  const ogImageUrl = `${baseUrl}/api/og?${ogParams.toString()}`;
 
   return {
     metadataBase: new URL(baseUrl),
@@ -52,15 +68,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CardSharePage({ params }: Props) {
+export default async function CardSharePage({ params, searchParams }: Props) {
   const { id } = await params;
+  const sParams = await searchParams;
   const record = await getGraphicRecord(id);
 
   const shareText = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official Builder Pass!\n\nCheck out my credential:`;
   const shareUrl = `https://hhgoa2026.vercel.app/card/${id}`;
   const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
-  const imageSrc = record?.imageDataUrl || `/api/og?id=${id}&type=card`;
+  const ogParams = new URLSearchParams({ id, type: 'card' });
+  if (sParams.name) ogParams.set('name', String(sParams.name));
+  if (sParams.role) ogParams.set('role', String(sParams.role));
+  if (sParams.title) ogParams.set('title', String(sParams.title));
+  if (sParams.company) ogParams.set('company', String(sParams.company));
+  if (sParams.location) ogParams.set('location', String(sParams.location));
+  if (sParams.tag) ogParams.set('tag', String(sParams.tag));
+
+  const imageSrc = record?.imageDataUrl || `/api/og?${ogParams.toString()}`;
 
   return (
     <div className="min-h-screen bg-[#0E6B3A] text-[#F7F1DF] flex flex-col justify-between p-4 sm:p-8 font-editorial-mono">
