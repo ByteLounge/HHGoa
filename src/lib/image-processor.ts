@@ -110,6 +110,7 @@ async function processPhotoCrop(
       height: Math.min(cropH, origH - extractTop),
     })
     .resize(targetWidth, targetHeight, { fit: 'cover' })
+    .ensureAlpha()
     .toBuffer();
 }
 
@@ -143,14 +144,17 @@ async function generateProfileFrameSharp({
     cropConfig
   );
 
+  // Mask photo with alpha channel enabled
   const maskSvg = Buffer.from(`
     <svg width="${innerPhotoSize}" height="${innerPhotoSize}">
-      <circle cx="${innerPhotoSize / 2}" cy="${innerPhotoSize / 2}" r="${innerPhotoSize / 2}" fill="#fff"/>
+      <circle cx="${innerPhotoSize / 2}" cy="${innerPhotoSize / 2}" r="${innerPhotoSize / 2}" fill="#FFFFFF"/>
     </svg>
   `);
 
   const maskedPhoto = await sharp(photoCroppedBuffer)
+    .ensureAlpha()
     .composite([{ input: maskSvg, blend: 'dest-in' }])
+    .png()
     .toBuffer();
 
   const nameText = escapeXml(builderInfo.name || 'Alex Rivera');
@@ -251,7 +255,7 @@ async function generateBuilderCardSharp({
   const photoSize = Math.round(cardWidth * 0.42);
   const photoLeft = Math.round(cardLeft + cardWidth * 0.07);
   const photoTop = Math.round(cardTop + cardHeight * 0.22);
-  const photoCornerRadius = Math.round(photoSize * 0.12);
+  const photoCornerRadius = Math.round(photoSize * 0.10);
 
   const photoCroppedBuffer = await processPhotoCrop(
     userSharp,
@@ -260,14 +264,17 @@ async function generateBuilderCardSharp({
     cropConfig
   );
 
+  // Mask photo with rounded corners ensuring alpha transparency outside mask
   const photoMaskSvg = Buffer.from(`
     <svg width="${photoSize}" height="${photoSize}">
-      <rect x="0" y="0" width="${photoSize}" height="${photoSize}" rx="${photoCornerRadius}" ry="${photoCornerRadius}" fill="#fff"/>
+      <rect x="0" y="0" width="${photoSize}" height="${photoSize}" rx="${photoCornerRadius}" ry="${photoCornerRadius}" fill="#FFFFFF"/>
     </svg>
   `);
 
   const roundedPhoto = await sharp(photoCroppedBuffer)
+    .ensureAlpha()
     .composite([{ input: photoMaskSvg, blend: 'dest-in' }])
+    .png()
     .toBuffer();
 
   const nameText = escapeXml(builderInfo.name || 'Alex Rivera');

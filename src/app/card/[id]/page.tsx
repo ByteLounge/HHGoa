@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getGraphicRecord } from '@/lib/storage';
-import { Sparkles, Share2, Download, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Share2, Download, ArrowLeft, CheckCircle2, QrCode } from 'lucide-react';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -20,14 +20,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? `${record.builderInfo.name} - ${record.builderInfo.builderTitle} (${record.builderInfo.role}) is attending HH Goa 2026. Create your custom builder pass!`
     : 'Join developers & tech innovators at HH Goa 2026. Create your custom profile frame and builder pass!';
 
-  const ogImageUrl = `/api/og?id=${id}`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
+  const ogImageUrl = `${baseUrl}/api/og?id=${id}`;
 
   return {
+    metadataBase: new URL(baseUrl),
     title,
     description,
     openGraph: {
       title,
       description,
+      url: `${baseUrl}/card/${id}`,
+      siteName: 'HH Goa 2026 Studio',
+      type: 'website',
       images: [
         {
           url: ogImageUrl,
@@ -50,68 +55,72 @@ export default async function CardSharePage({ params }: Props) {
   const { id } = await params;
   const record = await getGraphicRecord(id);
 
+  const shareText = `Ready for HH Goa 2026 🚀\n\nJust created my official Builder Pass!\n\nCheck out my credential:`;
+  const shareUrl = `https://hhgoa2026.vercel.app/card/${id}`;
+  const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+
   return (
-    <div className="min-h-screen bg-[#06080d] text-white flex flex-col justify-between p-4 sm:p-8">
+    <div className="min-h-screen bg-[#0E6B3A] text-[#F7F1DF] flex flex-col justify-between p-4 sm:p-8 font-editorial-mono">
       {/* Top Navbar */}
-      <header className="max-w-5xl mx-auto w-full flex items-center justify-between py-4 border-b border-white/10">
+      <header className="max-w-5xl mx-auto w-full flex items-center justify-between py-4 border-b-2 border-[#1E5A3B]">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 flex items-center justify-center font-black text-white shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center font-display font-bold text-lg shadow-[3px_3px_0px_#0A4C2B]">
             HH
           </div>
           <div>
-            <h1 className="font-black text-lg leading-none tracking-tight">HH GOA 2026</h1>
-            <p className="text-xs text-orange-400 font-medium">Official Builder Pass</p>
+            <h1 className="font-editorial-serif font-bold text-2xl leading-none text-[#FFD400]">HH GOA 2026</h1>
+            <p className="text-xs text-[#F7F1DF]/80 font-bold">Official Builder Pass</p>
           </div>
         </Link>
         <Link
           href="/"
-          className="flex items-center gap-2 text-sm font-bold text-slate-300 hover:text-white bg-[#0e131f] border border-white/10 px-4 py-2 rounded-xl transition-colors min-h-[44px]"
+          className="flex items-center gap-2 text-xs sm:text-sm font-editorial-display font-bold text-[#0A4C2B] bg-[#FFD400] border-2 border-[#0A4C2B] px-4 py-2.5 rounded-full shadow-[3px_3px_0px_#0A4C2B] hover:translate-x-0.5 transition-all min-h-[44px]"
         >
-          <ArrowLeft className="w-4 h-4" /> Create Yours
+          <ArrowLeft className="w-4 h-4 text-[#0A4C2B]" /> Studio
         </Link>
       </header>
 
       {/* Main Content Area */}
       <main className="max-w-4xl mx-auto w-full my-8 flex flex-col md:flex-row items-center gap-8 lg:gap-12">
-        {/* Preview Graphic */}
-        <div className="w-full max-w-md aspect-square rounded-3xl overflow-hidden bg-[#0e131f] border border-white/10 shadow-2xl shadow-orange-500/10 flex items-center justify-center relative group">
+        {/* Preview Graphic inside Editorial Parchment Card */}
+        <div className="w-full max-w-md aspect-square rounded-3xl overflow-hidden bg-[#F7F1DF] border-2 border-[#1E5A3B] shadow-[8px_8px_0px_#0A4C2B] flex items-center justify-center relative group p-3">
           {record?.imageDataUrl ? (
             <img
               src={record.imageDataUrl}
               alt="Generated Builder Card"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain rounded-2xl"
             />
           ) : (
-            <div className="text-center p-6 text-slate-400">
-              <Sparkles className="w-12 h-12 text-orange-500 mx-auto mb-3 animate-pulse" />
-              <p className="font-extrabold text-white">HH Goa 2026 Pass</p>
-              <p className="text-sm mt-1">Generate your personalized pass to view graphic</p>
+            <div className="text-center p-6 text-[#0A4C2B]">
+              <Sparkles className="w-12 h-12 text-[#FF007A] mx-auto mb-3 animate-pulse" />
+              <p className="font-editorial-serif font-bold text-2xl text-[#0A4C2B]">HH Goa 2026 Pass</p>
+              <p className="text-xs mt-1 text-[#0E6B3A]">Generate your personalized pass to view graphic</p>
             </div>
           )}
         </div>
 
         {/* Card Details & Actions */}
         <div className="flex-1 text-left space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-black uppercase tracking-wider">
-            <CheckCircle2 className="w-3.5 h-3.5 text-orange-500" /> Verified HH Goa 2026 Builder Pass
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] text-xs font-bold uppercase tracking-wider shadow-[2px_2px_0px_#0A4C2B]">
+            <CheckCircle2 className="w-4 h-4 text-[#FF007A]" /> Verified Official HH Goa Credential
           </div>
 
           <div>
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
+            <h2 className="text-4xl font-editorial-serif font-bold text-[#F7F1DF] uppercase">
               {record?.builderInfo.name || 'Alex Rivera'}
             </h2>
-            <p className="text-xl text-orange-400 font-extrabold mt-1">
+            <p className="text-xl text-[#FFD400] font-bold mt-1">
               {record?.builderInfo.builderTitle || 'The AI Architect'}
             </p>
-            <p className="text-slate-400 text-sm mt-2 font-medium">
+            <p className="text-[#F7F1DF]/80 text-sm mt-2 font-medium">
               {record?.builderInfo.role || 'Full Stack Engineer'} • {record?.builderInfo.company || record?.builderInfo.college || 'Goa, India'}
             </p>
           </div>
 
-          <div className="bg-[#0e131f] border border-white/10 rounded-2xl p-5 text-sm text-slate-300 space-y-2">
-            <p className="font-extrabold text-white">Event Info:</p>
+          <div className="bg-[#F7F1DF] text-[#0A4C2B] border-2 border-[#0A4C2B] rounded-2xl p-5 text-xs sm:text-sm space-y-2 shadow-[4px_4px_0px_#0A4C2B]">
+            <p className="font-bold uppercase tracking-wider text-[#0A4C2B]">Event Details:</p>
             <p>📅 28 – 31 October 2026 • Goa, India</p>
-            <p>🚀 Tag: #FrameInGoa</p>
+            <p className="text-[#FF007A] font-bold">🚀 Official Tag: #FrameInGoa</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -119,43 +128,39 @@ export default async function CardSharePage({ params }: Props) {
               <a
                 href={record.imageDataUrl}
                 download={`HHGoa2026_Card_${id.slice(0, 8)}.png`}
-                className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-black px-6 py-3.5 rounded-xl shadow-lg shadow-orange-500/25 transition-all hover:scale-[1.02] min-h-[48px]"
+                className="flex items-center gap-2 btn-editorial-pink px-6 py-3.5 rounded-full text-sm shadow-[4px_4px_0px_#0A4C2B] min-h-[48px]"
               >
-                <Download className="w-5 h-5" /> Download Pass PNG
+                <Download className="w-5 h-5 text-white" /> Download PNG
               </a>
             )}
 
             <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                `Ready for HH Goa 2026 🚀\n\nJust created my official Builder Pass!\n\nCheck it out here:`
-              )}&url=${encodeURIComponent(
-                `https://hhgoa2026.vercel.app/card/${id}`
-              )}`}
+              href={twitterIntentUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-[#0e131f] hover:bg-white/10 border border-white/10 text-white font-extrabold px-5 py-3.5 rounded-xl transition-all min-h-[48px]"
+              className="flex items-center gap-2 btn-editorial-cream px-5 py-3.5 rounded-full text-sm shadow-[4px_4px_0px_#0A4C2B] min-h-[48px]"
             >
-              <Share2 className="w-5 h-5 text-orange-400" /> Share on X
+              <Share2 className="w-5 h-5 text-[#FF007A]" /> Share to X
             </a>
           </div>
 
-          <div className="pt-4 border-t border-white/10">
-            <p className="text-xs text-slate-400">
+          <div className="pt-4 border-t border-[#1E5A3B]">
+            <p className="text-xs text-[#F7F1DF]/80">
               Want your own official HH Goa 2026 Profile Frame or Builder Pass?
             </p>
             <Link
               href="/"
-              className="inline-block text-sm text-orange-400 hover:text-orange-300 font-extrabold mt-1"
+              className="inline-block text-xs font-bold text-[#FFD400] hover:underline mt-1"
             >
-              Create your graphic in 5 seconds →
+              Create your graphic in studio →
             </Link>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="max-w-5xl mx-auto w-full text-center py-6 border-t border-white/10 text-xs text-slate-500">
-        © 2026 HH Goa • Hackathon &amp; Builder Residency
+      <footer className="max-w-5xl mx-auto w-full text-center py-6 border-t border-[#1E5A3B] text-xs text-[#F7F1DF]/70">
+        © 2026 HH Goa • Hackathon &amp; Builder Studio
       </footer>
     </div>
   );
