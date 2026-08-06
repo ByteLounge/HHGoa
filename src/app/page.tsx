@@ -84,6 +84,10 @@ export default function HomePage() {
   const handleGenerateAndDownload = async (): Promise<string | null> => {
     setIsGenerating(true);
     try {
+      if (typeof document !== 'undefined' && 'fonts' in document) {
+        await document.fonts.ready;
+      }
+
       let fileToUpload = userFile;
       if (!fileToUpload && userImageUrl) {
         const res = await fetch(userImageUrl);
