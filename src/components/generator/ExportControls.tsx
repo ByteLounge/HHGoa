@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
 import { ExportOptions, ExportResolution } from '@/types';
-import { Download, Share2, Copy, Check, QrCode, RefreshCw, Layers, Sparkles } from 'lucide-react';
+import { Download, Share2, Copy, Check, QrCode, RefreshCw, Layers } from 'lucide-react';
 
 interface ExportControlsProps {
   exportOptions: ExportOptions;

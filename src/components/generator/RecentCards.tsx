@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { GeneratedGraphicRecord } from '@/types';
-import { History, Download, ExternalLink, Trash2, Sparkles } from 'lucide-react';
+import { History, Download, ExternalLink, Trash2 } from 'lucide-react';
 
 export function RecentCards() {
   const [recentList, setRecentList] = useState<GeneratedGraphicRecord[]>([]);

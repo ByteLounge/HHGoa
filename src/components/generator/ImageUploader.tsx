@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
-import { Upload, AlertCircle, RefreshCw, CheckCircle2, Image as ImageIcon } from 'lucide-react';
+import { Upload, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { validateImageFile } from '@/lib/validation';
 
 interface ImageUploaderProps {

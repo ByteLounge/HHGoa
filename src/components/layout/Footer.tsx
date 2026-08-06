@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import { ShieldCheck, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 export function Footer() {
   return (

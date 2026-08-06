@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, ShieldCheck, ArrowDown, Zap, Award, Users, Terminal } from 'lucide-react';
+import { Sparkles, ArrowDown, Zap, Award, Terminal } from 'lucide-react';
 
 export function Hero() {
   return (

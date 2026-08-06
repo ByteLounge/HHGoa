@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { QrCode, Sparkles } from 'lucide-react';
+import { QrCode } from 'lucide-react';
 
 export function Gallery() {
   return (
