@@ -64,6 +64,11 @@ export const metadata: Metadata = {
     title: 'Hacker House Goa 2026 • Official Editorial Profile Frame & Builder Pass Studio',
     description: 'Generate festival-grade profile picture overlays and official builder credentials for Hacker House Goa 2026.',
   },
+  icons: {
+    icon: '/favicon.webp',
+    shortcut: '/favicon.webp',
+    apple: '/favicon.webp',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
