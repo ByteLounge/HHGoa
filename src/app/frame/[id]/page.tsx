@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { getGraphicRecord } from '@/lib/storage';
 import { Share2, Download, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
+import { ShareGraphicDisplay } from '@/components/share/ShareGraphicDisplay';
+
 interface Props {
   params: Promise<{ id: string }>;
 }
@@ -21,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : 'Official Profile Frame Credential for HH Goa 2026.';
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
-  const ogImageUrl = `${baseUrl}/api/og?id=${id}`;
+  const ogImageUrl = `${baseUrl}/api/og?id=${id}&type=frame`;
 
   return {
     metadataBase: new URL(baseUrl),
@@ -59,7 +61,7 @@ export default async function FrameSharePage({ params }: Props) {
   const shareUrl = `https://hhgoa2026.vercel.app/frame/${id}`;
   const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
-  const imageSrc = record?.imageDataUrl || `/api/og?id=${id}`;
+  const imageSrc = record?.imageDataUrl || `/api/og?id=${id}&type=frame`;
 
   return (
     <div className="min-h-screen bg-[#0E6B3A] text-[#F7F1DF] flex flex-col justify-between p-4 sm:p-8 font-editorial-mono">
@@ -86,11 +88,7 @@ export default async function FrameSharePage({ params }: Props) {
       <main className="max-w-4xl mx-auto w-full my-8 flex flex-col md:flex-row items-center gap-8 lg:gap-12">
         {/* Prominent High-Res Profile Frame Graphic (Downloaded PNG) */}
         <div className="w-full max-w-md aspect-square rounded-3xl overflow-hidden bg-[#F7F1DF] border-2 border-[#1E5A3B] shadow-[8px_8px_0px_#0A4C2B] flex items-center justify-center relative group p-2">
-          <img
-            src={imageSrc}
-            alt="Official HH Goa Profile Frame"
-            className="w-full h-full object-contain rounded-2xl"
-          />
+          <ShareGraphicDisplay id={id} initialSrc={imageSrc} altText="Official HH Goa Profile Frame" />
         </div>
 
         {/* Builder Details & Actions */}
