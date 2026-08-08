@@ -36,7 +36,120 @@ async function ensureBucketExists(): Promise<void> {
   }
 }
 
+/**
+ * Helper to remove previous graphics with matching builder details (name, role, company, type)
+ * so only the latest pass/frame is kept in Supabase Storage, Supabase DB, memory, and disk.
+ */
+async function cleanupDuplicateGraphics(newRecord: GeneratedGraphicRecord): Promise<void> {
+  const newName = (newRecord.builderInfo.name || '').trim().toLowerCase();
+  const newRole = (newRecord.builderInfo.role || '').trim().toLowerCase();
+  const newCompany = (newRecord.builderInfo.company || newRecord.builderInfo.college || '').trim().toLowerCase();
+  const newType = newRecord.type;
+
+  if (!newName) return;
+
+  // 1. Clean memory store
+  for (const [key, existing] of graphicMemoryStore.entries()) {
+    if (key !== newRecord.id && existing.type === newType) {
+      const exName = (existing.builderInfo.name || '').trim().toLowerCase();
+      const exRole = (existing.builderInfo.role || '').trim().toLowerCase();
+      const exCompany = (existing.builderInfo.company || existing.builderInfo.college || '').trim().toLowerCase();
+
+      if (exName === newName && exRole === newRole && exCompany === newCompany) {
+        graphicMemoryStore.delete(key);
+      }
+    }
+  }
+
+  // 2. Clean local disk
+  try {
+    const dir = getGraphicsDir();
+    if (fs.existsSync(dir)) {
+      const files = await fs.promises.readdir(dir);
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const oldId = file.replace('.json', '');
+          if (oldId === newRecord.id) continue;
+          try {
+            const content = await fs.promises.readFile(path.join(dir, file), 'utf-8');
+            const meta = JSON.parse(content);
+            const metaType = meta.type || 'card';
+            const metaName = (meta.builderInfo?.name || '').trim().toLowerCase();
+            const metaRole = (meta.builderInfo?.role || '').trim().toLowerCase();
+            const metaCompany = (meta.builderInfo?.company || meta.builderInfo?.college || '').trim().toLowerCase();
+
+            if (metaType === newType && metaName === newName && metaRole === newRole && metaCompany === newCompany) {
+              await fs.promises.unlink(path.join(dir, `${oldId}.json`)).catch(() => {});
+              await fs.promises.unlink(path.join(dir, `${oldId}.png`)).catch(() => {});
+            }
+          } catch {
+            // Ignore single file parse error
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Disk cleanup warning:', err);
+  }
+
+  // 3. Clean Supabase Storage & Supabase DB
+  if (supabase) {
+    try {
+      const folder = newType === 'frame' ? 'frames' : 'cards';
+      const { data: fileList } = await supabase.storage.from(BUCKET_NAME).list(folder);
+
+      if (fileList && fileList.length > 0) {
+        const jsonFiles = fileList.filter((f) => f.name.endsWith('.json'));
+        for (const jFile of jsonFiles) {
+          const oldId = jFile.name.replace('.json', '');
+          if (oldId === newRecord.id) continue;
+
+          try {
+            const { data: jsonData } = await supabase.storage
+              .from(BUCKET_NAME)
+              .download(`${folder}/${jFile.name}`);
+
+            if (jsonData) {
+              const text = await jsonData.text();
+              const meta = JSON.parse(text);
+              const metaName = (meta.builderInfo?.name || '').trim().toLowerCase();
+              const metaRole = (meta.builderInfo?.role || '').trim().toLowerCase();
+              const metaCompany = (meta.builderInfo?.company || meta.builderInfo?.college || '').trim().toLowerCase();
+
+              if (metaName === newName && metaRole === newRole && metaCompany === newCompany) {
+                // Delete previous PNG and JSON from Supabase Storage
+                await supabase.storage
+                  .from(BUCKET_NAME)
+                  .remove([`${folder}/${oldId}.png`, `${folder}/${oldId}.json`]);
+
+                console.log(`Discarded previous duplicate graphic ${oldId} for builder "${newRecord.builderInfo.name}" in Supabase Storage`);
+              }
+            }
+          } catch {
+            // Ignore single file check error
+          }
+        }
+      }
+
+      // Delete from Supabase DB table if configured
+      try {
+        await supabase
+          .from('graphics')
+          .delete()
+          .eq('type', newType);
+      } catch {
+        // Table cleanup optional
+      }
+    } catch (err) {
+      console.warn('Supabase duplicate cleanup warning:', err);
+    }
+  }
+}
+
 export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise<void> {
+  // Discard older duplicate passes with matching details before saving new record
+  await cleanupDuplicateGraphics(record);
+
   // 1. Cache in memory
   graphicMemoryStore.set(record.id, record);
 

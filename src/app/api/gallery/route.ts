@@ -11,6 +11,8 @@ export interface GalleryItem {
   createdAt: string;
   builderName?: string;
   builderTitle?: string;
+  builderRole?: string;
+  builderCompany?: string;
 }
 
 export async function GET() {
@@ -22,7 +24,7 @@ export async function GET() {
       // Fetch cards
       const { data: cardFiles } = await supabase.storage
         .from(BUCKET_NAME)
-        .list('cards', { limit: 20, sortBy: { column: 'name', order: 'desc' } });
+        .list('cards', { limit: 50, sortBy: { column: 'name', order: 'desc' } });
 
       if (cardFiles && cardFiles.length > 0) {
         for (const file of cardFiles) {
@@ -32,12 +34,37 @@ export async function GET() {
               .from(BUCKET_NAME)
               .getPublicUrl(`cards/${file.name}`).data.publicUrl;
 
+            let builderName: string | undefined;
+            let builderTitle: string | undefined;
+            let builderRole: string | undefined;
+            let builderCompany: string | undefined;
+
+            try {
+              const { data: jsonData } = await supabase.storage
+                .from(BUCKET_NAME)
+                .download(`cards/${id}.json`);
+              if (jsonData) {
+                const text = await jsonData.text();
+                const meta = JSON.parse(text);
+                builderName = meta.builderInfo?.name;
+                builderTitle = meta.builderInfo?.builderTitle;
+                builderRole = meta.builderInfo?.role;
+                builderCompany = meta.builderInfo?.company || meta.builderInfo?.college;
+              }
+            } catch {
+              // Ignore metadata fetch error
+            }
+
             items.push({
               id,
               type: 'card',
               imageUrl: publicUrl,
               shareUrl: `/card/${id}`,
               createdAt: file.created_at || new Date().toISOString(),
+              builderName,
+              builderTitle,
+              builderRole,
+              builderCompany,
             });
           }
         }
@@ -46,7 +73,7 @@ export async function GET() {
       // Fetch frames
       const { data: frameFiles } = await supabase.storage
         .from(BUCKET_NAME)
-        .list('frames', { limit: 20, sortBy: { column: 'name', order: 'desc' } });
+        .list('frames', { limit: 50, sortBy: { column: 'name', order: 'desc' } });
 
       if (frameFiles && frameFiles.length > 0) {
         for (const file of frameFiles) {
@@ -56,12 +83,37 @@ export async function GET() {
               .from(BUCKET_NAME)
               .getPublicUrl(`frames/${file.name}`).data.publicUrl;
 
+            let builderName: string | undefined;
+            let builderTitle: string | undefined;
+            let builderRole: string | undefined;
+            let builderCompany: string | undefined;
+
+            try {
+              const { data: jsonData } = await supabase.storage
+                .from(BUCKET_NAME)
+                .download(`frames/${id}.json`);
+              if (jsonData) {
+                const text = await jsonData.text();
+                const meta = JSON.parse(text);
+                builderName = meta.builderInfo?.name;
+                builderTitle = meta.builderInfo?.builderTitle;
+                builderRole = meta.builderInfo?.role;
+                builderCompany = meta.builderInfo?.company || meta.builderInfo?.college;
+              }
+            } catch {
+              // Ignore metadata fetch error
+            }
+
             items.push({
               id,
               type: 'frame',
               imageUrl: publicUrl,
               shareUrl: `/frame/${id}`,
               createdAt: file.created_at || new Date().toISOString(),
+              builderName,
+              builderTitle,
+              builderRole,
+              builderCompany,
             });
           }
         }
@@ -92,6 +144,8 @@ export async function GET() {
               createdAt: meta.createdAt || new Date().toISOString(),
               builderName: meta.builderInfo?.name,
               builderTitle: meta.builderInfo?.builderTitle,
+              builderRole: meta.builderInfo?.role,
+              builderCompany: meta.builderInfo?.company || meta.builderInfo?.college,
             });
           }
         }
@@ -104,9 +158,43 @@ export async function GET() {
   // Sort newest first
   items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
+  // Deduplicate items: Keep only the latest entry per unique builder identity + type
+  const uniqueMap = new Map<string, GalleryItem>();
+  const duplicateIdsToRemove: { id: string; type: 'card' | 'frame' }[] = [];
+
+  for (const item of items) {
+    const key = item.builderName
+      ? `${item.type}_${(item.builderName || '').trim().toLowerCase()}_${(item.builderRole || '').trim().toLowerCase()}_${(item.builderCompany || '').trim().toLowerCase()}`
+      : `id_${item.id}`;
+
+    if (!uniqueMap.has(key)) {
+      uniqueMap.set(key, item);
+    } else {
+      duplicateIdsToRemove.push({ id: item.id, type: item.type });
+    }
+  }
+
+  // Asynchronously purge older duplicates from Supabase Storage if found
+  if (supabase && duplicateIdsToRemove.length > 0) {
+    (async () => {
+      try {
+        for (const dup of duplicateIdsToRemove) {
+          const folder = dup.type === 'frame' ? 'frames' : 'cards';
+          await supabase!.storage
+            .from(BUCKET_NAME)
+            .remove([`${folder}/${dup.id}.png`, `${folder}/${dup.id}.json`]);
+        }
+      } catch (err) {
+        console.warn('Background gallery duplicate purge error:', err);
+      }
+    })();
+  }
+
+  const deduplicatedItems = Array.from(uniqueMap.values());
+
   return NextResponse.json({
     success: true,
-    count: items.length,
-    items,
+    count: deduplicatedItems.length,
+    items: deduplicatedItems,
   });
 }
