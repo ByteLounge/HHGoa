@@ -15,6 +15,7 @@ import { FramePreview } from '@/components/generator/FramePreview';
 import { CardPreview } from '@/components/generator/CardPreview';
 import { ExportControls } from '@/components/generator/ExportControls';
 import { RecentCards } from '@/components/generator/RecentCards';
+import { uploadGraphicFromClient } from '@/lib/supabase-client';
 
 import {
   BuilderInfo,
@@ -158,6 +159,13 @@ export default function HomePage() {
             ...existing.filter((item) => item.id !== data.id),
           ].slice(0, 8);
           localStorage.setItem('hhgoa_recent_graphics', JSON.stringify(updated));
+
+          // Guarantee upload to Supabase Storage directly from client browser
+          uploadGraphicFromClient(newRecord).then(() => {
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('graphicGenerated'));
+            }
+          });
         } catch (err: unknown) {
           console.warn('Could not save to localStorage:', err);
         }
