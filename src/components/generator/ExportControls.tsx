@@ -26,6 +26,9 @@ export function ExportControls({
 
   const handleDownload = async () => {
     await onGenerateAndDownload();
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('graphicGenerated'));
+    }
     // Fire celebratory confetti with HH Goa green, yellow, pink colors!
     confetti({
       particleCount: 90,

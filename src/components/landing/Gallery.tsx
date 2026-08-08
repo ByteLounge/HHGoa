@@ -30,6 +30,20 @@ export function Gallery() {
 
   useEffect(() => {
     fetchGallery();
+
+    const handleNewGraphic = () => {
+      fetchGallery();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('graphicGenerated', handleNewGraphic);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('graphicGenerated', handleNewGraphic);
+      }
+    };
   }, []);
 
   const filteredItems = items.filter((item) => {

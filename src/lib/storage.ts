@@ -130,16 +130,6 @@ async function cleanupDuplicateGraphics(newRecord: GeneratedGraphicRecord): Prom
           }
         }
       }
-
-      // Delete from Supabase DB table if configured
-      try {
-        await supabase
-          .from('graphics')
-          .delete()
-          .eq('type', newType);
-      } catch {
-        // Table cleanup optional
-      }
     } catch (err) {
       console.warn('Supabase duplicate cleanup warning:', err);
     }
@@ -147,7 +137,7 @@ async function cleanupDuplicateGraphics(newRecord: GeneratedGraphicRecord): Prom
 }
 
 export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise<void> {
-  // Discard older duplicate passes with matching details before saving new record
+  // Discard older duplicate passes synchronously before saving new record
   await cleanupDuplicateGraphics(record);
 
   // 1. Cache in memory
