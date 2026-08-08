@@ -170,9 +170,9 @@ async function generateProfileFrameSharp({
     frameNameFontSize = dimension * 0.022;
   } else if (frameNameLen > 18) {
     frameNameFontSize = dimension * 0.026;
-  } else if (frameNameLen > 14) {
-    frameNameFontSize = dimension * 0.030;
   }
+
+  const embeddedFontCss = getEmbeddedFontCss();
 
   const svgOverlay = `
   <svg width="${dimension}" height="${dimension}" viewBox="0 0 ${dimension} ${dimension}" xmlns="http://www.w3.org/2000/svg">
