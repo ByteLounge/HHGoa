@@ -116,7 +116,7 @@ export function ExportControls({
       >
         {isGenerating ? (
           <>
-            <RefreshCw className="w-5 h-5 animate-spin text-white" /> Rendering Sharp 4K PNG...
+            <RefreshCw className="w-5 h-5 animate-spin text-white" /> Rendering...
           </>
         ) : (
           <>
