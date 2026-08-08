@@ -54,7 +54,7 @@ export function ExportControls({
       url = await onGenerateAndDownload();
     }
 
-    const targetUrl = url || 'https://hhgoa2026.vercel.app';
+    const targetUrl = url || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
     const text = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official ${
       exportOptions.graphicType === 'card' ? 'Builder Pass' : 'Profile Frame'
     }.\n\nCheck out my credential:`;

@@ -1,0 +1,15 @@
+{
+  "id": "test-frame-uuid-202",
+  "type": "frame",
+  "builderInfo": {
+    "name": "Priya Patel",
+    "role": "AI Researcher",
+    "builderTitle": "Neural Architect",
+    "company": "MindAI",
+    "location": "Goa, India",
+    "customHashtag": "#FrameInGoa"
+  },
+  "themeId": "hhgoa-editorial",
+  "createdAt": "2026-08-08T16:31:35.311Z",
+  "shareUrl": "https://hhgoa2026.vercel.app/frame/test-frame-uuid-202"
+}

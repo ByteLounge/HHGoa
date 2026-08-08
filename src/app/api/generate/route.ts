@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     const graphicId = uuidv4();
-    const origin = req.nextUrl.origin || 'https://hhgoa2026.vercel.app';
+    const origin = req.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
     const queryParams = new URLSearchParams({
       name: parsedBuilderInfo.name || '',
       role: parsedBuilderInfo.role || '',

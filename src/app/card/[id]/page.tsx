@@ -60,6 +60,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
           width: 1200,
           height: 1200,
           alt: title,
+          type: 'image/png',
         },
       ],
     },
@@ -77,8 +78,13 @@ export default async function CardSharePage({ params, searchParams }: Props) {
   const sParams = await searchParams;
   const record = await getGraphicRecord(id);
 
+  const headerList = await headers();
+  const host = headerList.get('host') || 'hhgoa2026.vercel.app';
+  const proto = headerList.get('x-forwarded-proto') || 'https';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+
   const shareText = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official Builder Pass!\n\nCheck out my credential:`;
-  const shareUrl = `https://hhgoa2026.vercel.app/card/${id}`;
+  const shareUrl = `${baseUrl}/card/${id}`;
   const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
   const ogParams = new URLSearchParams({ id, type: 'card' });

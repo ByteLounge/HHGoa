@@ -60,6 +60,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
           width: 1200,
           height: 1200,
           alt: title,
+          type: 'image/png',
         },
       ],
     },
@@ -77,8 +78,13 @@ export default async function FrameSharePage({ params, searchParams }: Props) {
   const sParams = await searchParams;
   const record = await getGraphicRecord(id);
 
+  const headerList = await headers();
+  const host = headerList.get('host') || 'hhgoa2026.vercel.app';
+  const proto = headerList.get('x-forwarded-proto') || 'https';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+
   const shareText = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official Profile Frame!\n\nCheck out my graphic:`;
-  const shareUrl = `https://hhgoa2026.vercel.app/frame/${id}`;
+  const shareUrl = `${baseUrl}/frame/${id}`;
   const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
   const ogParams = new URLSearchParams({ id, type: 'frame' });

@@ -1,4 +1,4 @@
-import { GeneratedGraphicRecord } from '@/types';
+import { GeneratedGraphicRecord, ThemeId } from '@/types';
 import fs from 'fs';
 import path from 'path';
 import { supabase, BUCKET_NAME } from './supabase';
@@ -17,6 +17,24 @@ const getGraphicsDir = (): string => {
   }
   return dir;
 };
+
+// Helper to ensure Supabase Storage bucket exists
+async function ensureBucketExists(): Promise<void> {
+  if (!supabase) return;
+  try {
+    const { data: buckets } = await supabase.storage.listBuckets();
+    const exists = buckets?.some((b) => b.name === BUCKET_NAME);
+    if (!exists) {
+      await supabase.storage.createBucket(BUCKET_NAME, {
+        public: true,
+        fileSizeLimit: 10485760, // 10MB
+        allowedMimeTypes: ['image/png', 'application/json'],
+      });
+    }
+  } catch {
+    // Ignore error if client lacks bucket admin permissions or bucket already exists
+  }
+}
 
 export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise<void> {
   // 1. Cache in memory
@@ -49,18 +67,52 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
   // 3. Upload to Supabase Storage if configured
   if (supabase) {
     try {
-      const filePath = `${record.type}s/${record.id}.png`;
+      await ensureBucketExists();
+
+      const folder = record.type === 'frame' ? 'frames' : 'cards';
+      const pngFilePath = `${folder}/${record.id}.png`;
+      const jsonFilePath = `${folder}/${record.id}.json`;
+
+      // Upload PNG Image
       const { error: uploadError } = await supabase.storage
         .from(BUCKET_NAME)
-        .upload(filePath, pngBuffer, {
+        .upload(pngFilePath, pngBuffer, {
           contentType: 'image/png',
           upsert: true,
         });
 
       if (uploadError) {
-        console.warn('Supabase Storage upload message:', uploadError.message);
+        console.warn('Supabase Storage PNG upload message:', uploadError.message);
       } else {
-        console.log(`Successfully stored graphic ${record.id} in Supabase Storage (${filePath})`);
+        console.log(`Successfully stored graphic ${record.id} in Supabase Storage (${pngFilePath})`);
+      }
+
+      // Upload JSON Metadata
+      const metadataBuffer = Buffer.from(
+        JSON.stringify(
+          {
+            id: record.id,
+            type: record.type,
+            builderInfo: record.builderInfo,
+            themeId: record.themeId,
+            createdAt: record.createdAt,
+            shareUrl: record.shareUrl,
+          },
+          null,
+          2
+        ),
+        'utf-8'
+      );
+
+      const { error: jsonUploadError } = await supabase.storage
+        .from(BUCKET_NAME)
+        .upload(jsonFilePath, metadataBuffer, {
+          contentType: 'application/json',
+          upsert: true,
+        });
+
+      if (jsonUploadError) {
+        console.warn('Supabase Storage JSON upload message:', jsonUploadError.message);
       }
 
       // Optional metadata insertion into Supabase DB table 'graphics'
@@ -72,7 +124,7 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
           theme_id: record.themeId,
           created_at: record.createdAt,
           share_url: record.shareUrl,
-          image_path: filePath,
+          image_path: pngFilePath,
         });
       } catch (err: unknown) {
         console.warn('Supabase DB table save skipped:', err);
@@ -117,28 +169,93 @@ export async function getGraphicRecord(id: string): Promise<GeneratedGraphicReco
   if (supabase) {
     try {
       for (const folder of ['cards', 'frames']) {
-        const filePath = `${folder}/${id}.png`;
-        const { data, error } = await supabase.storage.from(BUCKET_NAME).download(filePath);
-        if (data && !error) {
-          const arrayBuffer = await data.arrayBuffer();
+        const pngFilePath = `${folder}/${id}.png`;
+        const jsonFilePath = `${folder}/${id}.json`;
+
+        // Check if DB table record exists first for full metadata accuracy
+        try {
+          const { data: dbData, error: dbError } = await supabase
+            .from('graphics')
+            .select('*')
+            .eq('id', id)
+            .maybeSingle();
+
+          if (dbData && !dbError) {
+            const { data: pngData, error: pngError } = await supabase.storage
+              .from(BUCKET_NAME)
+              .download(pngFilePath);
+
+            if (pngData && !pngError) {
+              const arrayBuffer = await pngData.arrayBuffer();
+              const pngBuffer = Buffer.from(arrayBuffer);
+              const imageDataUrl = `data:image/png;base64,${pngBuffer.toString('base64')}`;
+
+              const record: GeneratedGraphicRecord = {
+                id: dbData.id,
+                type: dbData.type,
+                imageDataUrl,
+                builderInfo: dbData.builder_info,
+                themeId: (dbData.theme_id || 'hhgoa-editorial') as ThemeId,
+                createdAt: dbData.created_at,
+                shareUrl: dbData.share_url,
+              };
+
+              graphicMemoryStore.set(id, record);
+              return record;
+            }
+          }
+        } catch {
+          // DB query error, proceed to storage check
+        }
+
+        // Check Storage PNG file
+        const { data: pngData, error: pngError } = await supabase.storage
+          .from(BUCKET_NAME)
+          .download(pngFilePath);
+
+        if (pngData && !pngError) {
+          const arrayBuffer = await pngData.arrayBuffer();
           const pngBuffer = Buffer.from(arrayBuffer);
           const imageDataUrl = `data:image/png;base64,${pngBuffer.toString('base64')}`;
+
+          let builderInfo = {
+            name: 'Hacker House Builder',
+            role: 'Builder',
+            builderTitle: 'Hacker House Goa',
+            company: 'Hacker House',
+            location: 'Goa, India',
+            customHashtag: '#FrameInGoa',
+          };
+          let themeId: ThemeId = 'hhgoa-editorial';
+          let createdAt = new Date().toISOString();
+          let shareUrl = `/${folder === 'cards' ? 'card' : 'frame'}/${id}`;
+
+          // Try downloading JSON metadata from Storage
+          try {
+            const { data: jsonData, error: jsonError } = await supabase.storage
+              .from(BUCKET_NAME)
+              .download(jsonFilePath);
+
+            if (jsonData && !jsonError) {
+              const jsonText = await jsonData.text();
+              const metadata = JSON.parse(jsonText);
+              if (metadata.builderInfo) builderInfo = metadata.builderInfo;
+              if (metadata.themeId) themeId = metadata.themeId as ThemeId;
+              if (metadata.createdAt) createdAt = metadata.createdAt;
+              if (metadata.shareUrl) shareUrl = metadata.shareUrl;
+            }
+          } catch {
+            // Ignore JSON read error, use fallback info
+          }
 
           const record: GeneratedGraphicRecord = {
             id,
             type: folder === 'cards' ? 'card' : 'frame',
             imageDataUrl,
-            builderInfo: {
-              name: 'Hacker House Builder',
-              role: 'Builder',
-              builderTitle: 'Hacker House Goa',
-              company: 'Hacker House',
-              location: 'Goa, India',
-              customHashtag: '#FrameInGoa',
-            },
-            themeId: 'hhgoa-editorial',
-            createdAt: new Date().toISOString(),
-            shareUrl: `https://hhgoa2026.vercel.app/${folder === 'cards' ? 'card' : 'frame'}/${id}`,
+            builderInfo,
+            themeId,
+            createdAt,
+            shareUrl,
           };
 
           graphicMemoryStore.set(id, record);

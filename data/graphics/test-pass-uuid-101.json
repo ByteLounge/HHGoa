@@ -1,0 +1,15 @@
+{
+  "id": "test-pass-uuid-101",
+  "type": "card",
+  "builderInfo": {
+    "name": "Aarav Sharma",
+    "role": "Full Stack Engineer",
+    "builderTitle": "The Web3 Wizard",
+    "company": "Goa Tech Labs",
+    "location": "Panaji, Goa",
+    "customHashtag": "#FrameInGoa"
+  },
+  "themeId": "hhgoa-editorial",
+  "createdAt": "2026-08-08T16:31:35.232Z",
+  "shareUrl": "https://hhgoa2026.vercel.app/card/test-pass-uuid-101"
+}
