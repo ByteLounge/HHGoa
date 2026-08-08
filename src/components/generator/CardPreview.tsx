@@ -14,7 +14,12 @@ interface CardPreviewProps {
 
 export function CardPreview({ userImageUrl, builderInfo, cropConfig }: CardPreviewProps) {
   return (
-    <div className="w-full max-w-sm sm:max-w-md aspect-square mx-auto rounded-3xl p-4 sm:p-6 select-none bg-[#F7F1DF] text-[#0A4C2B] border-2 border-[#1E5A3B] shadow-[8px_8px_0px_#0A4C2B] relative flex flex-col justify-between overflow-hidden">
+    <div
+      className="w-full max-w-sm sm:max-w-md aspect-square mx-auto rounded-3xl p-3 sm:p-4 select-none bg-cover bg-center border-2 border-[#1E5A3B] shadow-[8px_8px_0px_#0A4C2B] relative flex items-center justify-center overflow-hidden"
+      style={{ backgroundImage: "url('/builder-pass-bg.png')" }}
+    >
+      {/* Cream Builder Pass Card overlapping in center */}
+      <div className="w-full h-full rounded-2xl p-3.5 sm:p-5 bg-[#F7F1DF] text-[#0A4C2B] border-2 border-[#1E5A3B] shadow-[6px_6px_0px_#0A4C2B] relative flex flex-col justify-between overflow-hidden">
       {/* Editorial Decorative Stamp Header */}
       <div className="flex items-center justify-between border-b-2 border-[#0A4C2B] pb-3 z-10 font-editorial-mono">
         <div>
@@ -108,5 +113,6 @@ export function CardPreview({ userImageUrl, builderInfo, cropConfig }: CardPrevi
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }

@@ -1,5 +1,7 @@
 import sharp, { Sharp } from 'sharp';
 import QRCode from 'qrcode';
+import fs from 'fs';
+import path from 'path';
 import { BuilderInfo, ExportOptions, ImageCropConfig } from '@/types';
 import { FRAME_THEMES } from './constants';
 import { getEmbeddedFontCss, renderSvgWithResvg } from './fonts';
@@ -337,10 +339,6 @@ async function generateBuilderCardSharp({
       </pattern>
     </defs>
 
-    <!-- Canvas Background -->
-    <rect width="${dimension}" height="${dimension}" fill="#0E6B3A" />
-    <rect width="${dimension}" height="${dimension}" fill="url(#bgDots)" />
-
     <!-- Main Card Body (Cream Surface with Offset Shadow) -->
     <g transform="translate(${cardLeft}, ${cardTop})">
       <!-- Offset Shadow -->
@@ -403,14 +401,41 @@ async function generateBuilderCardSharp({
   </svg>
   `;
 
-  const canvas = sharp({
-    create: {
-      width: dimension,
-      height: dimension,
-      channels: 4,
-      background: { r: 14, g: 107, b: 58, alpha: 1 }, // #0E6B3A
-    },
-  });
+  let canvas: Sharp;
+  try {
+    const bgPathPublic = path.join(process.cwd(), 'public', 'builder-pass-bg.png');
+    const bgPathRoot = path.join(process.cwd(), 'builder-pass-bg.png');
+    const targetBgPath = fs.existsSync(bgPathPublic)
+      ? bgPathPublic
+      : fs.existsSync(bgPathRoot)
+      ? bgPathRoot
+      : null;
+
+    if (targetBgPath) {
+      const bgResized = await sharp(targetBgPath)
+        .resize(dimension, dimension, { fit: 'cover' })
+        .toBuffer();
+      canvas = sharp(bgResized);
+    } else {
+      canvas = sharp({
+        create: {
+          width: dimension,
+          height: dimension,
+          channels: 4,
+          background: { r: 14, g: 107, b: 58, alpha: 1 },
+        },
+      });
+    }
+  } catch {
+    canvas = sharp({
+      create: {
+        width: dimension,
+        height: dimension,
+        channels: 4,
+        background: { r: 14, g: 107, b: 58, alpha: 1 },
+      },
+    });
+  }
 
   const qrSize = Math.round(cardWidth * 0.16);
   const qrTop = Math.round(cardTop + cardHeight * 0.74);
