@@ -385,3 +385,35 @@ export async function getGraphicRecord(id: string): Promise<GeneratedGraphicReco
 
   return null;
 }
+
+export async function getAllGraphicRecords(): Promise<GeneratedGraphicRecord[]> {
+  const recordsMap = new Map<string, GeneratedGraphicRecord>();
+
+  // 1. Load from memory store
+  for (const [id, record] of graphicMemoryStore.entries()) {
+    recordsMap.set(id, record);
+  }
+
+  // 2. Load from disk
+  try {
+    const dir = getGraphicsDir();
+    if (fs.existsSync(dir)) {
+      const files = await fs.promises.readdir(dir);
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const id = file.replace('.json', '');
+          if (!recordsMap.has(id)) {
+            const record = await getGraphicRecord(id);
+            if (record) {
+              recordsMap.set(id, record);
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Error reading graphics directory:', err);
+  }
+
+  return Array.from(recordsMap.values());
+}
