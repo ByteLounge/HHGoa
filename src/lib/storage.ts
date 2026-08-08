@@ -248,6 +248,8 @@ export async function getGraphicRecord(id: string): Promise<GeneratedGraphicReco
             // Ignore JSON read error, use fallback info
           }
 
+          const publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(pngFilePath).data.publicUrl;
+
           const record: GeneratedGraphicRecord = {
             id,
             type: folder === 'cards' ? 'card' : 'frame',
@@ -256,6 +258,7 @@ export async function getGraphicRecord(id: string): Promise<GeneratedGraphicReco
             themeId,
             createdAt,
             shareUrl,
+            publicUrl,
           };
 
           graphicMemoryStore.set(id, record);

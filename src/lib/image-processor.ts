@@ -164,7 +164,15 @@ async function generateProfileFrameSharp({
   const locationText = escapeXml(builderInfo.location || 'Goa, India');
   const hashtagText = escapeXml(builderInfo.customHashtag || '#FrameInGoa');
 
-  const embeddedFontCss = getEmbeddedFontCss();
+  const frameNameLen = (builderInfo.name || '').length;
+  let frameNameFontSize = dimension * 0.036;
+  if (frameNameLen > 24) {
+    frameNameFontSize = dimension * 0.022;
+  } else if (frameNameLen > 18) {
+    frameNameFontSize = dimension * 0.026;
+  } else if (frameNameLen > 14) {
+    frameNameFontSize = dimension * 0.030;
+  }
 
   const svgOverlay = `
   <svg width="${dimension}" height="${dimension}" viewBox="0 0 ${dimension} ${dimension}" xmlns="http://www.w3.org/2000/svg">
@@ -202,7 +210,7 @@ async function generateProfileFrameSharp({
       <line x1="${dimension * 0.05}" y1="${dimension * 0.085}" x2="${dimension * 0.79}" y2="${dimension * 0.085}" stroke="#F7F1DF" stroke-opacity="0.3" stroke-width="2"/>
 
       <!-- User Full Name -->
-      <text x="${dimension * 0.05}" y="${dimension * 0.13}" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="${dimension * 0.036}" fill="#F7F1DF">${nameText}</text>
+      <text x="${dimension * 0.05}" y="${dimension * 0.13}" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="${frameNameFontSize}" fill="#F7F1DF">${nameText}</text>
       
       <!-- Title & Role -->
       <text x="${dimension * 0.05}" y="${dimension * 0.165}" font-family="'IBM Plex Mono', monospace" font-weight="700" font-size="${dimension * 0.022}" fill="#FFD400">${titleText} | ${roleText}</text>
@@ -298,6 +306,16 @@ async function generateBuilderCardSharp({
   const locationText = escapeXml(builderInfo.location || 'Goa, India');
   const hashtagText = escapeXml(builderInfo.customHashtag || '#FrameInGoa');
 
+  const nameLen = (builderInfo.name || '').length;
+  let nameFontSize = dimension * 0.04;
+  if (nameLen > 24) {
+    nameFontSize = dimension * 0.022;
+  } else if (nameLen > 18) {
+    nameFontSize = dimension * 0.027;
+  } else if (nameLen > 14) {
+    nameFontSize = dimension * 0.033;
+  }
+
   // Exact theme colors
   const cardBgColor = theme.cardBg || '#F7F1DF';
   const textColor = theme.textColor || '#0A4C2B';
@@ -353,7 +371,7 @@ async function generateBuilderCardSharp({
         <text x="${cardWidth * 0.03}" y="${cardHeight * 0.03}" font-family="'IBM Plex Mono', monospace" font-weight="700" font-size="${dimension * 0.017}" fill="#FFFFFF">${titleText}</text>
 
         <!-- Name -->
-        <text x="0" y="${cardHeight * 0.12}" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="${dimension * 0.04}" fill="${textColor}">${nameText}</text>
+        <text x="0" y="${cardHeight * 0.12}" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="${nameFontSize}" fill="${textColor}">${nameText}</text>
         
         <!-- Role / Stack -->
         <text x="0" y="${cardHeight * 0.175}" font-family="'IBM Plex Mono', monospace" font-weight="700" font-size="${dimension * 0.024}" fill="${accentColor}">${roleText}</text>

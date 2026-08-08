@@ -122,7 +122,13 @@ export function FramePreview({ userImageUrl, builderInfo, cropConfig }: FramePre
             y="52"
             fontFamily="Cormorant Garamond, serif"
             fontWeight="700"
-            fontSize="17"
+            fontSize={
+              (builderInfo.name || '').length > 24
+                ? '11'
+                : (builderInfo.name || '').length > 17
+                ? '13'
+                : '17'
+            }
             fill="#F7F1DF"
           >
             {builderInfo.name || 'Alex Rivera'}

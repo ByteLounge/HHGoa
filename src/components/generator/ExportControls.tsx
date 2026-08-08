@@ -57,7 +57,7 @@ export function ExportControls({
     const targetUrl = url || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
     const text = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official ${
       exportOptions.graphicType === 'card' ? 'Builder Pass' : 'Profile Frame'
-    }.\n\nCheck out my credential:`;
+    }!\n\nCheck out my credential #FrameInGoa:`;
 
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       text

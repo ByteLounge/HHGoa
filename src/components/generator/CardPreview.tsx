@@ -58,7 +58,15 @@ export function CardPreview({ userImageUrl, builderInfo, cropConfig }: CardPrevi
           </div>
 
           {/* Name */}
-          <h3 className="font-editorial-serif text-2xl font-bold text-[#0A4C2B] leading-tight truncate uppercase tracking-tight">
+          <h3
+            className={`font-editorial-serif font-bold text-[#0A4C2B] leading-tight uppercase tracking-tight break-words line-clamp-2 ${
+              (builderInfo.name || '').length > 22
+                ? 'text-xs sm:text-sm'
+                : (builderInfo.name || '').length > 15
+                ? 'text-sm sm:text-base'
+                : 'text-lg sm:text-xl'
+            }`}
+          >
             {builderInfo.name || 'Alex Rivera'}
           </h3>
 

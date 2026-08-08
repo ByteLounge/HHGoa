@@ -57,4 +57,5 @@ export interface GeneratedGraphicRecord {
   themeId: ThemeId;
   createdAt: string;
   shareUrl: string;
+  publicUrl?: string;
 }

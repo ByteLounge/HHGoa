@@ -31,7 +31,13 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const headerList = await headers();
   const host = headerList.get('host') || 'hhgoa2026.vercel.app';
   const proto = headerList.get('x-forwarded-proto') || 'https';
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+  let baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+  if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+    baseUrl = `https://${baseUrl}`;
+  }
+  if (baseUrl.startsWith('http://') && !baseUrl.includes('localhost')) {
+    baseUrl = baseUrl.replace('http://', 'https://');
+  }
   
   // Construct search string for ogImageUrl
   const ogParams = new URLSearchParams({ id, type: 'frame' });
@@ -42,7 +48,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   if (sParams.location) ogParams.set('location', String(sParams.location));
   if (sParams.tag) ogParams.set('tag', String(sParams.tag));
 
-  const ogImageUrl = `${baseUrl}/api/og?${ogParams.toString()}`;
+  const ogImageUrl = record?.publicUrl || `${baseUrl}/api/og?${ogParams.toString()}`;
 
   return {
     metadataBase: new URL(baseUrl),
@@ -81,9 +87,15 @@ export default async function FrameSharePage({ params, searchParams }: Props) {
   const headerList = await headers();
   const host = headerList.get('host') || 'hhgoa2026.vercel.app';
   const proto = headerList.get('x-forwarded-proto') || 'https';
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+  let baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+  if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+    baseUrl = `https://${baseUrl}`;
+  }
+  if (baseUrl.startsWith('http://') && !baseUrl.includes('localhost')) {
+    baseUrl = baseUrl.replace('http://', 'https://');
+  }
 
-  const shareText = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official Profile Frame!\n\nCheck out my graphic:`;
+  const shareText = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official Profile Frame!\n\nCheck out my graphic #FrameInGoa:`;
   const shareUrl = `${baseUrl}/frame/${id}`;
   const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
