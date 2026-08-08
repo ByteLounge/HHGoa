@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { supabase, BUCKET_NAME } from '@/lib/supabase';
-import fs from 'fs';
-import path from 'path';
 
 export interface GalleryItem {
   id: string;
@@ -15,21 +13,55 @@ export interface GalleryItem {
   builderCompany?: string;
 }
 
+/**
+ * Checks if a graphic ID or builder name belongs to test/dummy fixture data
+ */
+function isDummyOrTestItem(id: string, builderName?: string): boolean {
+  if (!id) return true;
+  const lowerId = id.toLowerCase();
+  if (
+    lowerId.startsWith('test-') ||
+    lowerId.startsWith('dup-') ||
+    lowerId.startsWith('dummy-') ||
+    lowerId.startsWith('non-existent') ||
+    lowerId.includes('uuid-')
+  ) {
+    return true;
+  }
+
+  if (builderName) {
+    const lowerName = builderName.toLowerCase();
+    if (
+      lowerName.includes('abcdef') ||
+      lowerName.includes('john doe') ||
+      lowerName.includes('test user')
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export async function GET() {
   const items: GalleryItem[] = [];
 
-  // 1. Fetch from Supabase Storage if configured
+  // Fetch only legitimate user-generated graphics from Supabase Storage
   if (supabase) {
     try {
-      // Fetch cards
+      // 1. Fetch Cards from Supabase Storage
       const { data: cardFiles } = await supabase.storage
         .from(BUCKET_NAME)
-        .list('cards', { limit: 50, sortBy: { column: 'name', order: 'desc' } });
+        .list('cards', { limit: 50, sortBy: { column: 'created_at', order: 'desc' } });
 
       if (cardFiles && cardFiles.length > 0) {
         for (const file of cardFiles) {
           if (file.name.endsWith('.png')) {
             const id = file.name.replace('.png', '');
+            
+            // Skip dummy test IDs
+            if (isDummyOrTestItem(id)) continue;
+
             const publicUrl = supabase.storage
               .from(BUCKET_NAME)
               .getPublicUrl(`cards/${file.name}`).data.publicUrl;
@@ -43,6 +75,7 @@ export async function GET() {
               const { data: jsonData } = await supabase.storage
                 .from(BUCKET_NAME)
                 .download(`cards/${id}.json`);
+
               if (jsonData) {
                 const text = await jsonData.text();
                 const meta = JSON.parse(text);
@@ -52,8 +85,11 @@ export async function GET() {
                 builderCompany = meta.builderInfo?.company || meta.builderInfo?.college;
               }
             } catch {
-              // Ignore metadata fetch error
+              // Metadata read fail, skip unverified file
             }
+
+            // Skip if builderName matches dummy patterns
+            if (isDummyOrTestItem(id, builderName)) continue;
 
             items.push({
               id,
@@ -70,15 +106,19 @@ export async function GET() {
         }
       }
 
-      // Fetch frames
+      // 2. Fetch Frames from Supabase Storage
       const { data: frameFiles } = await supabase.storage
         .from(BUCKET_NAME)
-        .list('frames', { limit: 50, sortBy: { column: 'name', order: 'desc' } });
+        .list('frames', { limit: 50, sortBy: { column: 'created_at', order: 'desc' } });
 
       if (frameFiles && frameFiles.length > 0) {
         for (const file of frameFiles) {
           if (file.name.endsWith('.png')) {
             const id = file.name.replace('.png', '');
+
+            // Skip dummy test IDs
+            if (isDummyOrTestItem(id)) continue;
+
             const publicUrl = supabase.storage
               .from(BUCKET_NAME)
               .getPublicUrl(`frames/${file.name}`).data.publicUrl;
@@ -92,6 +132,7 @@ export async function GET() {
               const { data: jsonData } = await supabase.storage
                 .from(BUCKET_NAME)
                 .download(`frames/${id}.json`);
+
               if (jsonData) {
                 const text = await jsonData.text();
                 const meta = JSON.parse(text);
@@ -101,8 +142,11 @@ export async function GET() {
                 builderCompany = meta.builderInfo?.company || meta.builderInfo?.college;
               }
             } catch {
-              // Ignore metadata fetch error
+              // Metadata read fail, skip unverified file
             }
+
+            // Skip if builderName matches dummy patterns
+            if (isDummyOrTestItem(id, builderName)) continue;
 
             items.push({
               id,
@@ -120,38 +164,6 @@ export async function GET() {
       }
     } catch (err) {
       console.warn('Gallery Supabase listing error:', err);
-    }
-  }
-
-  // 2. Fallback to local server graphics folder if items array is empty
-  if (items.length === 0) {
-    try {
-      const graphicsDir = path.join(process.cwd(), 'data', 'graphics');
-      if (fs.existsSync(graphicsDir)) {
-        const files = await fs.promises.readdir(graphicsDir);
-        for (const file of files) {
-          if (file.endsWith('.json')) {
-            const jsonPath = path.join(graphicsDir, file);
-            const content = await fs.promises.readFile(jsonPath, 'utf-8');
-            const meta = JSON.parse(content);
-            const type = meta.type || (file.startsWith('frame') ? 'frame' : 'card');
-            
-            items.push({
-              id: meta.id,
-              type,
-              imageUrl: `/api/og?id=${meta.id}&type=${type}`,
-              shareUrl: meta.shareUrl || `/${type}/${meta.id}`,
-              createdAt: meta.createdAt || new Date().toISOString(),
-              builderName: meta.builderInfo?.name,
-              builderTitle: meta.builderInfo?.builderTitle,
-              builderRole: meta.builderInfo?.role,
-              builderCompany: meta.builderInfo?.company || meta.builderInfo?.college,
-            });
-          }
-        }
-      }
-    } catch (err) {
-      console.warn('Gallery disk listing fallback error:', err);
     }
   }
 
