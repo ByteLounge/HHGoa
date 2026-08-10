@@ -57,7 +57,14 @@ export function ExportControls({
       url = await onGenerateAndDownload();
     }
 
-    const targetUrl = url || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
+    let targetUrl = url || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
+
+    // Replace localhost or 127.0.0.1 with public production domain so Twitter/X scraper can crawl the preview card
+    if (targetUrl.includes('localhost') || targetUrl.includes('127.0.0.1')) {
+      const publicBase = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
+      targetUrl = targetUrl.replace(/^https?:\/\/[^/]+/, publicBase);
+    }
+
     const text = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official ${
       exportOptions.graphicType === 'card' ? 'Builder Pass' : 'Profile Frame'
     }!\n\nCheck out my credential #FrameInGoa:`;

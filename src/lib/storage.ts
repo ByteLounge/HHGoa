@@ -2,6 +2,7 @@ import { GeneratedGraphicRecord, ThemeId } from '@/types';
 import fs from 'fs';
 import path from 'path';
 import { supabase, BUCKET_NAME } from './supabase';
+import { put } from '@vercel/blob';
 
 // Memory cache for super-fast lookups
 const graphicMemoryStore = new Map<string, GeneratedGraphicRecord>();
@@ -79,7 +80,24 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
     console.warn('Failed to save graphic record to disk:', err);
   }
 
-  // 3. Upload to Supabase Storage if configured
+  // 3. Upload to Vercel Blob if configured
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const blob = await put(`graphics/${record.id}.png`, pngBuffer, {
+        access: 'public',
+        addRandomSuffix: false,
+        contentType: 'image/png',
+      });
+      if (blob && blob.url) {
+        record.publicUrl = blob.url;
+        console.log(`Successfully stored graphic ${record.id} in Vercel Blob (${blob.url})`);
+      }
+    } catch (err) {
+      console.warn('Vercel Blob storage integration notice:', err);
+    }
+  }
+
+  // 4. Upload to Supabase Storage if configured
   if (supabase) {
     try {
       await ensureBucketExists();
