@@ -48,25 +48,36 @@ export function ExportControls({
   };
 
   const handleShareToX = async () => {
-    // Always generate a fresh unique graphic for the current user photo and form details
-    const freshUrl = await onGenerateAndDownload();
-    let targetUrl = freshUrl || generatedShareUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
-
-    // Replace localhost or 127.0.0.1 with public production domain so Twitter/X scraper can crawl the preview card
-    if (targetUrl.includes('localhost') || targetUrl.includes('127.0.0.1')) {
-      const publicBase = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
-      targetUrl = targetUrl.replace(/^https?:\/\/[^/]+/, publicBase);
+    // Open the share popup immediately in the click handler to keep the action user-initiated.
+    const popup = window.open('', '_blank', 'noopener,noreferrer');
+    if (!popup) {
+      alert('Please allow popups for this site to share to X.');
+      return;
     }
 
-    const text = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official ${
-      exportOptions.graphicType === 'card' ? 'Builder Pass' : 'Profile Frame'
-    }!\n\nCheck out my credential #FrameInGoa:`;
+    try {
+      const freshUrl = await onGenerateAndDownload();
+      let targetUrl = freshUrl || generatedShareUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
 
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      text
-    )}&url=${encodeURIComponent(targetUrl)}`;
+      // Replace localhost or 127.0.0.1 with public production domain so Twitter/X scraper can crawl the preview card
+      if (targetUrl.includes('localhost') || targetUrl.includes('127.0.0.1')) {
+        const publicBase = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
+        targetUrl = targetUrl.replace(/^https?:\/\/[^/]+/, publicBase);
+      }
 
-    window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+      const text = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official ${
+        exportOptions.graphicType === 'card' ? 'Builder Pass' : 'Profile Frame'
+      }!\n\nCheck out my credential #FrameInGoa:`;
+
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}&url=${encodeURIComponent(targetUrl)}`;
+
+      popup.location.href = twitterUrl;
+    } catch (error) {
+      popup.close();
+      console.error('Error while sharing to X:', error);
+    }
   };
 
   return (
