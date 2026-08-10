@@ -53,7 +53,7 @@ async function cleanupDuplicateGraphics(newRecord: GeneratedGraphicRecord): Prom
   return;
 }
 
-export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise<{ supabaseUploaded: boolean; error?: string }> {
+export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise<{ supabaseUploaded: boolean; publicUrl?: string; error?: string }> {
   let supabaseUploaded = false;
   let uploadErrorMsg: string | undefined;
 
@@ -180,7 +180,25 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
     uploadErrorMsg = 'Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL & SUPABASE_SERVICE_ROLE_KEY) not configured on server.';
   }
 
-  return { supabaseUploaded, error: uploadErrorMsg };
+  // Write updated metadata with publicUrl to disk
+  try {
+    const dir = getGraphicsDir();
+    const jsonPath = path.join(dir, `${record.id}.json`);
+    const metadata = {
+      id: record.id,
+      type: record.type,
+      builderInfo: record.builderInfo,
+      themeId: record.themeId,
+      createdAt: record.createdAt,
+      shareUrl: record.shareUrl,
+      publicUrl: record.publicUrl,
+    };
+    await fs.promises.writeFile(jsonPath, JSON.stringify(metadata, null, 2), 'utf-8');
+  } catch {
+    // Disk metadata write optional
+  }
+
+  return { supabaseUploaded, publicUrl: record.publicUrl, error: uploadErrorMsg };
 }
 
 export async function getGraphicRecord(id: string): Promise<GeneratedGraphicRecord | null> {

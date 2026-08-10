@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     const graphicId = uuidv4();
     const origin = req.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
-    const queryParams = new URLSearchParams({
+    const queryParamsObj = {
       name: parsedBuilderInfo.name || '',
       role: parsedBuilderInfo.role || '',
       title: parsedBuilderInfo.builderTitle || '',
@@ -38,9 +38,9 @@ export async function POST(req: NextRequest) {
       location: parsedBuilderInfo.location || '',
       tag: parsedBuilderInfo.customHashtag || '#FrameInGoa',
       theme: exportOptions.themeId || 'hhgoa-editorial',
-    }).toString();
+    };
 
-    const shareUrl = `${origin}/${exportOptions.graphicType}/${graphicId}?${queryParams}`;
+    let shareUrl = `${origin}/${exportOptions.graphicType}/${graphicId}?${new URLSearchParams(queryParamsObj).toString()}`;
 
     const pngBuffer = await generateHighResGraphic({
       userImageBuffer: buffer,
@@ -52,8 +52,8 @@ export async function POST(req: NextRequest) {
 
     const base64DataUrl = `data:image/png;base64,${pngBuffer.toString('base64')}`;
 
-    // Store graphic record for sharing page and upload to Supabase Storage
-    const { supabaseUploaded, error: storageError } = await saveGraphicRecord({
+    // Store graphic record for sharing page and upload to Supabase / Vercel Storage
+    const saveResult = await saveGraphicRecord({
       id: graphicId,
       type: exportOptions.graphicType,
       imageDataUrl: base64DataUrl,
@@ -62,6 +62,14 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
       shareUrl,
     });
+
+    const publicUrl = saveResult.publicUrl;
+    if (publicUrl) {
+      const updatedParams = new URLSearchParams({ ...queryParamsObj, img: publicUrl });
+      shareUrl = `${origin}/${exportOptions.graphicType}/${graphicId}?${updatedParams.toString()}`;
+    }
+
+    const { supabaseUploaded, error: storageError } = saveResult;
 
     // Check if client requested direct binary stream vs JSON with dataUrl & record metadata
     const acceptHeader = req.headers.get('accept') || '';

@@ -47,8 +47,9 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   if (sParams.company) ogParams.set('company', String(sParams.company));
   if (sParams.location) ogParams.set('location', String(sParams.location));
   if (sParams.tag) ogParams.set('tag', String(sParams.tag));
+  if (sParams.img) ogParams.set('img', String(sParams.img));
 
-  const ogImageUrl = record?.publicUrl || `${baseUrl}/api/og?${ogParams.toString()}`;
+  const ogImageUrl = record?.publicUrl || (typeof sParams.img === 'string' && sParams.img ? sParams.img : null) || `${baseUrl}/api/og?${ogParams.toString()}`;
 
   return {
     metadataBase: new URL(baseUrl),
