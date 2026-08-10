@@ -4,6 +4,8 @@ import { headers } from 'next/headers';
 import { getGraphicRecord } from '@/lib/storage';
 import { Share2, Download, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 import { ShareGraphicDisplay } from '@/components/share/ShareGraphicDisplay';
 
 interface Props {

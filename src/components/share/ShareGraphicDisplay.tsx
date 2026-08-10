@@ -13,6 +13,7 @@ export function ShareGraphicDisplay({ id, initialSrc, altText }: Props) {
   const [imgSrc, setImgSrc] = useState(initialSrc);
 
   useEffect(() => {
+    setImgSrc(initialSrc);
     try {
       const recent = JSON.parse(localStorage.getItem('hhgoa_recent_graphics') || '[]');
       const match = recent.find((item: { id: string; imageDataUrl?: string }) => item.id === id);
@@ -22,7 +23,7 @@ export function ShareGraphicDisplay({ id, initialSrc, altText }: Props) {
     } catch (err: unknown) {
       console.warn('Could not read recent graphics from localStorage:', err);
     }
-  }, [id]);
+  }, [id, initialSrc]);
 
   return (
     <img

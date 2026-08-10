@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
     headers: {
       'Content-Type': 'image/png',
       'Content-Length': pngBuffer.length.toString(),
-      'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400',
+      'Cache-Control': 'no-cache, no-store, max-age=0, s-maxage=0, stale-while-revalidate=0',
     },
   });
 }

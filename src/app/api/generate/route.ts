@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       theme: exportOptions.themeId || 'hhgoa-editorial',
     };
 
-    let shareUrl = `${origin}/${exportOptions.graphicType}/${graphicId}?${new URLSearchParams(queryParamsObj).toString()}`;
+    const shareUrl = `${origin}/${exportOptions.graphicType}/${graphicId}`;
 
     const pngBuffer = await generateHighResGraphic({
       userImageBuffer: buffer,
@@ -65,8 +65,10 @@ export async function POST(req: NextRequest) {
 
     const publicUrl = saveResult.publicUrl;
     if (publicUrl) {
-      const updatedParams = new URLSearchParams({ ...queryParamsObj, img: publicUrl });
-      shareUrl = `${origin}/${exportOptions.graphicType}/${graphicId}?${updatedParams.toString()}`;
+      // Keep canonical share URLs simple and rely on the pass record for OpenGraph rendering.
+      // This avoids stale preview behavior caused by query-param based image fallback.
+      // The share page will still render the correct graphic from the saved record.
+      void publicUrl;
     }
 
     const { supabaseUploaded, error: storageError } = saveResult;
