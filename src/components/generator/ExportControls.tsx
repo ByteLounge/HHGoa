@@ -39,10 +39,7 @@ export function ExportControls({
   };
 
   const handleCopyLink = async () => {
-    let url = generatedShareUrl;
-    if (!url) {
-      url = await onGenerateAndDownload();
-    }
+    const url = await onGenerateAndDownload();
     if (url) {
       navigator.clipboard.writeText(url);
       setCopied(true);
@@ -51,13 +48,9 @@ export function ExportControls({
   };
 
   const handleShareToX = async () => {
-    let url = generatedShareUrl;
-    // If share URL doesn't match current graphicType, generate a fresh unique record
-    if (!url || !url.includes(`/${exportOptions.graphicType}/`)) {
-      url = await onGenerateAndDownload();
-    }
-
-    let targetUrl = url || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
+    // Always generate a fresh unique graphic for the current user photo and form details
+    const freshUrl = await onGenerateAndDownload();
+    let targetUrl = freshUrl || generatedShareUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
 
     // Replace localhost or 127.0.0.1 with public production domain so Twitter/X scraper can crawl the preview card
     if (targetUrl.includes('localhost') || targetUrl.includes('127.0.0.1')) {
