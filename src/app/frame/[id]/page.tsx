@@ -79,7 +79,17 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       card: 'summary_large_image',
       title,
       description,
-      images: [ogImageUrl],
+      site: '@HackerHouseGoa',
+      creator: '@HackerHouseGoa',
+      images: [
+        {
+          url: ogImageUrl,
+          alt: title,
+          width: 1200,
+          height: 1200,
+          type: 'image/png',
+        },
+      ],
     },
   };
 }

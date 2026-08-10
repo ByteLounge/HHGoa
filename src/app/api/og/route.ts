@@ -94,7 +94,16 @@ export async function GET(req: NextRequest) {
   return new NextResponse(new Uint8Array(pngBuffer), {
     headers: {
       'Content-Type': 'image/png',
+      'Content-Length': pngBuffer.length.toString(),
       'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400',
     },
+  });
+}
+
+export async function HEAD(req: NextRequest) {
+  const res = await GET(req);
+  return new NextResponse(null, {
+    status: res.status,
+    headers: res.headers,
   });
 }
