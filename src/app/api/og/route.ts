@@ -30,10 +30,20 @@ export async function GET(req: NextRequest) {
     const customHashtag = searchParams.get('tag') || '#FrameInGoa';
     const themeId = (searchParams.get('theme') as ThemeId) || 'hhgoa-editorial';
 
-    const imgParam = searchParams.get('img') || searchParams.get('photo');
+    const photoParam = searchParams.get('photo');
+    const imgParam = searchParams.get('img');
     let userPhotoBuffer: Buffer | null = null;
 
-    if (imgParam) {
+    if (photoParam) {
+      try {
+        const cleanBase64 = photoParam.replace(/^data:image\/\w+;base64,/, '');
+        userPhotoBuffer = Buffer.from(cleanBase64, 'base64');
+      } catch {
+        // Base64 decode fallback
+      }
+    }
+
+    if (!userPhotoBuffer && imgParam && (imgParam.startsWith('http://') || imgParam.startsWith('https://'))) {
       try {
         const fetchRes = await fetch(imgParam);
         if (fetchRes.ok) {

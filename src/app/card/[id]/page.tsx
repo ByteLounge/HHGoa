@@ -48,6 +48,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   if (sParams.location) ogParams.set('location', String(sParams.location));
   if (sParams.tag) ogParams.set('tag', String(sParams.tag));
   if (sParams.img) ogParams.set('img', String(sParams.img));
+  if (sParams.photo) ogParams.set('photo', String(sParams.photo));
 
   const ogImageUrl = record?.publicUrl || (typeof sParams.img === 'string' && sParams.img ? sParams.img : null) || `${baseUrl}/api/og?${ogParams.toString()}`;
 
@@ -113,6 +114,8 @@ export default async function CardSharePage({ params, searchParams }: Props) {
   if (sParams.company) ogParams.set('company', String(sParams.company));
   if (sParams.location) ogParams.set('location', String(sParams.location));
   if (sParams.tag) ogParams.set('tag', String(sParams.tag));
+  if (sParams.img) ogParams.set('img', String(sParams.img));
+  if (sParams.photo) ogParams.set('photo', String(sParams.photo));
 
   const imageSrc = record?.imageDataUrl || `/api/og?${ogParams.toString()}`;
 
