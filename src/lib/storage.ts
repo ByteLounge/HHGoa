@@ -180,31 +180,6 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
     uploadErrorMsg = 'Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL & SUPABASE_SERVICE_ROLE_KEY) not configured on server.';
   }
 
-  // 5. Zero-config public CDN image upload fallback if publicUrl is not set yet
-  if (!record.publicUrl) {
-    try {
-      const formData = new FormData();
-      const fileBlob = new Blob([pngBuffer], { type: 'image/png' });
-      formData.append('file', fileBlob, `HHGoa_${record.type}_${record.id}.png`);
-
-      const uploadRes = await fetch('https://tmpfiles.org/api/v1/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (uploadRes.ok) {
-        const uploadJson = await uploadRes.json();
-        if (uploadJson && uploadJson.data && uploadJson.data.url) {
-          const directUrl = uploadJson.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
-          record.publicUrl = directUrl;
-          console.log(`Successfully stored graphic ${record.id} in public CDN fallback (${directUrl})`);
-        }
-      }
-    } catch (err) {
-      console.warn('Zero-config public CDN upload fallback skipped:', err);
-    }
-  }
-
   // Write updated metadata with publicUrl to disk
   try {
     const dir = getGraphicsDir();

@@ -41,16 +41,19 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   
   // Construct search string for ogImageUrl
   const ogParams = new URLSearchParams({ id, type: 'card' });
-  if (sParams.name) ogParams.set('name', String(sParams.name));
-  if (sParams.role) ogParams.set('role', String(sParams.role));
-  if (sParams.title) ogParams.set('title', String(sParams.title));
+  if (name) ogParams.set('name', String(name));
+  if (role) ogParams.set('role', String(role));
+  if (builderTitle) ogParams.set('title', String(builderTitle));
   if (sParams.company) ogParams.set('company', String(sParams.company));
   if (sParams.location) ogParams.set('location', String(sParams.location));
   if (sParams.tag) ogParams.set('tag', String(sParams.tag));
-  if (sParams.img) ogParams.set('img', String(sParams.img));
-  if (sParams.photo) ogParams.set('photo', String(sParams.photo));
+  if (sParams.theme) ogParams.set('theme', String(sParams.theme));
+  if (record?.publicUrl) ogParams.set('img', String(record.publicUrl));
+  else if (sParams.img) ogParams.set('img', String(sParams.img));
 
-  const ogImageUrl = record?.publicUrl || (typeof sParams.img === 'string' && sParams.img ? sParams.img : null) || `${baseUrl}/api/og?${ogParams.toString()}`;
+  const ogImageUrl = (record?.publicUrl && !record.publicUrl.includes('tmpfiles'))
+    ? record.publicUrl
+    : (typeof sParams.img === 'string' && sParams.img && !sParams.img.includes('tmpfiles') ? sParams.img : `${baseUrl}/api/og?${ogParams.toString()}`);
 
   return {
     metadataBase: new URL(baseUrl),
