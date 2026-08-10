@@ -48,22 +48,14 @@ export function ExportControls({
   };
 
   const handleShareToX = async () => {
-    // Open the share popup immediately in the click handler to keep the action user-initiated.
-    const popup = window.open('', '_blank', 'noopener,noreferrer');
-    if (!popup) {
-      alert('Please allow popups for this site to share to X.');
-      return;
-    }
-
     try {
       const freshUrl = await onGenerateAndDownload();
-      let targetUrl = freshUrl || generatedShareUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
+      const targetUrl = freshUrl || generatedShareUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://hhgoa2026.vercel.app');
 
       // Replace localhost or 127.0.0.1 with public production domain so Twitter/X scraper can crawl the preview card
-      if (targetUrl.includes('localhost') || targetUrl.includes('127.0.0.1')) {
-        const publicBase = process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
-        targetUrl = targetUrl.replace(/^https?:\/\/[^/]+/, publicBase);
-      }
+      const normalizedUrl = targetUrl.includes('localhost') || targetUrl.includes('127.0.0.1')
+        ? targetUrl.replace(/^https?:\/\/[^/]+/, process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app')
+        : targetUrl;
 
       const text = `Ready for Hacker House Goa 2026 🚀\n\nJust created my official ${
         exportOptions.graphicType === 'card' ? 'Builder Pass' : 'Profile Frame'
@@ -71,12 +63,15 @@ export function ExportControls({
 
       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
         text
-      )}&url=${encodeURIComponent(targetUrl)}`;
+      )}&url=${encodeURIComponent(normalizedUrl)}`;
 
-      popup.location.href = twitterUrl;
+      const popup = window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+      if (!popup) {
+        window.location.href = twitterUrl;
+      }
     } catch (error) {
-      popup.close();
       console.error('Error while sharing to X:', error);
+      alert('Unable to open X right now. Please try again or copy the link manually.');
     }
   };
 
