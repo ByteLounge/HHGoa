@@ -30,21 +30,38 @@ export async function GET(req: NextRequest) {
     const customHashtag = searchParams.get('tag') || '#FrameInGoa';
     const themeId = (searchParams.get('theme') as ThemeId) || 'hhgoa-editorial';
 
-    const initials = name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase() || 'HH';
+    const imgParam = searchParams.get('img') || searchParams.get('photo');
+    let userPhotoBuffer: Buffer | null = null;
 
-    const avatarSvg = `<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="400" fill="#0E6B3A"/><circle cx="200" cy="200" r="150" fill="#FFD400" stroke="#0A4C2B" stroke-width="8"/><text x="200" y="240" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="130" fill="#0A4C2B" text-anchor="middle">${initials}</text></svg>`;
+    if (imgParam) {
+      try {
+        const fetchRes = await fetch(imgParam);
+        if (fetchRes.ok) {
+          const ab = await fetchRes.arrayBuffer();
+          userPhotoBuffer = Buffer.from(ab);
+        }
+      } catch {
+        // Fallback to default photo if image fetch fails
+      }
+    }
 
-    const defaultPhoto = await sharp(Buffer.from(avatarSvg))
-      .png()
-      .toBuffer();
+    if (!userPhotoBuffer) {
+      const initials = name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .substring(0, 2)
+        .toUpperCase() || 'HH';
+
+      const avatarSvg = `<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="400" fill="#0E6B3A"/><circle cx="200" cy="200" r="150" fill="#0A4C2B" stroke="#FFD400" stroke-width="8"/><text x="200" y="240" font-family="'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="130" fill="#FFD400" text-anchor="middle">${initials}</text></svg>`;
+
+      userPhotoBuffer = await sharp(Buffer.from(avatarSvg))
+        .png()
+        .toBuffer();
+    }
 
     pngBuffer = await generateHighResGraphic({
-      userImageBuffer: defaultPhoto,
+      userImageBuffer: userPhotoBuffer,
       builderInfo: {
         name,
         role,

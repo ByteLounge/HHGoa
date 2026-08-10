@@ -4,8 +4,15 @@ import path from 'path';
 import { supabase, BUCKET_NAME } from './supabase';
 import { put } from '@vercel/blob';
 
-// Memory cache for super-fast lookups
-const graphicMemoryStore = new Map<string, GeneratedGraphicRecord>();
+// Memory cache for super-fast lookups across serverless routes
+const globalForGraphics = globalThis as unknown as {
+  graphicMemoryStore?: Map<string, GeneratedGraphicRecord>;
+};
+
+export const graphicMemoryStore =
+  globalForGraphics.graphicMemoryStore || new Map<string, GeneratedGraphicRecord>();
+
+globalForGraphics.graphicMemoryStore = graphicMemoryStore;
 
 const getGraphicsDir = (): string => {
   const dir = path.join(process.cwd(), 'data', 'graphics');
