@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
   return new NextResponse(new Uint8Array(pngBuffer), {
     headers: {
       'Content-Type': 'image/png',
-      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400',
     },
   });
 }

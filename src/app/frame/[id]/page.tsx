@@ -48,7 +48,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   if (sParams.location) ogParams.set('location', String(sParams.location));
   if (sParams.tag) ogParams.set('tag', String(sParams.tag));
 
-  const ogImageUrl = `${baseUrl}/api/og?${ogParams.toString()}`;
+  const ogImageUrl = record?.publicUrl || `${baseUrl}/api/og?${ogParams.toString()}`;
 
   return {
     metadataBase: new URL(baseUrl),

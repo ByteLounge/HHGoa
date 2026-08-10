@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
         headers: {
           'Content-Type': 'image/png',
           'Content-Disposition': `attachment; filename="HHGoa2026_${exportOptions.graphicType}_${graphicId.slice(0, 8)}.png"`,
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400',
         },
       });
     }
