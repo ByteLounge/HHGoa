@@ -3,7 +3,6 @@ import { generateHighResGraphic } from '@/lib/image-processor';
 import { builderInfoSchema } from '@/lib/validation';
 import { saveGraphicRecord } from '@/lib/storage';
 import { v4 as uuidv4 } from 'uuid';
-import sharp from 'sharp';
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,18 +28,6 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Create compressed lightweight photo thumbnail to carry directly in share URL
-    let photoThumbBase64 = '';
-    try {
-      const thumbBuf = await sharp(buffer)
-        .resize(120, 120, { fit: 'cover' })
-        .jpeg({ quality: 60 })
-        .toBuffer();
-      photoThumbBase64 = thumbBuf.toString('base64');
-    } catch (err) {
-      console.warn('Could not generate photo thumbnail for query string:', err);
-    }
-
     const graphicId = uuidv4();
     const origin = req.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
     const queryParamsObj: Record<string, string> = {
@@ -52,10 +39,6 @@ export async function POST(req: NextRequest) {
       tag: parsedBuilderInfo.customHashtag || '#FrameInGoa',
       theme: exportOptions.themeId || 'hhgoa-editorial',
     };
-
-    if (photoThumbBase64) {
-      queryParamsObj.photo = photoThumbBase64;
-    }
 
     let shareUrl = `${origin}/${exportOptions.graphicType}/${graphicId}?${new URLSearchParams(queryParamsObj).toString()}`;
 
