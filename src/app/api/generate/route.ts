@@ -52,8 +52,8 @@ export async function POST(req: NextRequest) {
 
     const base64DataUrl = `data:image/png;base64,${pngBuffer.toString('base64')}`;
 
-    // Store graphic record for sharing page
-    await saveGraphicRecord({
+    // Store graphic record for sharing page and upload to Supabase Storage
+    const { supabaseUploaded, error: storageError } = await saveGraphicRecord({
       id: graphicId,
       type: exportOptions.graphicType,
       imageDataUrl: base64DataUrl,
@@ -80,6 +80,8 @@ export async function POST(req: NextRequest) {
       id: graphicId,
       shareUrl,
       imageDataUrl: base64DataUrl,
+      supabaseUploaded,
+      storageError,
     });
   } catch (error: unknown) {
     const errMessage = error instanceof Error ? error.message : 'Failed to generate graphic. Please try again.';

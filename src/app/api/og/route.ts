@@ -22,10 +22,10 @@ export async function GET(req: NextRequest) {
   } else {
     // Dynamic fallback image generation if record is not found in memory/disk
     const graphicType = searchParams.get('type') === 'frame' ? 'frame' : 'card';
-    const name = searchParams.get('name') || 'Official Builder';
-    const role = searchParams.get('role') || 'Full Stack Engineer';
-    const title = searchParams.get('title') || 'The AI Architect';
-    const company = searchParams.get('company') || '2:47 PM Studio';
+    const name = searchParams.get('name') || 'Hacker House Builder';
+    const role = searchParams.get('role') || 'Builder';
+    const title = searchParams.get('title') || 'Official Credential';
+    const company = searchParams.get('company') || 'Hacker House';
     const location = searchParams.get('location') || 'Goa, India';
     const customHashtag = searchParams.get('tag') || '#FrameInGoa';
     const themeId = (searchParams.get('theme') as ThemeId) || 'hhgoa-editorial';

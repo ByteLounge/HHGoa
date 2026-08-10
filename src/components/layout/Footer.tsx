@@ -32,9 +32,6 @@ export function Footer() {
             <a href="#features" className="hover:text-[#FFD400] transition-colors">
               Specs
             </a>
-            <a href="#gallery" className="hover:text-[#FFD400] transition-colors">
-              Gallery
-            </a>
             <a href="#faq" className="hover:text-[#FFD400] transition-colors">
               FAQ
             </a>

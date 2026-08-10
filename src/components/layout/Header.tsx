@@ -19,7 +19,6 @@ export function Header() {
   const navLinks = [
     { label: 'Studio', href: '#generator' },
     { label: 'Specs', href: '#features' },
-    { label: 'Gallery', href: '#gallery' },
     { label: 'FAQ', href: '#faq' },
   ];
 

@@ -48,7 +48,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   if (sParams.location) ogParams.set('location', String(sParams.location));
   if (sParams.tag) ogParams.set('tag', String(sParams.tag));
 
-  const ogImageUrl = record?.publicUrl || `${baseUrl}/api/og?${ogParams.toString()}`;
+  const ogImageUrl = `${baseUrl}/api/og?${ogParams.toString()}`;
 
   return {
     metadataBase: new URL(baseUrl),
@@ -83,6 +83,12 @@ export default async function FrameSharePage({ params, searchParams }: Props) {
   const { id } = await params;
   const sParams = await searchParams;
   const record = await getGraphicRecord(id);
+
+  const name = record?.builderInfo?.name || (typeof sParams.name === 'string' && sParams.name ? sParams.name : 'Hacker House Builder');
+  const builderTitle = record?.builderInfo?.builderTitle || (typeof sParams.title === 'string' && sParams.title ? sParams.title : 'Official Profile Frame');
+  const role = record?.builderInfo?.role || (typeof sParams.role === 'string' && sParams.role ? sParams.role : 'Builder');
+  const company = record?.builderInfo?.company || record?.builderInfo?.college || (typeof sParams.company === 'string' && sParams.company ? sParams.company : 'Hacker House');
+  const location = record?.builderInfo?.location || (typeof sParams.location === 'string' && sParams.location ? sParams.location : 'Goa, India');
 
   const headerList = await headers();
   const host = headerList.get('host') || 'hhgoa2026.vercel.app';
@@ -145,13 +151,13 @@ export default async function FrameSharePage({ params, searchParams }: Props) {
 
           <div>
             <h2 className="text-4xl font-editorial-serif font-bold text-[#F7F1DF] uppercase">
-              {record?.builderInfo?.name || 'Alex Rivera'}
+              {name}
             </h2>
             <p className="text-xl text-[#FFD400] font-bold mt-1">
-              {record?.builderInfo?.builderTitle || 'The AI Architect'}
+              {builderTitle}
             </p>
             <p className="text-[#F7F1DF]/90 text-sm mt-2 font-medium">
-              {(record?.builderInfo?.role || 'Full Stack Engineer') + ' • ' + (record?.builderInfo?.company || record?.builderInfo?.college || '2:47 PM Studio') + ' • ' + (record?.builderInfo?.location || 'Goa, India')}
+              {role + ' • ' + company + ' • ' + location}
             </p>
           </div>
 

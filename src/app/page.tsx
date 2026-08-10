@@ -5,7 +5,6 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Hero } from '@/components/landing/Hero';
 import { Features } from '@/components/landing/Features';
-import { Gallery } from '@/components/landing/Gallery';
 import { FAQ } from '@/components/landing/FAQ';
 import { ImageUploader } from '@/components/generator/ImageUploader';
 import { PhotoEditorModal } from '@/components/generator/PhotoEditorModal';
@@ -317,9 +316,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features & Gallery & FAQ */}
+      {/* Features & FAQ */}
       <Features />
-      <Gallery />
       <FAQ />
 
       {/* Fine-Tuning Photo Framing Modal */}

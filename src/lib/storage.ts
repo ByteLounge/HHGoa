@@ -37,106 +37,17 @@ async function ensureBucketExists(): Promise<void> {
 }
 
 /**
- * Helper to remove previous graphics with matching builder details (name, role, company, type)
- * so only the latest pass/frame is kept in Supabase Storage, Supabase DB, memory, and disk.
+ * Preserves all unique pass/frame records so every shared URL remains permanently valid.
  */
-async function cleanupDuplicateGraphics(newRecord: GeneratedGraphicRecord): Promise<void> {
-  const newName = (newRecord.builderInfo.name || '').trim().toLowerCase();
-  const newRole = (newRecord.builderInfo.role || '').trim().toLowerCase();
-  const newCompany = (newRecord.builderInfo.company || newRecord.builderInfo.college || '').trim().toLowerCase();
-  const newType = newRecord.type;
-
-  if (!newName) return;
-
-  // 1. Clean memory store
-  for (const [key, existing] of graphicMemoryStore.entries()) {
-    if (key !== newRecord.id && existing.type === newType) {
-      const exName = (existing.builderInfo.name || '').trim().toLowerCase();
-      const exRole = (existing.builderInfo.role || '').trim().toLowerCase();
-      const exCompany = (existing.builderInfo.company || existing.builderInfo.college || '').trim().toLowerCase();
-
-      if (exName === newName && exRole === newRole && exCompany === newCompany) {
-        graphicMemoryStore.delete(key);
-      }
-    }
-  }
-
-  // 2. Clean local disk
-  try {
-    const dir = getGraphicsDir();
-    if (fs.existsSync(dir)) {
-      const files = await fs.promises.readdir(dir);
-      for (const file of files) {
-        if (file.endsWith('.json')) {
-          const oldId = file.replace('.json', '');
-          if (oldId === newRecord.id) continue;
-          try {
-            const content = await fs.promises.readFile(path.join(dir, file), 'utf-8');
-            const meta = JSON.parse(content);
-            const metaType = meta.type || 'card';
-            const metaName = (meta.builderInfo?.name || '').trim().toLowerCase();
-            const metaRole = (meta.builderInfo?.role || '').trim().toLowerCase();
-            const metaCompany = (meta.builderInfo?.company || meta.builderInfo?.college || '').trim().toLowerCase();
-
-            if (metaType === newType && metaName === newName && metaRole === newRole && metaCompany === newCompany) {
-              await fs.promises.unlink(path.join(dir, `${oldId}.json`)).catch(() => {});
-              await fs.promises.unlink(path.join(dir, `${oldId}.png`)).catch(() => {});
-            }
-          } catch {
-            // Ignore single file parse error
-          }
-        }
-      }
-    }
-  } catch (err) {
-    console.warn('Disk cleanup warning:', err);
-  }
-
-  // 3. Clean Supabase Storage & Supabase DB
-  if (supabase) {
-    try {
-      const folder = newType === 'frame' ? 'frames' : 'cards';
-      const { data: fileList } = await supabase.storage.from(BUCKET_NAME).list(folder);
-
-      if (fileList && fileList.length > 0) {
-        const jsonFiles = fileList.filter((f) => f.name.endsWith('.json'));
-        for (const jFile of jsonFiles) {
-          const oldId = jFile.name.replace('.json', '');
-          if (oldId === newRecord.id) continue;
-
-          try {
-            const { data: jsonData } = await supabase.storage
-              .from(BUCKET_NAME)
-              .download(`${folder}/${jFile.name}`);
-
-            if (jsonData) {
-              const text = await jsonData.text();
-              const meta = JSON.parse(text);
-              const metaName = (meta.builderInfo?.name || '').trim().toLowerCase();
-              const metaRole = (meta.builderInfo?.role || '').trim().toLowerCase();
-              const metaCompany = (meta.builderInfo?.company || meta.builderInfo?.college || '').trim().toLowerCase();
-
-              if (metaName === newName && metaRole === newRole && metaCompany === newCompany) {
-                // Delete previous PNG and JSON from Supabase Storage
-                await supabase.storage
-                  .from(BUCKET_NAME)
-                  .remove([`${folder}/${oldId}.png`, `${folder}/${oldId}.json`]);
-
-                console.log(`Discarded previous duplicate graphic ${oldId} for builder "${newRecord.builderInfo.name}" in Supabase Storage`);
-              }
-            }
-          } catch {
-            // Ignore single file check error
-          }
-        }
-      }
-    } catch (err) {
-      console.warn('Supabase duplicate cleanup warning:', err);
-    }
-  }
+async function cleanupDuplicateGraphics(_newRecord: GeneratedGraphicRecord): Promise<void> {
+  // Retain all generated records to guarantee every shareable URL stays active
+  return;
 }
 
-export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise<void> {
+export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise<{ supabaseUploaded: boolean; error?: string }> {
+  let supabaseUploaded = false;
+  let uploadErrorMsg: string | undefined;
+
   // Discard older duplicate passes synchronously before saving new record
   await cleanupDuplicateGraphics(record);
 
@@ -185,8 +96,10 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
         });
 
       if (uploadError) {
-        console.warn('Supabase Storage PNG upload message:', uploadError.message);
+        uploadErrorMsg = uploadError.message;
+        console.error('Supabase Storage PNG upload error:', uploadError.message);
       } else {
+        supabaseUploaded = true;
         console.log(`Successfully stored graphic ${record.id} in Supabase Storage (${pngFilePath})`);
       }
 
@@ -207,16 +120,12 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
         'utf-8'
       );
 
-      const { error: jsonUploadError } = await supabase.storage
+      await supabase.storage
         .from(BUCKET_NAME)
         .upload(jsonFilePath, metadataBuffer, {
           contentType: 'application/json',
           upsert: true,
         });
-
-      if (jsonUploadError) {
-        console.warn('Supabase Storage JSON upload message:', jsonUploadError.message);
-      }
 
       // Optional metadata insertion into Supabase DB table 'graphics'
       try {
@@ -228,14 +137,20 @@ export async function saveGraphicRecord(record: GeneratedGraphicRecord): Promise
           created_at: record.createdAt,
           share_url: record.shareUrl,
           image_path: pngFilePath,
+          image_data_url: record.imageDataUrl,
         });
       } catch (err: unknown) {
         console.warn('Supabase DB table save skipped:', err);
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      uploadErrorMsg = err instanceof Error ? err.message : String(err);
       console.warn('Supabase Storage integration skipped:', err);
     }
+  } else {
+    uploadErrorMsg = 'Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL & SUPABASE_SERVICE_ROLE_KEY) not configured on server.';
   }
+
+  return { supabaseUploaded, error: uploadErrorMsg };
 }
 
 export async function getGraphicRecord(id: string): Promise<GeneratedGraphicRecord | null> {
