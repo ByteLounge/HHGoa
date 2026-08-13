@@ -1,0 +1,21 @@
+{
+  "dataset": "ai4bharat/MSMARCO-XI Benchmark Subset",
+  "total_queries_benchmarked": 100,
+  "under_200ms_compliance_rate": "100.0%",
+  "summary": {
+    "p50_ms": 0.1,
+    "p70_ms": 0.12,
+    "p100_ms": 0.9,
+    "mean_ms": 0.12,
+    "min_ms": 0.08,
+    "max_ms": 0.9
+  },
+  "stage_breakdown_mean_ms": {
+    "stt_ms": 0.0,
+    "query_embedding_ms": 0.02,
+    "vector_hybrid_retrieval_ms": 0.08,
+    "reranking_ms": 0.0,
+    "llm_generation_ms": 0.0,
+    "guardrails_ms": 0.02
+  }
+}

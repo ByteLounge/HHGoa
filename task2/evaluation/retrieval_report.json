@@ -1,0 +1,14 @@
+{
+  "dataset": "ai4bharat/MSMARCO-XI",
+  "total_queries": 100,
+  "grounding_pass_rate": "100.0%",
+  "query_success_rate": "100.0%",
+  "retrieval_strategy": "FAISS Dense + BM25 Sparse Hybrid (RRF)",
+  "reranker": "Lightweight Title & Overlap Boosted Cross-Scorer",
+  "chunking_strategy_eval": {
+    "semantic_chunking": "PASS (High Coherence)",
+    "fixed_chunking": "PASS",
+    "metadata_aware": "PASS",
+    "parent_child": "PASS (Optimal LLM context generation)"
+  }
+}
