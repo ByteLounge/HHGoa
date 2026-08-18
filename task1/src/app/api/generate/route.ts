@@ -30,16 +30,6 @@ export async function POST(req: NextRequest) {
 
     const graphicId = uuidv4();
     const origin = req.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || 'https://hhgoa2026.vercel.app';
-    const queryParamsObj: Record<string, string> = {
-      name: parsedBuilderInfo.name || '',
-      role: parsedBuilderInfo.role || '',
-      title: parsedBuilderInfo.builderTitle || '',
-      company: parsedBuilderInfo.company || parsedBuilderInfo.college || '',
-      location: parsedBuilderInfo.location || '',
-      tag: parsedBuilderInfo.customHashtag || '#FrameInGoa',
-      theme: exportOptions.themeId || 'hhgoa-editorial',
-    };
-
     const shareUrl = `${origin}/${exportOptions.graphicType}/${graphicId}`;
 
     const pngBuffer = await generateHighResGraphic({

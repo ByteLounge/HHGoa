@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 function patchFs(fsModule) {
+  if (process.platform !== 'win32') return;
   if (!fsModule || fsModule.__readlink_patched) return;
   fsModule.__readlink_patched = true;
 
