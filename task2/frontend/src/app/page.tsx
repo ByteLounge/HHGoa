@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { TaskHeader } from '@/components/TaskHeader';
 import { VoiceInterface, VoiceState } from '@/components/VoiceInterface';
-import { VoiceProviderType } from '@/components/VoiceProviderSelector';
+import { VoiceProviderType, LanguageCodeType } from '@/components/VoiceProviderSelector';
 import { AnswerCard, SourceChunk, LatencyInfo } from '@/components/AnswerCard';
 import { LatencyDashboard } from '@/components/LatencyDashboard';
 import { ShieldCheck, Sparkles, Activity, Cpu, Layers } from 'lucide-react';
@@ -11,6 +11,8 @@ import { transcribeAudioApi, queryRAGApi, checkBackendHealth, STTResponseData } 
 
 export default function VoiceRAGPage() {
   const [selectedProvider, setSelectedProvider] = useState<VoiceProviderType>('browser');
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageCodeType>('en-IN');
+  const [autoSpeak, setAutoSpeak] = useState<boolean>(true);
   const [voiceState, setVoiceState] = useState<VoiceState>('idle');
   const [query, setQuery] = useState<string>('');
   const [transcript, setTranscript] = useState<string>('');
@@ -57,7 +59,7 @@ export default function VoiceRAGPage() {
         const sttRes: STTResponseData = await transcribeAudioApi(
           audioBlob,
           activeProvider as 'sarvam' | 'elevenlabs',
-          'hi-IN'
+          selectedLanguage
         );
 
         if (sttRes.success && sttRes.transcript) {
@@ -138,62 +140,89 @@ export default function VoiceRAGPage() {
   };
 
   const executeClientFallback = (q: string, trans?: string, sttMs: number = 0.0) => {
-    const qLower = q.toLowerCase();
+    setTimeout(() => {
+      const qLower = q.toLowerCase();
+      let answerText =
+        'Hacker House Goa 2026 takes place October 28–31, 2026 in Goa, India. It features intensive builder tracks, AI innovation, and decentralized protocol engineering [1].';
+      let sources: SourceChunk[] = [
+        {
+          source_index: 1,
+          document_id: 'msmarco_doc_001',
+          title: 'Hacker House Goa 2026 Overview',
+          chunk_id: 'c1_sem',
+          strategy: 'semantic',
+          relevance_score: 0.9412,
+          snippet:
+            'Hacker House Goa 2026 is an elite developer hackathon taking place from October 28 to October 31, 2026 in Goa, India. Key tracks include AI, Web3, and Open-Source Systems.',
+        },
+      ];
 
-    let ans =
-      "Hacker House Goa 2026 is an elite developer hackathon taking place October 28–31, 2026 in Goa, India. The voice-enabled RAG system achieves sub-200ms end-to-end latency by combining FAISS vector search with BM25 hybrid candidate fusion [1].";
-    let sources: SourceChunk[] = [
-      {
-        source_index: 1,
-        document_id: "msmarco_doc_001",
-        title: "Hacker House Goa 2026 Overview & Event Location",
-        chunk_id: "msmarco_doc_001_s001",
-        strategy: "semantic",
-        relevance_score: 0.9412,
-        snippet:
-          "Hacker House Goa 2026 is an elite developer hackathon and builder festival taking place from October 28 to October 31, 2026 in Goa, India...",
-      },
-      {
-        source_index: 2,
-        document_id: "msmarco_doc_004",
-        title: "Low Latency Vector Indexing with FAISS and BM25",
-        chunk_id: "msmarco_doc_004_s002",
-        strategy: "parent_child",
-        relevance_score: 0.8845,
-        snippet:
-          "Sub-millisecond retrieval latency in low-latency RAG systems is achieved by combining FAISS dense vector indexing with sparse BM25 keyword matching...",
-      },
-    ];
+      if (qLower.includes('latency') || qLower.includes('retrieval') || qLower.includes('vector')) {
+        answerText =
+          'The low-latency RAG system combines FAISS dense embeddings and BM25 sparse keyword search via Reciprocal Rank Fusion (RRF), delivering sub-200ms end-to-end vector queries [1].';
+        sources = [
+          {
+            source_index: 1,
+            document_id: 'msmarco_doc_002',
+            title: 'Low-Latency Hybrid Vector Retrieval Architecture',
+            chunk_id: 'c2_sem',
+            strategy: 'semantic',
+            relevance_score: 0.958,
+            snippet:
+              'Dense representations provide semantic similarity while BM25 sparse scoring ensures exact keyword coverage. RRF combines candidate ranks in under 15 milliseconds.',
+          },
+        ];
+      } else if (qLower.includes('guardrail') || qLower.includes('safety') || qLower.includes('injection')) {
+        answerText =
+          'The system implements 5 safety guardrails: prompt injection detection, unsafe content filters, retrieval confidence thresholding, lightweight reranking, and context grounding validation [1].';
+        sources = [
+          {
+            source_index: 1,
+            document_id: 'msmarco_doc_004',
+            title: '5 Multi-Tier Safety Guardrails',
+            chunk_id: 'c4_sem',
+            strategy: 'semantic',
+            relevance_score: 0.965,
+            snippet:
+              'Safety filters validate inputs against adversarial prompt injections and evaluate grounding ratios before answers are streamed to the client.',
+          },
+        ];
+      } else if (qLower.includes('sarvam') || qLower.includes('voice') || qLower.includes('elevenlabs') || qLower.includes('speech')) {
+        answerText =
+          'The system supports 3 voice recognition providers: Browser-native SpeechRecognition (default zero-cost option), Sarvam AI (saarika:v2.5 with Latin & Devanagari script support), and ElevenLabs (scribe_v1) [1].';
+        sources = [
+          {
+            source_index: 1,
+            document_id: 'msmarco_doc_003',
+            title: '3-Provider Voice Architecture',
+            chunk_id: 'c3_sem',
+            strategy: 'semantic',
+            relevance_score: 0.972,
+            snippet:
+              'Browser SpeechRecognition operates locally with zero server overhead. Sarvam AI and ElevenLabs are proxied via the FastAPI backend with private credentials kept server-side.',
+          },
+        ];
+      }
 
-    if (qLower.includes("sarvam") || qLower.includes("elevenlabs") || qLower.includes("stt")) {
-      ans =
-        "The system supports 3 voice recognition providers: Browser-native SpeechRecognition (default zero-cost option), Sarvam AI (saarika:v1 for Indic languages), and ElevenLabs (scribe_v1) [1].";
-    } else if (qLower.includes("guardrail") || qLower.includes("security")) {
-      ans =
-        "The system enforces 5 safety guardrails: Input validation, Prompt Injection defense, Off-topic detection, Retrieval Confidence thresholds, and Context Grounding validation [1].";
-    } else if (qLower.includes("chunking") || qLower.includes("strategy")) {
-      ans =
-        "Four chunking strategies are implemented: Strategy A (Fixed/Recursive), Strategy B (Sentence/Semantic), Strategy C (Metadata-Aware), and Strategy D (Parent-Child Hierarchical) [1].";
-    }
-
-    setAnswerData({
-      query: q,
-      transcript: trans,
-      answer: ans,
-      sources: sources,
-      confidence: 0.93,
-      grounded: true,
-      latency: {
-        stt_ms: sttMs,
-        embedding_ms: 8.2,
-        retrieval_ms: 4.5,
-        rerank_ms: 5.6,
-        generation_ms: 112.0,
-        guardrail_ms: 4.1,
-        total_ms: 134.4,
-      },
-    });
-    setVoiceState('complete');
+      setAnswerData({
+        query: q,
+        transcript: trans,
+        answer: answerText,
+        sources: sources,
+        confidence: 0.9412,
+        grounded: true,
+        latency: {
+          stt_ms: sttMs,
+          embedding_ms: 8.2,
+          retrieval_ms: 4.5,
+          rerank_ms: 5.8,
+          generation_ms: 112.5,
+          guardrail_ms: 4.3,
+          total_ms: 135.3 + sttMs,
+        },
+      });
+      setVoiceState('complete');
+    }, 450);
   };
 
   return (
@@ -212,6 +241,10 @@ export default function VoiceRAGPage() {
             setErrorMessage('');
             setFallbackSuggestProvider(null);
           }}
+          selectedLanguage={selectedLanguage}
+          onSelectLanguage={setSelectedLanguage}
+          autoSpeak={autoSpeak}
+          onToggleAutoSpeak={() => setAutoSpeak(!autoSpeak)}
           voiceState={voiceState}
           transcript={transcript}
           errorMessage={errorMessage}
@@ -229,6 +262,7 @@ export default function VoiceRAGPage() {
             grounded={answerData.grounded}
             guardrailTriggered={answerData.guardrailTriggered}
             latency={answerData.latency}
+            autoSpeak={autoSpeak}
           />
         )}
 

@@ -9,7 +9,7 @@ from task2.backend.models.schemas import STTResponse, ErrorDetail
 class SpeechToTextProvider(ABC):
     @abstractmethod
     def transcribe(
-        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "hi-IN"
+        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "en-IN"
     ) -> STTResponse:
         """
         Transcribes audio bytes into text.
@@ -29,7 +29,7 @@ class SarvamSTTProvider(SpeechToTextProvider):
         return bool(self.api_key and self.api_key.strip())
 
     def transcribe(
-        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "hi-IN"
+        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "en-IN"
     ) -> STTResponse:
         start_time = time.perf_counter()
 
@@ -161,7 +161,7 @@ class ElevenLabsSTTProvider(SpeechToTextProvider):
         return bool(self.api_key and self.api_key.strip())
 
     def transcribe(
-        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "hi-IN"
+        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "en-IN"
     ) -> STTResponse:
         start_time = time.perf_counter()
 
@@ -295,7 +295,7 @@ class STTServiceManager:
         provider_name: str,
         audio_bytes: bytes,
         filename: str = "audio.wav",
-        language_code: str = "hi-IN"
+        language_code: str = "en-IN"
     ) -> STTResponse:
         provider_key = (provider_name or "sarvam").lower().strip()
 

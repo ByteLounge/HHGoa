@@ -136,7 +136,7 @@ def get_latency_metrics():
 async def speech_to_text(
     file: UploadFile = File(...),
     provider: str = Form("sarvam"),
-    language_code: str = Form("hi-IN")
+    language_code: str = Form("en-IN")
 ):
     try:
         # Validate file payload
@@ -185,7 +185,7 @@ async def execute_rag_query(request: TextQueryRequest):
 async def execute_voice_query(
     file: UploadFile = File(...),
     provider: str = Form("sarvam"),
-    language_code: str = Form("hi-IN")
+    language_code: str = Form("en-IN")
 ):
     audio_bytes = await file.read()
     stt_res = stt_manager.transcribe(

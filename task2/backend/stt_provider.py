@@ -7,7 +7,7 @@ from typing import Tuple, Dict, Any, Optional
 class SpeechToTextProvider(ABC):
     @abstractmethod
     def transcribe_audio(
-        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "hi-IN"
+        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "en-IN"
     ) -> Tuple[str, float, bool, str]:
         """
         Transcribes audio bytes to text.
@@ -24,7 +24,7 @@ class SarvamSTTProvider(SpeechToTextProvider):
         self.model = os.getenv("SARVAM_MODEL", "saarika:v2.5")
 
     def transcribe_audio(
-        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "hi-IN"
+        self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "en-IN"
     ) -> Tuple[str, float, bool, str]:
         start_time = time.perf_counter()
 

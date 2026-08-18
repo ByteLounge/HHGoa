@@ -28,7 +28,7 @@ export class BrowserSpeechProvider {
     return this.recognition !== null;
   }
 
-  public start(callbacks: BrowserSpeechCallbacks): boolean {
+  public start(callbacks: BrowserSpeechCallbacks, lang: string = 'en-IN'): boolean {
     if (!this.recognition) {
       if (callbacks.onError) {
         callbacks.onError('Browser Speech Recognition is not supported in this browser.');
@@ -41,6 +41,7 @@ export class BrowserSpeechProvider {
     }
 
     try {
+      this.recognition.lang = lang || 'en-IN';
       this.recognition.onstart = () => {
         this.isListening = true;
         if (callbacks.onStart) callbacks.onStart();

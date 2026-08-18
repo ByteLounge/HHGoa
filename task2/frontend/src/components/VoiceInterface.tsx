@@ -17,7 +17,7 @@ import {
   Layers,
   ArrowRight
 } from 'lucide-react';
-import { VoiceProviderSelector, VoiceProviderType } from './VoiceProviderSelector';
+import { VoiceProviderSelector, VoiceProviderType, LanguageCodeType } from './VoiceProviderSelector';
 import { BrowserSpeechProvider } from '@/services/browserSpeech';
 
 export type VoiceState =
@@ -40,6 +40,10 @@ interface VoiceInterfaceProps {
   ) => void;
   selectedProvider: VoiceProviderType;
   onSelectProvider: (provider: VoiceProviderType) => void;
+  selectedLanguage: LanguageCodeType;
+  onSelectLanguage: (lang: LanguageCodeType) => void;
+  autoSpeak: boolean;
+  onToggleAutoSpeak: () => void;
   voiceState: VoiceState;
   transcript: string;
   errorMessage: string;
@@ -50,6 +54,10 @@ export function VoiceInterface({
   onQuerySubmit,
   selectedProvider,
   onSelectProvider,
+  selectedLanguage,
+  onSelectLanguage,
+  autoSpeak,
+  onToggleAutoSpeak,
   voiceState,
   transcript,
   errorMessage,
@@ -112,7 +120,7 @@ export function VoiceInterface({
           onEnd: () => {
             setBrowserSpeechActive(false);
           },
-        });
+        }, selectedLanguage);
 
         if (!started && selectedProvider === 'auto') {
           startMediaRecorder('sarvam');
@@ -215,6 +223,10 @@ export function VoiceInterface({
         selectedProvider={selectedProvider}
         onSelectProvider={onSelectProvider}
         isBrowserSupported={isBrowserSupported}
+        selectedLanguage={selectedLanguage}
+        onSelectLanguage={onSelectLanguage}
+        autoSpeak={autoSpeak}
+        onToggleAutoSpeak={onToggleAutoSpeak}
       />
 
       {/* Main Voice Interaction Hero Card */}

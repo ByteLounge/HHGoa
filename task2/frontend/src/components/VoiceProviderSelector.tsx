@@ -1,24 +1,29 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Cpu, Globe, Zap, Layers, Info, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { Cpu, Globe, Zap, Layers, Info, CheckCircle2, Volume2, VolumeX, Languages } from 'lucide-react';
 
 export type VoiceProviderType = 'browser' | 'sarvam' | 'elevenlabs' | 'auto';
+export type LanguageCodeType = 'en-IN' | 'hi-IN' | 'unknown';
 
 interface VoiceProviderSelectorProps {
   selectedProvider: VoiceProviderType;
   onSelectProvider: (provider: VoiceProviderType) => void;
   isBrowserSupported: boolean;
-  sarvamConfigured?: boolean;
-  elevenlabsConfigured?: boolean;
+  selectedLanguage: LanguageCodeType;
+  onSelectLanguage: (lang: LanguageCodeType) => void;
+  autoSpeak: boolean;
+  onToggleAutoSpeak: () => void;
 }
 
 export function VoiceProviderSelector({
   selectedProvider,
   onSelectProvider,
   isBrowserSupported,
-  sarvamConfigured = false,
-  elevenlabsConfigured = false,
+  selectedLanguage,
+  onSelectLanguage,
+  autoSpeak,
+  onToggleAutoSpeak,
 }: VoiceProviderSelectorProps) {
   const [showInfo, setShowInfo] = useState(false);
 
@@ -43,15 +48,15 @@ export function VoiceProviderSelector({
     {
       id: 'sarvam',
       name: 'SARVAM AI',
-      badge: 'CLOUD STT • INDIC',
-      description: 'Sarvam AI cloud STT API (saarika:v1). Optimized for Hindi, English, and Indian regional accents.',
+      badge: 'saarika:v2.5 • INDIC',
+      description: 'Sarvam AI cloud STT API (saarika:v2.5). Supports English (Latin script) & Indic languages.',
       icon: <Cpu className="w-4 h-4 text-[#FF007A]" />,
       available: true,
     },
     {
       id: 'elevenlabs',
       name: 'ELEVENLABS',
-      badge: 'CLOUD STT • PRECISION',
+      badge: 'scribe_v1 • PRECISION',
       description: 'ElevenLabs Speech-to-Text API (scribe_v1). High precision transcription alternative.',
       icon: <Zap className="w-4 h-4 text-[#FFD400]" />,
       available: true,
@@ -66,10 +71,16 @@ export function VoiceProviderSelector({
     },
   ];
 
+  const languages: { id: LanguageCodeType; label: string; scriptBadge: string }[] = [
+    { id: 'en-IN', label: 'English (Latin)', scriptBadge: 'ABC' },
+    { id: 'hi-IN', label: 'Hindi (Devanagari)', scriptBadge: 'अ/आ' },
+    { id: 'unknown', label: 'Auto-Detect', scriptBadge: '🌐' },
+  ];
+
   return (
     <div className="w-full max-w-4xl mx-auto space-y-3 font-editorial-mono">
-      {/* Header Label Row */}
-      <div className="flex items-center justify-between px-1">
+      {/* Header Label Row with Language & Auto-Speak Controls */}
+      <div className="flex flex-wrap items-center justify-between gap-3 px-1">
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold uppercase tracking-widest text-[#FFD400]">
             VOICE INPUT PROVIDER
@@ -78,15 +89,43 @@ export function VoiceProviderSelector({
             DEFAULT: BROWSER
           </span>
         </div>
-        <button
-          type="button"
-          onClick={() => setShowInfo(!showInfo)}
-          className="text-xs text-[#F7F1DF]/80 hover:text-[#FFD400] flex items-center gap-1 cursor-pointer transition-colors"
-          aria-label="Toggle Provider Specs Info"
-        >
-          <Info className="w-3.5 h-3.5" />
-          <span>{showInfo ? 'Hide Specs' : 'Provider Info'}</span>
-        </button>
+
+        {/* Quick Toggles: Language Script & Voice Output */}
+        <div className="flex items-center gap-2">
+          {/* Auto-Speak Answers Toggle */}
+          <button
+            type="button"
+            onClick={onToggleAutoSpeak}
+            className={`px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 cursor-pointer transition-all ${
+              autoSpeak
+                ? 'bg-[#FFD400] text-[#0A4C2B] border-[#0A4C2B] shadow-[2px_2px_0px_#0A4C2B]'
+                : 'bg-[#0A4C2B] text-[#F7F1DF]/70 border-[#1E5A3B] hover:text-[#FFD400]'
+            }`}
+            title="Auto-play voice responses out loud"
+          >
+            {autoSpeak ? (
+              <>
+                <Volume2 className="w-3.5 h-3.5 text-[#FF007A] animate-pulse" />
+                <span>VOICE READOUT: ON</span>
+              </>
+            ) : (
+              <>
+                <VolumeX className="w-3.5 h-3.5 opacity-60" />
+                <span>VOICE READOUT: OFF</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowInfo(!showInfo)}
+            className="text-xs text-[#F7F1DF]/80 hover:text-[#FFD400] flex items-center gap-1 cursor-pointer transition-colors px-2 py-1"
+            aria-label="Toggle Provider Specs Info"
+          >
+            <Info className="w-3.5 h-3.5" />
+            <span>{showInfo ? 'Hide' : 'Specs'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Provider Selection Buttons Grid */}
@@ -130,6 +169,34 @@ export function VoiceProviderSelector({
         })}
       </div>
 
+      {/* Language Script Selector Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-[#0A4C2B] border border-[#1E5A3B] text-xs">
+        <div className="flex items-center gap-1.5 text-[#F7F1DF]/80">
+          <Languages className="w-3.5 h-3.5 text-[#FFD400]" />
+          <span className="font-bold">TRANSCRIPTION SCRIPT / LANGUAGE:</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          {languages.map((lang) => {
+            const isLangSelected = selectedLanguage === lang.id;
+            return (
+              <button
+                key={lang.id}
+                type="button"
+                onClick={() => onSelectLanguage(lang.id)}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  isLangSelected
+                    ? 'bg-[#FFD400] text-[#0A4C2B] shadow-[2px_2px_0px_#0A4C2B]'
+                    : 'bg-[#0E6B3A] text-[#F7F1DF]/70 hover:text-[#FFD400]'
+                }`}
+              >
+                <span className="text-[10px] opacity-80">{lang.scriptBadge}</span>
+                <span>{lang.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Expandable Technical Info Panel */}
       {showInfo && (
         <div className="p-4 rounded-xl bg-[#0A4C2B] border-2 border-[#FFD400] text-[#F7F1DF] text-xs space-y-2 mt-2 shadow-[4px_4px_0px_#FFD400]">
@@ -141,13 +208,13 @@ export function VoiceProviderSelector({
               <strong className="text-[#FFD400]">Browser STT (Default):</strong> Direct browser-native SpeechRecognition. Zero API cost, sub-10ms transcript output.
             </li>
             <li>
-              <strong className="text-[#FFD400]">Sarvam AI:</strong> Proxied via Render backend (`POST /api/stt`). API key is stored strictly server-side.
+              <strong className="text-[#FFD400]">Sarvam AI:</strong> Proxied via Render backend (`POST /api/stt`). Model `saarika:v2.5`. Default is English Latin script (`en-IN`), or toggle to Hindi (`hi-IN`) for Devanagari script.
             </li>
             <li>
-              <strong className="text-[#FFD400]">ElevenLabs:</strong> Proxied via Render backend. API key stored strictly server-side.
+              <strong className="text-[#FFD400]">ElevenLabs:</strong> Proxied via Render backend (`POST /api/stt` with `scribe_v1`). High precision audio recognition.
             </li>
             <li>
-              <strong className="text-[#FFD400]">Automatic Fallback:</strong> Seamless chain: Browser → Sarvam → ElevenLabs → Text Input fallback.
+              <strong className="text-[#FFD400]">Voice Readout (TTS):</strong> Natural speech synthesis reads answers back aloud. Toggle ON/OFF anytime.
             </li>
           </ul>
         </div>
