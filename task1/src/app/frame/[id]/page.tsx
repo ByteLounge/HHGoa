@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { headers } from 'next/headers';
 import { getGraphicRecord } from '@/lib/storage';
 import { Share2, Download, ArrowLeft, CheckCircle2 } from 'lucide-react';
@@ -139,8 +140,14 @@ export default async function FrameSharePage({ params, searchParams }: Props) {
       {/* Top Navbar */}
       <header className="max-w-5xl mx-auto w-full flex items-center justify-between py-4 border-b-2 border-[#1E5A3B]">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center font-display font-bold text-base shadow-[3px_3px_0px_#0A4C2B]">
-            HH
+          <div className="w-10 h-10 rounded-xl bg-[#FFD400] border-2 border-[#0A4C2B] overflow-hidden flex items-center justify-center shadow-[3px_3px_0px_#0A4C2B] flex-shrink-0">
+            <Image
+              src="/favicon.webp"
+              alt="Hacker House Goa Logo"
+              width={40}
+              height={40}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
             <h1 className="font-editorial-serif font-bold text-2xl leading-none text-[#FFD400]">HACKER HOUSE GOA 2026</h1>

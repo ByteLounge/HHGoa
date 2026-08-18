@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Send } from 'lucide-react';
 
 export function Footer() {
@@ -10,8 +11,14 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           {/* Logo & Info */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center font-display font-bold text-base shadow-[2px_2px_0px_#0A4C2B]">
-              HH
+            <div className="w-10 h-10 rounded-xl bg-[#FFD400] border-2 border-[#0A4C2B] overflow-hidden flex items-center justify-center shadow-[2px_2px_0px_#0A4C2B] flex-shrink-0">
+              <Image
+                src="/favicon.webp"
+                alt="Hacker House Goa Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">

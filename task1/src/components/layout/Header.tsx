@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Sparkles, ShieldCheck, Menu, X, ArrowRight, ExternalLink, Mic, IdCard } from 'lucide-react';
 
 export function Header() {
@@ -34,8 +35,15 @@ export function Header() {
         {/* Brand Logo & Event Badge */}
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center font-display font-bold text-lg tracking-tighter shadow-[3px_3px_0px_#0A4C2B] group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all">
-              HH
+            <div className="w-10 h-10 rounded-xl bg-[#FFD400] border-2 border-[#0A4C2B] overflow-hidden flex items-center justify-center shadow-[3px_3px_0px_#0A4C2B] group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all flex-shrink-0">
+              <Image
+                src="/favicon.webp"
+                alt="Hacker House Goa Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-cover"
+                priority
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
