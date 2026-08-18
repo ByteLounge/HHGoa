@@ -264,8 +264,27 @@ export default function VoiceRAGPage() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-16 border-t-2 border-[#1E5A3B] py-8 text-center text-xs font-editorial-mono text-[#F7F1DF]/70">
-        <p>Hacker House Goa 2026 • Task 2 — Voice-Enabled RAG System</p>
+      <footer className="mt-16 border-t-2 border-[#1E5A3B] py-8 text-center text-xs font-editorial-mono text-[#F7F1DF]/70 space-y-2">
+        <div className="flex justify-center items-center gap-4 text-xs font-bold text-[#FFD400]">
+          <a
+            href="https://hhgoa-frame-id-generator.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition-colors"
+          >
+            ← Task 01: Profile Frame &amp; Pass Studio ↗
+          </a>
+          <span>•</span>
+          <a
+            href="https://hhgoa.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition-colors"
+          >
+            HHGoa.com ↗
+          </a>
+        </div>
+        <p>© 2026 Hacker House Goa • Task 2 — Voice-Enabled RAG System</p>
       </footer>
     </div>
   );

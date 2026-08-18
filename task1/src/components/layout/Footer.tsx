@@ -36,6 +36,14 @@ export function Footer() {
               FAQ
             </a>
             <a
+              href="https://hhgoa-rag-voice.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#FF007A] transition-colors text-[#FFD400]"
+            >
+              Task 02: Voice RAG ↗
+            </a>
+            <a
               href="https://hhgoa.com"
               target="_blank"
               rel="noopener noreferrer"

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Sparkles, ShieldCheck, Menu, X, ArrowRight, ExternalLink } from 'lucide-react';
+import { Sparkles, ShieldCheck, Menu, X, ArrowRight, ExternalLink, Mic, IdCard } from 'lucide-react';
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -31,28 +31,47 @@ export function Header() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-        {/* Yellow Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center font-display font-bold text-lg tracking-tighter shadow-[3px_3px_0px_#0A4C2B] group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all">
-            HH
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-editorial-serif font-bold text-xl sm:text-2xl tracking-tight text-[#FFD400]">
-                HACKER HOUSE GOA <span className="text-[#F7F1DF] font-mono text-base font-normal">2026</span>
-              </span>
-              <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#FFD400]/20 text-[#FFD400] border border-[#FFD400]/40">
-                <ShieldCheck className="w-3 h-3 text-[#FFD400]" /> OFFICIAL
-              </span>
+        {/* Brand Logo & Event Badge */}
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-[#FFD400] text-[#0A4C2B] border-2 border-[#0A4C2B] flex items-center justify-center font-display font-bold text-lg tracking-tighter shadow-[3px_3px_0px_#0A4C2B] group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all">
+              HH
             </div>
-            <p className="text-[10px] font-mono text-[#F7F1DF]/70 -mt-0.5">
-              2:47 PM Studio • Identity Engine
-            </p>
-          </div>
-        </Link>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-editorial-serif font-bold text-xl sm:text-2xl tracking-tight text-[#FFD400]">
+                  HACKER HOUSE GOA <span className="text-[#F7F1DF] font-mono text-base font-normal">2026</span>
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#FFD400]/20 text-[#FFD400] border border-[#FFD400]/40">
+                  <ShieldCheck className="w-3 h-3 text-[#FFD400]" /> OFFICIAL
+                </span>
+              </div>
+              <p className="text-[10px] font-mono text-[#F7F1DF]/70 -mt-0.5">
+                2:47 PM Studio • Identity Engine
+              </p>
+            </div>
+          </Link>
+
+          {/* Task Switcher Desktop Tabs */}
+          <nav className="hidden lg:flex items-center gap-2 ml-4 p-1.5 rounded-full bg-[#0A4C2B] border-2 border-[#1E5A3B]">
+            <div className="px-4 py-1.5 rounded-full text-xs font-editorial-mono font-bold text-[#0A4C2B] bg-[#FFD400] border border-[#0A4C2B] shadow-[2px_2px_0px_#0A4C2B] flex items-center gap-1.5">
+              <IdCard className="w-3.5 h-3.5 text-[#FF007A]" />
+              <span>TASK 01: IDENTITY FRAME</span>
+            </div>
+            <a
+              href="https://hhgoa-rag-voice.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-1.5 rounded-full text-xs font-editorial-mono font-bold text-[#F7F1DF]/80 hover:text-[#FFD400] hover:bg-[#0E6B3A] transition-all flex items-center gap-1.5"
+            >
+              <Mic className="w-3.5 h-3.5 text-[#FFD400]" />
+              <span>TASK 02: VOICE RAG ↗</span>
+            </a>
+          </nav>
+        </div>
 
         {/* Center Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-editorial-mono font-bold text-[#F7F1DF]">
+        <nav className="hidden xl:flex items-center gap-8 text-sm font-editorial-mono font-bold text-[#F7F1DF]">
           {navLinks.map((link) => (
             <a
               key={link.label}
@@ -109,6 +128,20 @@ export function Header() {
                 <ArrowRight className="w-4 h-4 text-[#FFD400]" />
               </a>
             ))}
+
+            <a
+              href="https://hhgoa-rag-voice.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm font-bold text-[#FFD400] hover:text-white py-2 border-b border-[#1E5A3B] flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <Mic className="w-4 h-4 text-[#FF007A]" />
+                <span>TASK 02: Voice-Enabled RAG</span>
+              </div>
+              <span className="text-[10px] bg-[#FFD400] text-[#0A4C2B] px-2 py-0.5 rounded-full font-bold">SWITCH ↗</span>
+            </a>
 
             <a
               href="#generator"
