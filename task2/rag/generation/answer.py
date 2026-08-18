@@ -71,29 +71,37 @@ class GroundedAnswerGenerator:
         return answer_text.strip(), sources, gen_ms
 
     def _call_groq_api(self, system_prompt: str, user_prompt: str) -> str:
-        try:
-            res = requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "model": self.model or "llama-3.1-8b-instant",
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    "temperature": 0.1,
-                    "max_tokens": 400,
-                },
-                timeout=3.0,
-            )
-            if res.status_code == 200:
-                data = res.json()
-                return data["choices"][0]["message"]["content"]
-        except Exception as e:
-            print(f"[LLM] Groq API call error: {e}")
+        models_to_try = [self.model or "groq/compound-mini", "groq/compound-mini", "llama-3.1-8b-instant", "qwen/qwen3.6-27b"]
+        seen = set()
+        for candidate in models_to_try:
+            if not candidate or candidate in seen:
+                continue
+            seen.add(candidate)
+            try:
+                res = requests.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "model": candidate,
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        "temperature": 0.1,
+                        "max_tokens": 400,
+                    },
+                    timeout=4.0,
+                )
+                if res.status_code == 200:
+                    data = res.json()
+                    content = data["choices"][0]["message"]["content"]
+                    if content and content.strip():
+                        return content.strip()
+            except Exception as e:
+                print(f"[LLM] Groq ({candidate}) call error: {e}")
         return self._local_grounded_synthesis(user_prompt, [])
 
     def _call_openai_api(self, system_prompt: str, user_prompt: str) -> str:

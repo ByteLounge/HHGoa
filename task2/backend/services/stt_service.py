@@ -23,7 +23,7 @@ class SarvamSTTProvider(SpeechToTextProvider):
         self.endpoint = endpoint or os.getenv(
             "SARVAM_STT_ENDPOINT", "https://api.sarvam.ai/speech-to-text"
         )
-        self.model = "saarika:v1"
+        self.model = os.getenv("SARVAM_MODEL", "saarika:v2.5")
 
     def is_configured(self) -> bool:
         return bool(self.api_key and self.api_key.strip())
