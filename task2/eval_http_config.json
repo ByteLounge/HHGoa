@@ -1,0 +1,28 @@
+{
+  "name": "HH Goa Task 2 Voice-Enabled RAG Backend",
+  "base_url": "http://127.0.0.1:8000",
+  "embed": {
+    "url": "http://127.0.0.1:8000/api/embed",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body_template": {
+      "texts": "$texts"
+    },
+    "response_path": "embeddings"
+  },
+  "generate": {
+    "url": "http://127.0.0.1:8000/api/query",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body_template": {
+      "query": "$query",
+      "top_k": 20,
+      "final_k": 4
+    },
+    "response_path": "answer"
+  }
+}

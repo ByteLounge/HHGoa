@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "target_root": "D:\\Projects\\HHGoa\\task2",
+    "generation_backend": "api",
+    "generation_model_hint": "groq/compound-mini",
+    "language": "hin",
+    "split": "validation",
+    "num_answerable": 3,
+    "num_unanswerable": 3,
+    "num_examples": 6,
+    "num_chunks": 133,
+    "top_k": 5,
+    "seed": 42,
+    "num_errored": 0
+  },
+  "retrieval": {
+    "check": "retrieval (reference-based)",
+    "num_evaluated": 3,
+    "top_k": 5,
+    "cross_lingual": {
+      "recall_at_k": {
+        "1": 0.6667,
+        "3": 1.0,
+        "5": 1.0
+      },
+      "mrr": 0.8333
+    },
+    "same_language": {
+      "recall_at_k": {
+        "1": 0.6667,
+        "3": 1.0,
+        "5": 1.0
+      },
+      "mrr": 0.8333
+    }
+  },
+  "faithfulness": {
+    "check": "faithfulness / hallucination (reference-free, LLM-as-judge)",
+    "num_evaluated": 0,
+    "error": "OPENAI_API_KEY not configured -- judge-based checks skipped."
+  },
+  "correctness": {
+    "check": "correctness (reference-based, LLM-as-judge)",
+    "num_evaluated": 0,
+    "error": "OPENAI_API_KEY not configured -- judge-based checks skipped."
+  },
+  "reliability": {
+    "check": "reliability / \"lying factor\" (answerable-vs-answered 2x2)",
+    "num_answerable_evaluated": 3,
+    "num_unanswerable_evaluated": 3,
+    "false_refusal_rate": 0.0,
+    "false_refusal_examples": [],
+    "false_confidence_rate": 0.3333,
+    "false_confidence_examples": [
+      {
+        "query": "hexadecimal numbers to binary numbers",
+        "fabricated_answer": "To change a hexadecimal number into binary, replace each hex digit with its 4‑bit binary equivalent (0 → 0000, 1 → 0001, … , F → 1111). If the resulting binary string does not end on a 4‑bit boundary,"
+      }
+    ]
+  },
+  "latency": {
+    "check": "latency",
+    "num_evaluated": 6,
+    "embed": {
+      "avg_ms": 88.51,
+      "p50_ms": 71.05,
+      "p95_ms": 209.23,
+      "p99_ms": 308.82
+    },
+    "search": {
+      "avg_ms": 0.25,
+      "p50_ms": 0.1,
+      "p95_ms": 0.97,
+      "p99_ms": 1.67
+    },
+    "retrieval_total": {
+      "avg_ms": 99.81,
+      "p50_ms": 50.17,
+      "p95_ms": 271.78,
+      "p99_ms": 321.42
+    },
+    "generation": {
+      "avg_ms": 2498.71,
+      "p50_ms": 2215.01,
+      "p95_ms": 4123.11,
+      "p99_ms": 4480.07
+    },
+    "retrieval_latency_budget_ms": 200,
+    "retrieval_within_budget": false,
+    "generation_latency_target_ms": 1500.0,
+    "generation_within_target": false
+  }
+}

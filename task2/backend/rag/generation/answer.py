@@ -2,7 +2,18 @@ import os
 import time
 import requests
 import json
+from pathlib import Path
 from typing import List, Dict, Any, Tuple
+from dotenv import load_dotenv
+
+# Automatically load environment files if present
+_current_dir = Path(__file__).resolve().parent
+_backend_dir = _current_dir.parent.parent
+_task2_dir = _backend_dir.parent
+
+for _env_path in [_backend_dir / ".env", _task2_dir / ".env", _task2_dir.parent / ".env"]:
+    if _env_path.exists():
+        load_dotenv(_env_path, override=False)
 
 class GroundedAnswerGenerator:
     def __init__(self, provider: str = None, model: str = None, api_key: str = None):

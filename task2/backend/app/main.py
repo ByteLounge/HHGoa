@@ -132,6 +132,36 @@ def get_latency_metrics():
     }
 
 
+@app.post("/api/embed")
+@app.post("/embed")
+async def create_embeddings(payload: Dict[str, Any]):
+    """
+    HTTP Embedding Endpoint for RAG Eval Loop & external benchmarks.
+    Accepts {"texts": ["..."]}, {"text": "..."}, or {"query": "..."}.
+    """
+    texts = payload.get("texts")
+    if texts is None:
+        single = payload.get("text") or payload.get("query")
+        if single:
+            texts = [single]
+        else:
+            texts = []
+
+    if isinstance(texts, str):
+        texts = [texts]
+
+    if not texts:
+        return {"embeddings": [], "dimension": 384, "count": 0}
+
+    vecs = orchestrator.embedding_engine.embed_texts(texts)
+    embeddings = vecs.tolist() if hasattr(vecs, "tolist") else [list(v) for v in vecs]
+    return {
+        "embeddings": embeddings,
+        "dimension": len(embeddings[0]) if embeddings else 384,
+        "count": len(embeddings)
+    }
+
+
 @app.post("/api/stt", response_model=STTResponse)
 async def speech_to_text(
     file: UploadFile = File(...),
